@@ -31,23 +31,22 @@ export default function HeroSection() {
             <motion.span 
               variants={fadeIn} 
               custom={0.1}
-              className="inline-block px-4 py-1.5 text-sm font-medium bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-700 rounded-full shadow-sm backdrop-blur-sm"
+              className="inline-block px-4 py-1.5 text-sm font-medium bg-gradient-to-r from-mint-300/20 to-mint-500/20 text-mint-700 rounded-full shadow-sm backdrop-blur-sm"
             >
               ✨ Discover Your Future Path
             </motion.span>
-            
-            <motion.h1 
+              <motion.h1 
               variants={fadeIn}
               custom={0.3}
               className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight"
             >
-              Find Your <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Ideal Career</span> With Pathway Infinity
+              Find Your <span className="bg-gradient-to-r from-mint-500 to-sky-500 bg-clip-text text-transparent">Ideal Career</span> With Pathway Infinity
             </motion.h1>
             
             <motion.p 
               variants={fadeIn}
               custom={0.5}
-              className="text-lg md:text-xl text-gray-600 max-w-2xl leading-relaxed"
+              className="text-lg md:text-xl text-sky-800 max-w-2xl leading-relaxed"
             >
               Answer simple questions, get personalized recommendations, and explore career paths matched to your unique personality, interests, and strengths.
             </motion.p>
@@ -74,10 +73,9 @@ export default function HeroSection() {
           >
             <div className="relative w-full h-full">
               {/* Decorative background elements */}
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px]">
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-full blur-3xl"></div>
-                <div className="absolute inset-10 bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-full blur-2xl"></div>
-                <div className="absolute inset-20 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-full blur-xl"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px]">              <div className="absolute inset-0 bg-gradient-to-r from-mint-300/20 to-mint-500/20 rounded-full blur-3xl"></div>
+                <div className="absolute inset-10 bg-gradient-to-r from-sky-300/20 to-sky-500/20 rounded-full blur-2xl"></div>
+                <div className="absolute inset-20 bg-gradient-to-r from-azure-300/20 to-mint-400/20 rounded-full blur-xl"></div>
               </div>
               {/* Main illustration */}
               <motion.div 
@@ -89,9 +87,8 @@ export default function HeroSection() {
                   delay: 0.8,
                   type: "spring",
                   stiffness: 100 
-                }}
-                style={{
-                  filter: 'drop-shadow(0 10px 15px rgba(99, 102, 241, 0.1))'
+                }}                style={{
+                  filter: 'drop-shadow(0 10px 15px rgba(112, 229, 140, 0.15))'
                 }}
               >
                 <Image 

@@ -1,84 +1,60 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./lib/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
-  theme: {
-    extend: {
-      fontFamily: {
-        'nunito': ['Nunito', 'sans-serif'],
-      },
-      colors: {
-        'mint': {
-          50: '#f2fbf9',
-          100: '#d3f8ed',
-          200: '#a8f0d9',
-          300: '#6ee0c0',
-          400: '#38c9a3',
-          500: '#1aae88',
-          600: '#138d6d',
-          700: '#137159',
-          800: '#145a4a',
-          900: '#144b3e',
-          950: '#0a2a24',
-        },
-        'lavender': {
-          50: '#f5f3ff',
-          100: '#ede9fe',
-          200: '#ddd6fe',
-          300: '#c4b5fd',
-          400: '#a78bfa',
-          500: '#8b5cf6',
-          600: '#7c3aed',
-          700: '#6d28d9',
-          800: '#5b21b6',
-          900: '#4c1d95',
-          950: '#2e1065',
-        },
-      },
-    },
-  },
-  plugins: [],
-}
-module.exports = {
-  content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  theme: {
-    extend: {
+  theme: {    extend: {
       fontFamily: {
         'nunito': ['Nunito', 'sans-serif'],
-      },
-      colors: {
-        'mint': {
-          50: '#f2fbf9',
-          100: '#d3f8ed',
-          200: '#a8f0d9',
-          300: '#6ee0c0',
-          400: '#38c9a3',
-          500: '#1aae88',
-          600: '#138d6d',
-          700: '#137159',
-          800: '#145a4a',
-          900: '#144b3e',
-          950: '#0a2a24',
+      },      colors: {        'mint': {
+          50: '#f6fdf8',
+          100: '#e8fbee',
+          200: '#c9f7d4',
+          300: '#98ff98', // Primary mint green
+          400: '#70e58c',
+          500: '#42c572',
+          600: '#2e9d58',
+          700: '#277c47',
+          800: '#23633c',
+          900: '#1f5135',
         },
-        'lavender': {
-          50: '#f5f3ff',
-          100: '#ede9fe',
-          200: '#ddd6fe',
-          300: '#c4b5fd',
-          400: '#a78bfa',
-          500: '#8b5cf6',
-          600: '#7c3aed',
-          700: '#6d28d9',
-          800: '#5b21b6',
-          900: '#4c1d95',
-          950: '#2e1065',
+        'sky': {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
+        'azure': {
+          50: '#ecfeff',
+          100: '#cffafe',
+          200: '#a5f3fc',
+          300: '#67e8f9',
+          400: '#22d3ee',
+          500: '#06b6d4',
+          600: '#0891b2',
+          700: '#0e7490',
+          800: '#155e75',
+          900: '#164e63',
+        },
+        'slate': {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
         },
       },
       backgroundImage: {

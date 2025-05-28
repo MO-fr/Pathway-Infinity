@@ -9,12 +9,11 @@ export default function Button({
   className = '',
   onClick,
   ...props 
-}) {  const baseClasses = "group relative inline-flex items-center justify-center px-6 py-3 rounded-full font-medium text-base transition-all duration-300 transform overflow-hidden";
-    const variantClasses = {
-    primary: "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg hover:shadow-indigo-500/25 hover:-translate-y-0.5 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500 before:to-indigo-500 before:opacity-0 before:transition-opacity hover:before:opacity-100 before:-z-10",
-    secondary: "bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg hover:shadow-pink-500/25 hover:-translate-y-0.5 before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500 before:to-pink-500 before:opacity-0 before:transition-opacity hover:before:opacity-100 before:-z-10",
-    outline: "bg-white/80 backdrop-blur-sm text-indigo-600 border border-indigo-200 hover:border-indigo-300 hover:bg-white hover:-translate-y-0.5 shadow-sm hover:shadow-lg hover:shadow-indigo-500/10",
-    text: "bg-transparent text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 px-4"
+}) {  const baseClasses = "group relative inline-flex items-center justify-center px-6 py-3 rounded-full font-medium text-base transition-all duration-300 transform overflow-hidden";  const variantClasses = {
+    primary: "bg-gradient-to-r from-mint-400 to-mint-500 text-white shadow-lg hover:shadow-mint-400/25 hover:-translate-y-0.5 before:absolute before:inset-0 before:bg-gradient-to-r before:from-mint-500 before:to-mint-400 before:opacity-0 before:transition-opacity hover:before:opacity-100 before:-z-10",
+    secondary: "bg-gradient-to-r from-sky-400 to-sky-500 text-white shadow-lg hover:shadow-sky-400/25 hover:-translate-y-0.5 before:absolute before:inset-0 before:bg-gradient-to-r before:from-sky-500 before:to-sky-400 before:opacity-0 before:transition-opacity hover:before:opacity-100 before:-z-10",
+    outline: "bg-slate-50/80 backdrop-blur-sm text-sky-600 border border-sky-200 hover:border-sky-300 hover:bg-slate-50 hover:-translate-y-0.5 shadow-sm hover:shadow-lg hover:shadow-sky-400/10",
+    text: "bg-transparent text-sky-600 hover:text-sky-700 hover:bg-sky-50 px-4"
   };
   
   const allClasses = `${baseClasses} ${variantClasses[variant] || ''} ${className}`;
