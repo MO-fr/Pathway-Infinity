@@ -63,14 +63,13 @@ export default function AnimatedBackground() {
   }, [isTouchDevice, windowSize.width, windowSize.height]);
   
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden">
-      <motion.div 
-        className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-100 via-purple-50 to-teal-50"
+    <div className="fixed inset-0 -z-10 overflow-hidden">      <motion.div 
+        className="absolute inset-0 w-full h-full bg-gradient-to-br from-mint-100 via-slate-50 to-sky-50"
         animate={{
           background: [
-            'linear-gradient(120deg, rgba(224, 242, 254, 0.8) 0%, rgba(236, 253, 245, 0.8) 50%, rgba(239, 246, 255, 0.8) 100%)',
-            'linear-gradient(120deg, rgba(224, 231, 255, 0.8) 0%, rgba(220, 252, 231, 0.8) 50%, rgba(254, 243, 199, 0.8) 100%)',
-            'linear-gradient(120deg, rgba(224, 242, 254, 0.8) 0%, rgba(236, 253, 245, 0.8) 50%, rgba(239, 246, 255, 0.8) 100%)'
+            'linear-gradient(120deg, rgba(246, 253, 248, 0.8) 0%, rgba(248, 250, 252, 0.8) 50%, rgba(240, 249, 255, 0.8) 100%)',
+            'linear-gradient(120deg, rgba(209, 250, 229, 0.8) 0%, rgba(152, 245, 255, 0.8) 50%, rgba(186, 230, 253, 0.8) 100%)',
+            'linear-gradient(120deg, rgba(246, 253, 248, 0.8) 0%, rgba(248, 250, 252, 0.8) 50%, rgba(240, 249, 255, 0.8) 100%)'
           ]
         }}
         transition={{ 
@@ -80,17 +79,15 @@ export default function AnimatedBackground() {
         }}
       />
       
-      {/* Animated circles that move with mouse position */}
-      <motion.div 
-        className="absolute w-[800px] h-[800px] rounded-full bg-blue-100/30 blur-3xl"
+      {/* Animated circles that move with mouse position */}      <motion.div 
+        className="absolute w-[800px] h-[800px] rounded-full bg-mint-100/30 blur-3xl"
         animate={{
           x: mousePosition.x * 100 - 400,
           y: mousePosition.y * 100 - 400,
         }}
         transition={{ type: 'spring', damping: 30, stiffness: 50 }}
-      />
-        <motion.div 
-        className="absolute w-[600px] h-[600px] rounded-full bg-green-100/30 blur-3xl"
+      />      <motion.div 
+        className="absolute w-[600px] h-[600px] rounded-full bg-sky-100/30 blur-3xl"
         animate={{
           x: -mousePosition.x * 50 + (windowSize.width/2 || 0) - 300,
           y: -mousePosition.y * 50 + (windowSize.height/2 || 0) - 300,
@@ -99,7 +96,7 @@ export default function AnimatedBackground() {
       />
       
       <motion.div 
-        className="absolute w-[400px] h-[400px] rounded-full bg-lavender-100/30 blur-3xl"
+        className="absolute w-[400px] h-[400px] rounded-full bg-azure-100/30 blur-3xl"
         animate={{
           x: mousePosition.y * 100 + (windowSize.width/3 || 0) - 200,
           y: mousePosition.x * 100 + (windowSize.height/3 || 0) - 200,

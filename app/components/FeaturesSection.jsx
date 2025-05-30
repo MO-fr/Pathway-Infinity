@@ -70,9 +70,7 @@ export default function FeaturesSection() {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Discover Your Pathway</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+        >          <h2 className="text-3xl md:text-4xl font-bold mb-4">Discover Your Pathway</h2>          <p className="text-sky-700 max-w-2xl mx-auto text-lg">
             Our intuitive platform helps students explore and discover career opportunities tailored to their unique skills and interests.
           </p>
         </motion.div>

@@ -1,20 +1,22 @@
-@tailwind base; 
-@tailwind components;
+/* Tailwind directives */
+@tailwind base;
+@tailwind components; 
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Modern pastel palette */
-    --color-primary: 99 102 241;    /* indigo-500 */
-    --color-secondary: 236 72 153;  /* pink-500 */
-    --color-accent: 168 85 247;     /* purple-500 */
+    /* Mint green with blue tones palette */
+    --color-primary: 112 229 140;    /* mint-400 */
+    --color-secondary: 56 189 248;   /* sky-400 */
+    --color-accent: 34 211 238;      /* azure-400 */
     --color-background: 255 255 255;
     --color-foreground: 23 23 23;
     
-    /* Additional pastel colors */
-    --color-mint: 167 243 208;      /* mint green */
-    --color-lavender: 226 232 240;  /* lavender */
-    --color-peach: 254 215 170;     /* peach */
+    /* Additional colors from our palette */
+    --color-mint: 152 255 152;      /* mint green #98FF98 */
+    --color-sky: 56 189 248;        /* sky blue */
+    --color-azure: 34 211 238;      /* azure blue */
+    --color-slate: 148 163 184;     /* slate gray */
   }
 
   html {
@@ -23,8 +25,8 @@
   }
 
   body {
-    background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 50%, #faf5ff 100%);
-    color: #1f2937;
+    background: linear-gradient(135deg, #f6fdf8 0%, #f0f9ff 50%, #ecfeff 100%);
+    color: #0284c7;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
@@ -44,7 +46,7 @@
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    background-image: linear-gradient(to right, rgb(37, 99, 235), rgb(124, 58, 237));
+    background-image: linear-gradient(to right, rgb(70, 197, 114), rgb(14, 165, 233));
     animation: gradient 6s linear infinite;
   }
 
@@ -88,7 +90,7 @@
 /* Smooth scrollbar for modern browsers */
 .scrollbar-pretty {
   scrollbar-width: thin;
-  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+  scrollbar-color: rgba(112, 229, 140, 0.5) transparent;
 }
 
 .scrollbar-pretty::-webkit-scrollbar {

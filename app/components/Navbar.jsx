@@ -26,37 +26,18 @@ export default function Navbar() {
     };
   }, []);
 
-  return (
-    <header 
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
+  return (    <header      className={`fixed w-full z-50 transition-all duration-300 ${
+        scrolled ? 'bg-slate-50/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex justify-between items-center h-16 md:h-20">
-          {/* Logo */}
+        <div className="flex justify-between items-center h-16 md:h-20">          {/* Logo */}
           <Link href="/" className="flex items-center">
-            <span className="text-xl md:text-2xl font-bold text-blue-600">
+            <span className="text-xl md:text-2xl font-bold text-mint-600">
               Pathway Infinity
             </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/questionnaire" className="text-gray-700 hover:text-blue-600 font-medium">
-              Start Assessment
-            </Link>
-            <Link href="/results" className="text-gray-700 hover:text-blue-600 font-medium">
-              Results
-            </Link>
-            <Link href="/saved" className="text-gray-700 hover:text-blue-600 font-medium">
-              Saved Pathways
-            </Link>
-            <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium">
-              Dashboard
-            </Link>
-          </nav>
-
+          </Link>          
+          
           {/* Auth Buttons (Desktop) */}
           <div className="hidden md:flex items-center space-x-4">
             <Button href="/login" variant="text">
@@ -67,10 +48,9 @@ export default function Navbar() {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button 
+          {/* Mobile Menu Button */}          <button 
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-gray-700 focus:outline-none"
+            className="md:hidden text-sky-700 focus:outline-none"
             aria-label="Toggle menu"
           >
             <svg
@@ -107,49 +87,27 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-white border-t border-gray-200"
-          >
-            <div className="container mx-auto px-4 py-4 space-y-4">
-              <Link 
-                href="/questionnaire" 
-                className="block py-2 text-gray-700 hover:text-blue-600"
-                onClick={() => setIsOpen(false)}
-              >
-                Start Assessment
-              </Link>
-              <Link 
-                href="/results" 
-                className="block py-2 text-gray-700 hover:text-blue-600"
-                onClick={() => setIsOpen(false)}
-              >
-                Results
-              </Link>
-              <Link 
-                href="/saved" 
-                className="block py-2 text-gray-700 hover:text-blue-600"
-                onClick={() => setIsOpen(false)}
-              >
-                Saved Pathways
-              </Link>
+            className="md:hidden bg-slate-50 border-t border-mint-100"
+          >            <div className="container mx-auto px-4 py-4 space-y-4">
               <Link 
                 href="/dashboard" 
-                className="block py-2 text-gray-700 hover:text-blue-600"
+                className="block py-2 text-sky-800 hover:text-mint-600"
                 onClick={() => setIsOpen(false)}
               >
                 Dashboard
               </Link>
               
-              <div className="pt-4 border-t border-gray-200 flex flex-col space-y-3">
+              <div className="pt-4 border-t border-mint-100 flex flex-col space-y-3">
                 <Link 
                   href="/login" 
-                  className="py-2 text-center text-gray-700 hover:text-blue-600"
+                  className="py-2 text-center text-sky-800 hover:text-mint-600"
                   onClick={() => setIsOpen(false)}
                 >
                   Log in
                 </Link>
                 <Link 
                   href="/signup" 
-                  className="py-2 text-center bg-blue-600 text-white rounded-full hover:bg-blue-700"
+                  className="py-2 text-center bg-mint-500 text-white rounded-full hover:bg-mint-600"
                   onClick={() => setIsOpen(false)}
                 >
                   Sign up
