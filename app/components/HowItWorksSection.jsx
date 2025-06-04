@@ -6,23 +6,23 @@ export default function HowItWorksSection() {
   const steps = [
     {
       number: '01',
-      title: 'Take the Assessment',
-      description: 'Answer simple questions about your interests, strengths, and preferences.'
+      title: 'Skills Assessment',
+      description: 'Take a quick assessment to identify your natural abilities, interests, and work preferences.'
     },
     {
       number: '02',
-      title: 'Get Personalized Results',
-      description: 'Our AI analyzes your responses and matches them to careers and educational programs.'
+      title: 'Explore Trades & Careers',
+      description: 'Get matched with trade schools, vocational programs, and career paths that fit your profile.'
     },
     {
       number: '03',
-      title: 'Explore Your Options',
-      description: 'Browse detailed information about recommended career paths and educational opportunities.'
+      title: 'Compare Programs',
+      description: 'Compare training programs, apprenticeships, and career paths to find your best fit.'
     },
     {
       number: '04',
-      title: 'Save and Compare',
-      description: 'Save your favorite options to your profile and compare different career paths.'
+      title: 'Plan Your Path',
+      description: 'Get detailed information about training requirements, costs, and next steps for your chosen path.'
     }
   ];
   
@@ -35,12 +35,15 @@ export default function HowItWorksSection() {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
-        >          <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>          <p className="text-sky-700 max-w-2xl mx-auto text-lg">
-            Discover your ideal career path in just a few simple steps
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
+          <p className="text-sky-700 max-w-2xl mx-auto text-lg">
+            Start your journey to a rewarding trade or career in just a few simple steps
           </p>
         </motion.div>
         
-        <div className="relative">          {/* Progress Line */}
+        <div className="relative">
+          {/* Progress Line */}
           <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-mint-200 transform -translate-x-1/2"></div>
           
           <div className="space-y-12 md:space-y-0 relative">
@@ -64,7 +67,9 @@ export default function HowItWorksSection() {
                 {/* Step Content */}
                 <div className={`md:w-5/12 ${
                   index % 2 === 0 ? 'md:text-right md:pr-12' : 'md:text-left md:pl-12'
-                }`}>                  <h3 className="text-xl md:text-2xl font-bold mb-2">                    <span className={`
+                }`}>
+                  <h3 className="text-xl md:text-2xl font-bold mb-2">
+                    <span className={`
                       inline-block px-3 py-1 rounded-lg text-white mr-2                      ${index % 4 === 0 ? 'bg-mint-500' : 
                         index % 4 === 1 ? 'bg-sky-500' : 
                         index % 4 === 2 ? 'bg-azure-500' : 'bg-slate-500'}

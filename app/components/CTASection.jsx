@@ -23,7 +23,7 @@ export default function CTASection() {
             transition={{ duration: 0.5 }}
             className="text-3xl md:text-4xl font-bold mb-6"
           >
-            Ready to Discover Your <span className="text-mint-600">Perfect Path</span>?
+            Ready to Find Your <span className="text-mint-600">Perfect Trade or Career</span>?
           </motion.h2>
           
           <motion.p
@@ -31,23 +31,18 @@ export default function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-lavender-700 mb-8 text-lg max-w-2xl mx-auto"
+            className="text-sky-700 mb-8 text-lg max-w-2xl mx-auto"
           >
-            Take the first step toward finding a career that truly matches who you are. 
-            Our questionnaire takes just 10 minutes and could change your future.
+            Take the first step toward a rewarding future. Our quick assessment will match you with trade schools, vocational programs, and career paths that fit your skills and interests.
           </motion.p>
-          
-          <motion.div
+            <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col md:flex-row gap-4 justify-center"
           >
-            <Button href="/questionnaire" variant="primary">
-              Start Free Assessment
-            </Button>
-            <Button href="/signup" variant="outline">
+            <Button href="/signup" variant="primary">
               Create Account
             </Button>
           </motion.div>

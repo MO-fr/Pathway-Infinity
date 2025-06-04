@@ -1,4 +1,4 @@
-// Prisma schema
+// Prisma schema for user authentication and profile management
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +8,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Define your models here
+model User {
+  id            String      @id @default(cuid())
+  email         String      @unique
+  name          String
+  password      String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  savedPrograms Program[]   // Relation to saved trade programs
+}
+
+model Program {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  type        String    // e.g., "trade", "vocational", "apprenticeship"
+  duration    String
+  cost        String?
+  location    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  users       User[]    // Many-to-many relation with users who saved this program
+}
