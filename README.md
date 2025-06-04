@@ -1,10 +1,20 @@
 # Pathway Infinity
 
+[![Next.js](https://img.shields.io/badge/Next.js-14.0-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18.0-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-6.0-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-latest-316192?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
+
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Maintainability](https://img.shields.io/badge/Maintainability-A-brightgreen?style=for-the-badge)](https://codeclimate.com)
+[![Last Commit](https://img.shields.io/github/last-commit/MO-fr/Pathway-Infinity?style=for-the-badge)](https://github.com/MO-fr/Pathway-Infinity/commits)
+
 ## Project Overview
 **Industry**: Launchpad Philly  
 **Developer**: [Mohamed Souare]  
 **Completion Date**: June 27th 2025  
-**GitHub Repository**: [Your repository URL]  
+**GitHub Repository**: [https://github.com/MO-fr/Pathway-Infinity.git]  
 
 ## Business Problem
 
@@ -40,46 +50,110 @@ Pathway Infinity makes career guidance accessible, personalized, and engaging th
 - Seamless user experience across devices
 
 ### Technology Stack
-- **Frontend**: Next.js 14 +, React
-- **Styling**: Tailwind CSS, Framer Motion
-- **UI Components**: Custom components with modern design
-- **Database**: PostgreSQL
-- **Authentication**: NextAuth.js
-- **Deployment**: [Platform to be determined]
-- **Other Tools**: 
-  - Font: Nunito
-  - Animations: Custom CSS animations
-  - Version Control: Git
+
+#### Frontend & UI
+[![Next.js](https://img.shields.io/badge/Next.js-14.0-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18.0-blue?style=flat-square&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-ff69b4?style=flat-square&logo=framer)](https://www.framer.com/motion/)
+
+#### Styling
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![PostCSS](https://img.shields.io/badge/PostCSS-8.0-dd3a0a?style=flat-square&logo=postcss)](https://postcss.org/)
+
+#### Database & ORM
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-latest-316192?style=flat-square&logo=postgresql)](https://www.postgresql.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-6.0-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
+[![Neon](https://img.shields.io/badge/Neon-Serverless-orange?style=flat-square)](https://neon.tech/)
+
+#### Authentication & Security
+[![NextAuth.js](https://img.shields.io/badge/NextAuth.js-latest-black?style=flat-square)](https://next-auth.js.org/)
+[![bcrypt](https://img.shields.io/badge/bcrypt-latest-purple?style=flat-square)](https://www.npmjs.com/package/bcrypt)
+
+#### Development Tools
+[![ESLint](https://img.shields.io/badge/ESLint-8.0-4B32C3?style=flat-square&logo=eslint)](https://eslint.org/)
+[![Git](https://img.shields.io/badge/Git-latest-F05032?style=flat-square&logo=git)](https://git-scm.com/)
+[![npm](https://img.shields.io/badge/npm-latest-CB3837?style=flat-square&logo=npm)](https://www.npmjs.com/)
 
 ## Technical Implementation
 
-### Key Components
-1. **HeroSection**: Main landing page component with animated background
-2. **AnimatedBackground**: Dynamic visual element for enhanced user experience
-3. **Questionnaire**: Interactive career assessment system
-4. **User Authentication**: Secure login and signup functionality
-5. **Dashboard**: Personal user space for saved career paths
-6. **Results Display**: Detailed career recommendations presentation
+### Current Features
+1. **User Authentication**:
+   - Secure signup and login functionality
+   - Session management with NextAuth.js
+   - Protected routes and middleware
+   - Automatic redirect to dashboard after authentication
+
+2. **Landing Page**:
+   - Modern, animated hero section
+   - Feature highlights
+   - How it works section
+   - Smooth scrolling navigation
+   - Call-to-action buttons
+
+3. **Dashboard**:
+   - Personalized welcome message
+   - Career quiz access
+   - Saved programs view
+   - Easy navigation between features
+   - Smooth sign-out functionality
+
+4. **Navigation**:
+   - Responsive navbar with mobile menu
+   - User session status display
+   - Smooth transitions between pages
+   - Protected route handling
 
 ### Database Schema
 ```prisma
-// Current schema structure
+// Current implemented schema
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// Models to be implemented
+model User {
+  id            String      @id @default(cuid())
+  email         String      @unique
+  name          String
+  password      String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  savedPrograms Program[]
+}
+
+model Program {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  type        String
+  duration    String
+  cost        String?
+  location    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  users       User[]
+}
 ```
 
-### Environment Variables
-Required environment variables:
+### Environment Setup
+Required environment variables in `.env`:
 ```env
-DATABASE_URL="postgresql://username:password@localhost:5432/pathways_infinity_db"
+# Database Configuration
+DATABASE_URL="postgresql://[username]:[password]@[host]/pathway-infinity?sslmode=require"
+
+# Authentication
 NEXTAUTH_SECRET="your-secret-key"
-NEXTAUTH_URL="http://localhost:3000"
-AI_API_KEY="your-api-key"
+NEXTAUTH_URL="http://localhost:3001"
+
+# Optional Features
+AI_API_KEY="your-api-key"  # If implementing AI features
 ```
+
+Make sure to:
+1. Replace the DATABASE_URL with your actual database connection string
+2. Generate a secure NEXTAUTH_SECRET for production
+3. Update NEXTAUTH_URL based on your deployment environment
 
 ### User Interface Elements
 - Modern gradient backgrounds
@@ -89,17 +163,60 @@ AI_API_KEY="your-api-key"
 - Custom scrollbar styling
 - Interactive UI components
 
-## Setup Instructions
+## Setup and Installation
 
 1. Clone the repository
 ```bash
-git clone [your-repo-url]
+git clone [https://github.com/MO-fr/Pathway-Infinity.git]
+cd pathway-infinity
 ```
 
 2. Install dependencies
 ```bash
 npm install
 ```
+
+3. Set up your environment variables
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+4. Set up the database
+```bash
+npx prisma generate
+npx prisma migrate deploy
+```
+
+5. Start the development server
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:3001`
+
+## Current Status
+
+### Implemented Features
+- ✅ Full user authentication system
+- ✅ Responsive navigation with mobile support
+- ✅ Modern, animated landing page
+- ✅ User dashboard with welcome message
+- ✅ Protected routes with middleware
+- ✅ Database setup with Prisma
+- ✅ User session management
+
+### In Progress
+- 🔄 Career quiz implementation
+- 🔄 Program recommendations
+- 🔄 Saved programs functionality
+- 🔄 Results page design
+
+### Upcoming Features
+- 📅 AI-powered program matching
+- 📅 User profile customization
+- 📅 Program comparison tools
+- 📅 Progress tracking
 
 3. Set up environment variables
 ```bash
