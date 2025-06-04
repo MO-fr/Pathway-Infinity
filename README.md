@@ -8,7 +8,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Maintainability](https://img.shields.io/badge/Maintainability-A-brightgreen?style=for-the-badge)](https://codeclimate.com)
-[![Last Commit](https://img.shields.io/github/last-commit/MO-fr/Pathway-Infinity?style=for-the-badge)](https://github.com/MO-fr/Pathway-Infinity/commits)
+
 
 ## Project Overview
 **Industry**: Launchpad Philly  
@@ -253,7 +253,7 @@ npm run dev
 Contributions, issues, and feature requests are welcome!
 
 ## License
-[Your chosen license]
+[MIT]
 
 First, run the development server:
 
