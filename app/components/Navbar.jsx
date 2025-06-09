@@ -28,6 +28,13 @@ export default function Navbar() {
     };
   }, []);
 
+  const handleSignOut = async () => {
+    await signOut({
+      callbackUrl: '/login',
+      redirect: true
+    });
+  };
+
   return (
     <header
       className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-50/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
@@ -52,12 +59,11 @@ export default function Navbar() {
                 </span>
                 <Button href="/dashboard" variant="text">
                   Dashboard
-                </Button>                <Button
-                  onClick={() => signOut({
-                    callbackUrl: '/',
-                    redirect: true
-                  })}
-                  variant="primary"
+                </Button>
+                <Button
+                  onClick={handleSignOut}
+                  variant="outline"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
                   Sign out
                 </Button>
@@ -97,7 +103,9 @@ export default function Navbar() {
               )}
             </svg>
           </button>
-        </div>        {/* Mobile Menu */}
+        </div>
+
+        {/* Mobile Menu */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -122,10 +130,7 @@ export default function Navbar() {
                     <button
                       onClick={() => {
                         setIsOpen(false);
-                        signOut({
-                          callbackUrl: '/',
-                          redirect: true
-                        });
+                        handleSignOut();
                       }}
                       className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
@@ -145,51 +150,6 @@ export default function Navbar() {
                       href="/signup"
                       className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                       onClick={() => setIsOpen(false)}
-                    >
-                      Sign up
-                    </Link>
-                  </>
-                )}
-              </div>
-            </motion.div>
-          )}
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden"
-            >
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                {session ? (
-                  <>
-                    <div className="block px-3 py-2 text-base font-medium text-gray-700">
-                      Welcome, {session.user.name}!
-                    </div>
-                    <Link
-                      href="/dashboard"
-                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                    >
-                      Dashboard
-                    </Link>
-                    <button
-                      onClick={() => signOut({ callbackUrl: '/' })}
-                      className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                    >
-                      Sign out
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      href="/login"
-                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                    >
-                      Log in
-                    </Link>
-                    <Link
-                      href="/signup"
-                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                     >
                       Sign up
                     </Link>
