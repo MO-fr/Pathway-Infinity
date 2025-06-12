@@ -104,6 +104,17 @@ Pathway Infinity makes career guidance accessible, personalized, and engaging th
    - Smooth transitions between pages
    - Protected route handling
 
+5. **Career Quiz**:
+   - Distraction-free, 6-question quiz
+   - One question at a time, with smooth transitions
+   - Visual progress bar
+   - Mobile-friendly layout
+
+6. **Results Page**:
+   - Displays top two career path matches
+   - Clean, responsive UI
+   - Fallback handling for missing data
+
 ### Database Schema
 ```prisma
 // Current implemented schema
@@ -195,59 +206,46 @@ npm run dev
 
 The application will be available at `http://localhost:3001`
 
-## Current Status
+## 🚀 Current Status (as of June 2025)
 
-### Implemented Features
-- ✅ Full user authentication system
-- ✅ Responsive navigation with mobile support
-- ✅ Modern, animated landing page
-- ✅ User dashboard with welcome message
-- ✅ Protected routes with middleware
-- ✅ Database setup with Prisma
-- ✅ User session management
+### Major Features (Complete)
+- **Distraction-Free Career Quiz**: 6-question, one-at-a-time quiz with smooth transitions, mobile-friendly layout, and a visual progress bar.
+- **Results Page**: Personalized career path recommendations based on quiz answers, with a clean, responsive UI and fallback handling for missing data.
+- **Navbar Hiding**: Navbar is automatically hidden during the quiz and results for a focused experience.
+- **State Management**: Uses React state and sessionStorage for quiz flow and answer persistence.
+- **No Lint Errors**: Codebase is clean, with no unused variables or imports, and follows project coding standards.
+- **Modern, Accessible UI**: All pages are responsive, simple, and easy to use for non-technical students.
 
-### In Progress
-- 🔄 Career quiz implementation
-- 🔄 Program recommendations
-- 🔄 Saved programs functionality
-- 🔄 Results page design
+### User Flow
+1. **Dashboard**: User lands on a dashboard with options to start the career quiz, view saved programs, or start over.
+2. **Quiz**: User answers 6 questions, one at a time, with animated transitions and a step indicator.
+3. **Results**: After the last question, answers are processed and the user is shown their top two career path matches.
+4. **Navigation**: User can return to dashboard, retake the quiz, or explore recommended programs.
 
-### Upcoming Features
-- 📅 AI-powered program matching
-- 📅 User profile customization
-- 📅 Program comparison tools
-- 📅 Progress tracking
+### Technical Highlights
+- **Next.js 14+ / React 18+**
+- **Framer Motion** for smooth UI transitions
+- **Tailwind CSS** for styling
+- **NextAuth.js** for authentication
+- **Prisma + PostgreSQL** for data
+- **No new libraries added without approval**
+- **All code documented and production-grade**
 
-3. Set up environment variables
-```bash
-cp .env.example .env.local
-# Edit .env.local with your values
-```
+### Recently Completed
+- ✅ Career quiz and results page fully implemented
+- ✅ Navbar hides on quiz/results routes
+- ✅ All ESLint issues resolved
+- ✅ Mobile and desktop UI tested
 
-4. Start the development server
-```bash
-npm run dev
-```
+### In Progress / Next Steps
+- 🔄 AI-powered program matching (future)
+- 🔄 User profile customization
+- 🔄 Program comparison tools
+- 🔄 Progress tracking
 
-5. Open [http://localhost:3001](http://localhost:3001) with your browser
+---
 
-## Current Status and Future Enhancements
-
-### Implemented Features
-- Modern, responsive UI design
-- Landing page with animated components
-- Basic routing structure
-- UI components library
-- Styling system with Tailwind CSS
-- Animation system with Framer Motion
-
-### Planned Features
-- AI integration for career recommendations
-- User authentication system
-- Personal dashboard
-- Career path database
-- Result saving functionality
-- Advanced analytics
+For setup, contribution, and deployment instructions, see below.
 
 ## Contributing
 Contributions, issues, and feature requests are welcome!
