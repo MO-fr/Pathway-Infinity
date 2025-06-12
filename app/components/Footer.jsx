@@ -1,11 +1,8 @@
 'use client';
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  
+
   return (
     <footer className="bg-slate-50 border-t border-mint-100">
       <div className="container mx-auto px-4 md:px-6 py-12">

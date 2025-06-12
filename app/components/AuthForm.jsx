@@ -105,6 +105,7 @@ export function AuthForm({ mode = 'login' }) {
   return (
     <div className="w-full max-w-md mx-auto">
       <motion.form
+        key={mode} // Add key prop to ensure proper re-rendering
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -120,6 +121,7 @@ export function AuthForm({ mode = 'login' }) {
               type="text"
               name="name"
               id="name"
+              autoComplete="name"
               value={formData.name || ''}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-mint-500 focus:outline-none focus:ring-1 focus:ring-mint-500"
@@ -138,6 +140,7 @@ export function AuthForm({ mode = 'login' }) {
             type="email"
             name="email"
             id="email"
+            autoComplete="email"
             value={formData.email}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-mint-500 focus:outline-none focus:ring-1 focus:ring-mint-500"
@@ -155,6 +158,7 @@ export function AuthForm({ mode = 'login' }) {
             type="password"
             name="password"
             id="password"
+            autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
             value={formData.password}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-mint-500 focus:outline-none focus:ring-1 focus:ring-mint-500"

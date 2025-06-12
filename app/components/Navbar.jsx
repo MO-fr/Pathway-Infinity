@@ -3,14 +3,17 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 import Button from './Button';
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -28,12 +31,39 @@ export default function Navbar() {
     };
   }, []);
 
-  const handleSignOut = async () => {
-    await signOut({
-      callbackUrl: '/login',
-      redirect: true
-    });
-  };
+  const handleSignOut = useCallback(async () => {
+    if (isSigningOut) return; // Prevent multiple clicks
+
+    try {
+      setIsSigningOut(true);
+
+      // Clear any local storage items if they exist
+      localStorage.clear();
+
+      // Sign out using NextAuth
+      await signOut({
+        callbackUrl: '/login',
+        redirect: false
+      });
+
+      // Clear any cookies
+      document.cookie.split(';').forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, '')
+          .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+      });
+
+      // Redirect to login page
+      router.push('/login');
+    } catch (error) {
+      console.error('Sign out error:', error);
+    } finally {
+      setIsSigningOut(false);
+      setIsOpen(false); // Close mobile menu if open
+    }
+  }, [router, isSigningOut]);
+
+  if (!mounted) return null;
 
   return (
     <header
@@ -56,6 +86,7 @@ export default function Navbar() {
                 {/* User name and navigation when logged in */}
                 <span className="text-gray-700">
                   Welcome, {session.user.name}!
+
                 </span>
                 <Button href="/dashboard" variant="text">
                   Dashboard
@@ -64,8 +95,9 @@ export default function Navbar() {
                   onClick={handleSignOut}
                   variant="outline"
                   className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  disabled={isSigningOut}
                 >
-                  Sign out
+                  {isSigningOut ? 'Signing out...' : 'Sign out'}
                 </Button>
               </>
             ) : (
@@ -128,13 +160,11 @@ export default function Navbar() {
                       Dashboard
                     </Link>
                     <button
-                      onClick={() => {
-                        setIsOpen(false);
-                        handleSignOut();
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={handleSignOut}
+                      disabled={isSigningOut}
+                      className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50 disabled:opacity-50"
                     >
-                      Sign out
+                      {isSigningOut ? 'Signing out...' : 'Sign out'}
                     </button>
                   </>
                 ) : (

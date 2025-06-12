@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -28,10 +28,6 @@ export default function Dashboard() {
     const { data: session } = useSession();
     const [mounted, setMounted] = useState(false);
 
-    const handleSignOut = async () => {
-        await signOut({ callbackUrl: '/' });
-    };
-
     useEffect(() => {
         setMounted(true);
     }, []);
@@ -47,7 +43,7 @@ export default function Dashboard() {
                 transition={{ duration: 0.6 }}
                 className="max-w-7xl mx-auto mb-12 text-center relative"
             >
-            
+
 
                 <motion.h1
                     className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"
@@ -140,53 +136,7 @@ export default function Dashboard() {
                             <p className="text-gray-600 text-lg">Begin a new journey to explore different career paths.</p>
                         </motion.div>
                     </Link>
-                </motion.div>
-            </motion.div>
-
-            {/* Quick Help Section with Animation */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="max-w-7xl mx-auto"
-            >
-                <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-100 p-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Need Help? We've Got You! 🌟</h2>
-                    <div className="grid gap-6 md:grid-cols-2">
-                        <motion.div
-                            whileHover={{ scale: 1.01 }}
-                            className="p-4 rounded-xl bg-blue-50/50 border border-blue-100"
-                        >
-                            <h3 className="text-lg font-semibold text-blue-900 mb-2">Getting Started</h3>
-                            <p className="text-blue-700">Take the career quiz for personalized program recommendations based on your interests.</p>
-                        </motion.div>
-
-                        <motion.div
-                            whileHover={{ scale: 1.01 }}
-                            className="p-4 rounded-xl bg-green-50/50 border border-green-100"
-                        >
-                            <h3 className="text-lg font-semibold text-green-900 mb-2">Save & Compare</h3>
-                            <p className="text-green-700">Save interesting programs to your dashboard and compare them later.</p>
-                        </motion.div>
-
-                        <motion.div
-                            whileHover={{ scale: 1.01 }}
-                            className="p-4 rounded-xl bg-purple-50/50 border border-purple-100"
-                        >
-                            <h3 className="text-lg font-semibold text-purple-900 mb-2">Explore Options</h3>
-                            <p className="text-purple-700">Compare different trade programs to find your perfect match.</p>
-                        </motion.div>
-
-                        <motion.div
-                            whileHover={{ scale: 1.01 }}
-                            className="p-4 rounded-xl bg-amber-50/50 border border-amber-100"
-                        >
-                            <h3 className="text-lg font-semibold text-amber-900 mb-2">Start Fresh</h3>
-                            <p className="text-amber-700">Feel free to start over and explore different career paths anytime.</p>
-                        </motion.div>
-                    </div>
-                </div>
-            </motion.div>
+                </motion.div>            </motion.div>
         </div>
     );
 }

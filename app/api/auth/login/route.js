@@ -3,9 +3,9 @@
  * Handles user authentication and session management
  */
 
-import { NextResponse } from 'next/server';
+import { createAuthToken, setAuthToken, verifyPassword } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { verifyPassword, createAuthToken, setAuthToken } from '@/lib/auth';
+import { NextResponse } from 'next/server';
 
 export async function POST(req) {
   try {
@@ -44,14 +44,13 @@ export async function POST(req) {
         { error: 'Invalid credentials' },
         { status: 401 }
       );
-    }
-
-    // Generate auth token
+    }    // Generate auth token
     const token = createAuthToken(user.id);
     setAuthToken(token);
 
-    // Return user data (excluding password)
-    const { password: _, ...userData } = user;
+    // Return user data (excluding password field)
+    const userData = { ...user };
+    delete userData.password;
     return NextResponse.json({ user: userData });
   } catch (error) {
     console.error('Login error:', error);

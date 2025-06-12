@@ -4,9 +4,9 @@ import "@fontsource/nunito/600.css";
 import "@fontsource/nunito/700.css";
 import "./globals.css";
 
-import { NextAuthProvider } from "@/components/NextAuthProvider";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import NavigationHandler from "@/components/NavigationHandler";
+import { NextAuthProvider } from "@/components/NextAuthProvider";
 
 export const metadata = {
   metadataBase: process.env.VERCEL_URL
@@ -25,8 +25,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="antialiased min-h-screen flex flex-col font-nunito" suppressHydrationWarning={true}>
         <NextAuthProvider>
-          <Navbar />
-          <main className="flex-grow relative pt-16 md:pt-20">{children}</main>
+          <NavigationHandler>
+            {children}
+          </NavigationHandler>
           <Footer />
         </NextAuthProvider>
       </body>
