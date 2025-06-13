@@ -33,14 +33,15 @@ export default function HeroSection() {
               custom={0.1}
               className="inline-block px-4 py-1.5 text-sm font-medium bg-gradient-to-r from-mint-300/20 to-mint-500/20 text-mint-700 rounded-full shadow-sm backdrop-blur-sm"
             >
-              ✨ Discover Your Future Path
+              ✨ Discover Your Trade or Career Path
             </motion.span>
-              <motion.h1 
+            
+            <motion.h1 
               variants={fadeIn}
               custom={0.3}
               className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight"
             >
-              Find Your <span className="bg-gradient-to-r from-mint-500 to-sky-500 bg-clip-text text-transparent">Ideal Career</span> With Pathway Infinity
+              Find Your <span className="bg-gradient-to-r from-mint-500 to-sky-500 bg-clip-text text-transparent">Perfect Trade</span> With Pathway Infinity
             </motion.h1>
             
             <motion.p 
@@ -48,19 +49,15 @@ export default function HeroSection() {
               custom={0.5}
               className="text-lg md:text-xl text-sky-800 max-w-2xl leading-relaxed"
             >
-              Answer simple questions, get personalized recommendations, and explore career paths matched to your unique personality, interests, and strengths.
+              Discover trade schools, vocational training, and career paths matched to your skills and interests. Get personalized recommendations for both traditional careers and skilled trades.
             </motion.p>
-            
-            <motion.div 
+              <motion.div 
               variants={fadeIn}
               custom={0.7}
               className="flex flex-wrap gap-6 pt-4"
             >
-              <Button href="/questionnaire" variant="primary">
-                Start Your Journey <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
-              </Button>
-              <Button href="/login" variant="outline">
-                Sign In to Continue
+              <Button href="/signup" variant="primary">
+                Create Account
               </Button>
             </motion.div>
           </motion.div>

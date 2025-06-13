@@ -1,8 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
 import Button from '@/components/Button';
+import { motion } from 'framer-motion';
 
 export default function NotFound() {
   return (
@@ -14,7 +13,7 @@ export default function NotFound() {
       >
         <h1 className="text-6xl font-bold text-blue-600 mb-4">404</h1>
       </motion.div>
-      
+
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -23,16 +22,16 @@ export default function NotFound() {
       >
         Oops! Path not found
       </motion.h2>
-      
+
       <motion.p
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
         className="text-lg text-gray-600 mb-8 max-w-md"
       >
-       It seems you&#39;ve wandered off the path. Don&#39;t worry, finding the right way is what we do best!
+        It seems you&#39;ve wandered off the path. Don&#39;t worry, finding the right way is what we do best!
       </motion.p>
-      
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
