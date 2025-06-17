@@ -1,6 +1,13 @@
-// Results page
 'use client';
 
+/**
+ * Results Page Component
+ * 
+ * Displays the analysis results and matching schools based on user's quiz answers.
+ * This is a client component that fetches and displays data from the quiz.
+ */
+
+import ErrorMessage from '@/app/components/ErrorMessage';
 import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -9,161 +16,50 @@ import { useEffect, useState } from 'react';
 export default function ResultsPage() {
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(true);
-    const router = useRouter(); useEffect(() => {
-        // Process the quiz answers from sessionStorage
-        const processQuizResults = () => {
-            try {
-                const storedAnswers = sessionStorage.getItem('quizAnswers');
+    const [error, setError] = useState(null);
+    const router = useRouter();
 
-                if (!storedAnswers) {
-                    // No answers found, use fallback data
-                    setResults({
-                        topMatch: {
-                            title: "Construction Trades",
-                            description: "Building, renovating, and maintaining structures.",
-                            careers: [
-                                "Carpenter", "Electrician", "Plumber", "HVAC Technician",
-                                "Construction Manager", "Welder", "Masonry Worker"
-                            ],
-                            icon: "🏗️"
-                        },
-                        secondMatch: {
-                            title: "Automotive & Mechanical",
-                            description: "Working with vehicles and mechanical systems.",
-                            careers: [
-                                "Automotive Mechanic", "Diesel Technician", "Auto Body Repair",
-                                "Heavy Equipment Operator", "Aviation Mechanic"
-                            ],
-                            icon: "🔧"
-                        }
-                    });
-                    setLoading(false);
-                    return;
-                }
+    const analyzeResults = async () => {
+        try {
+            setLoading(true);
+            setError(null);
 
-                const userAnswers = JSON.parse(storedAnswers);
+            const storedAnswers = sessionStorage.getItem('quizAnswers');
 
-                // Based on user answers, determine career matches
-                // In a real app, this would be a more sophisticated algorithm
-                // For now, we'll use the answers to choose between predefined matches
-
-                // Example career matches based on answer patterns
-                const careerMatches = {
-                    // Construction & Trades focused
-                    constructionTrades: {
-                        title: "Construction Trades",
-                        description: "Building, renovating, and maintaining structures.",
-                        careers: [
-                            "Carpenter", "Electrician", "Plumber", "HVAC Technician",
-                            "Construction Manager", "Welder", "Masonry Worker"
-                        ],
-                        icon: "🏗️"
-                    },
-                    // Automotive & Mechanical focused
-                    automotiveMechanical: {
-                        title: "Automotive & Mechanical",
-                        description: "Working with vehicles and mechanical systems.",
-                        careers: [
-                            "Automotive Mechanic", "Diesel Technician", "Auto Body Repair",
-                            "Heavy Equipment Operator", "Aviation Mechanic"
-                        ],
-                        icon: "🔧"
-                    },
-                    // Healthcare & Medical focused
-                    healthcareMedical: {
-                        title: "Healthcare & Medical",
-                        description: "Providing care and support in medical settings.",
-                        careers: [
-                            "Medical Assistant", "Dental Hygienist", "Pharmacy Technician",
-                            "Nursing Assistant", "Physical Therapy Assistant"
-                        ],
-                        icon: "⚕️"
-                    },
-                    // Tech & IT focused
-                    technologyIT: {
-                        title: "Technology & IT",
-                        description: "Working with computers, networks, and digital systems.",
-                        careers: [
-                            "IT Support Specialist", "Network Technician", "Computer Repair Technician",
-                            "Cybersecurity Specialist", "Web Developer"
-                        ],
-                        icon: "💻"
-                    }
-                };
-
-                // Simple scoring algorithm based on answers
-                let scores = {
-                    constructionTrades: 0,
-                    automotiveMechanical: 0,
-                    healthcareMedical: 0,
-                    technologyIT: 0
-                };
-
-                // Question 1: Work environment preference
-                if (userAnswers[1] === 'outdoor') {
-                    scores.constructionTrades += 2;
-                } else if (userAnswers[1] === 'mechanical') {
-                    scores.automotiveMechanical += 2;
-                } else if (userAnswers[1] === 'indoor') {
-                    scores.healthcareMedical += 1;
-                    scores.technologyIT += 1;
-                }
-
-                // Question 2: Activity preference
-                if (userAnswers[2] === 'hands_on') {
-                    scores.constructionTrades += 1;
-                    scores.automotiveMechanical += 1;
-                } else if (userAnswers[2] === 'analytical') {
-                    scores.technologyIT += 2;
-                } else if (userAnswers[2] === 'social') {
-                    scores.healthcareMedical += 2;
-                }
-
-                // Question 3: Learning style
-                if (userAnswers[3] === 'practical') {
-                    scores.constructionTrades += 1;
-                    scores.automotiveMechanical += 1;
-                }
-
-                // Question 4: Career values
-                if (userAnswers[4] === 'stability') {
-                    scores.healthcareMedical += 1;
-                } else if (userAnswers[4] === 'financial') {
-                    scores.technologyIT += 1;
-                }
-
-                // Question 5: Technology preference
-                if (userAnswers[5] === 'tech_focused') {
-                    scores.technologyIT += 2;
-                } else if (userAnswers[5] === 'low_tech') {
-                    scores.constructionTrades += 1;
-                }
-
-                // Sort scores to find top matches
-                const sortedScores = Object.entries(scores)
-                    .sort((a, b) => b[1] - a[1])
-                    .map(item => item[0]);
-
-                // Set the top two matches
-                setResults({
-                    topMatch: careerMatches[sortedScores[0]],
-                    secondMatch: careerMatches[sortedScores[1]]
-                });
-
-                setLoading(false);
-            } catch (error) {
-                console.error("Error processing quiz results:", error);
-                setLoading(false);
+            if (!storedAnswers) {
+                router.push('/questionnaire');
+                return;
             }
-        };
 
-        // Add a slight delay to simulate processing
-        const timer = setTimeout(() => {
-            processQuizResults();
-        }, 1500);
+            const answers = JSON.parse(storedAnswers);
+            // eslint-disable-next-line no-console
+            console.log('Quiz answers:', answers);
 
-        return () => clearTimeout(timer);
-    }, [router]);
+            // Import here to avoid server-side issues with client-only components
+            const { analyzeQuizResults } = await import('@/lib/services/analysis');
+            const results = await analyzeQuizResults(answers);
+
+            // eslint-disable-next-line no-console
+            console.log('Analysis results:', results);
+
+            if (!results || !results.matches || results.matches.length === 0) {
+                // eslint-disable-next-line no-console
+                console.warn('No matches found in results:', results);
+            }
+
+            setResults(results);
+        } catch (error) {
+            console.error('Failed to analyze results:', error);
+            setError(error.message || 'Failed to analyze quiz results. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        analyzeResults();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (loading) {
         return (
@@ -172,21 +68,27 @@ export default function ResultsPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className="text-center"
-                >
-                    <div className="w-16 h-16 border-4 border-mint-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                >                    <div className="w-16 h-16 border-4 border-mint-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                     <p className="text-xl text-gray-700">Analyzing your answers...</p>
                 </motion.div>
             </div>
         );
     }
 
-    if (!results) {
+    if (error) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
                 <div className="max-w-md text-center">
-                    <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
-                    <p className="mb-6">We couldn't process your quiz results. Please try taking the quiz again.</p>
-                    <Button onClick={() => router.push('/questionnaire')} variant="primary">
+                    <h1 className="text-2xl font-bold mb-4">Error</h1>
+                    <ErrorMessage
+                        message={error}
+                        onRetry={analyzeResults}
+                    />
+                    <Button
+                        onClick={() => router.push('/questionnaire')}
+                        variant="primary"
+                        className="mt-4"
+                    >
                         Retake Quiz
                     </Button>
                 </div>
@@ -194,102 +96,159 @@ export default function ResultsPage() {
         );
     }
 
+    if (!results?.matches?.length) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+                <div className="max-w-md text-center">
+                    <h1 className="text-2xl font-bold mb-4">No matching schools found</h1>
+                    <p className="mb-6">
+                        We couldn&apos;t find any schools matching your criteria. This could be because:
+                        <ul className="list-disc text-left mt-3 ml-6">
+                            <li>Your answers were very specific</li>
+                            <li>We don&apos;t have schools in our database that match your preferences</li>
+                            <li>There might be a temporary issue with our school database</li>
+                        </ul>
+                    </p>
+                    <div className="space-y-4">
+                        <Button onClick={analyzeResults} variant="secondary" className="w-full">
+                            Try Again
+                        </Button>
+                        <Button onClick={() => router.push('/questionnaire')} variant="primary" className="w-full">
+                            Retake Quiz
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-10 px-4">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-5xl mx-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                     className="text-center mb-12"
                 >
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4">Your Career Path Results</h1>
+                    <h1 className="text-3xl md:text-4xl font-bold mb-4">Your Best Career Path Matches</h1>
                     <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-                        Based on your answers, we've identified career paths that align with your interests and preferences.
+                        Based on your answers, we&apos;ve found these trade schools that match your interests and goals.
                     </p>
                 </motion.div>
 
-                <div className="grid md:grid-cols-2 gap-8 mb-12">
-                    {/* Top Match */}
+                {/* AI Analysis */}
+                {results.analysis && (
                     <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="bg-white rounded-2xl shadow-xl overflow-hidden border border-mint-100"
+                        className="bg-white/80 backdrop-blur-sm rounded-xl p-6 mb-8 shadow-lg border border-mint-100"
                     >
-                        <div className="p-4 text-white bg-mint-500">
-                            <div className="flex items-center justify-between">
-                                <h2 className="text-xl font-bold">Top Match</h2>
-                                <span className="text-3xl">{results.topMatch.icon}</span>
-                            </div>
-                        </div>
-                        <div className="p-6">
-                            <h3 className="text-2xl font-bold mb-2">{results.topMatch.title}</h3>
-                            <p className="text-gray-700 mb-4">{results.topMatch.description}</p>
-
-                            <h4 className="font-semibold text-gray-900 mb-2">Career Options:</h4>
-                            <ul className="space-y-1 mb-6">
-                                {results.topMatch.careers.map((career, index) => (
-                                    <motion.li
-                                        key={index}
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.3 + (index * 0.1) }}
-                                        className="flex items-center"
-                                    >
-                                        <span className="mr-2">•</span>
-                                        {career}
-                                    </motion.li>
-                                ))}
-                            </ul>
-
-                            <Button variant="primary" className="w-full">Explore Programs</Button>
-                        </div>
+                        <h2 className="text-xl font-semibold mb-3">Analysis of Your Results</h2>
+                        <p className="text-gray-700 whitespace-pre-line">{results.analysis}</p>
                     </motion.div>
+                )}
 
-                    {/* Second Match */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.4 }}
-                        className="bg-white rounded-2xl shadow-xl overflow-hidden border border-mint-100"
-                    >
-                        <div className="p-4 text-white bg-sky-500">
-                            <div className="flex items-center justify-between">
-                                <h2 className="text-xl font-bold">Second Match</h2>
-                                <span className="text-3xl">{results.secondMatch.icon}</span>
+                {/* School Matches */}
+                <div className="space-y-6">
+                    {results.matches.map((school, index) => (
+                        <motion.div
+                            key={school.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.3 + (index * 0.1) }}
+                            className="bg-white rounded-2xl shadow-xl overflow-hidden border border-mint-100"
+                        >
+                            <div className="p-6 md:p-8">
+                                <div className="flex flex-col md:flex-row justify-between">                                    <div className="flex-1">
+                                    <h3 className="text-2xl font-bold mb-2">{school.name}</h3>
+
+                                    {/* Pathway and Industries */}
+                                    {(school.pathway || school.industries) && (
+                                        <div className="mb-4">
+                                            {school.pathway && <span className="inline-block bg-mint-100 text-mint-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">{school.pathway}</span>}
+                                            {school.industries && school.industries.split(',').map((industry, i) => (
+                                                <span key={i} className="inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">{industry.trim()}</span>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    <div className="grid md:grid-cols-2 gap-4 mb-6">
+                                        {/* Location */}
+                                        {school.location && (
+                                            <div className="flex items-start">
+                                                <div className="mr-3 text-mint-500">📍</div>
+                                                <div>
+                                                    <p className="font-semibold">Location</p>
+                                                    <p className="text-gray-600">{school.location}</p>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Cost */}
+                                        {school.cost && (
+                                            <div className="flex items-start">
+                                                <div className="mr-3 text-mint-500">💰</div>
+                                                <div>
+                                                    <p className="font-semibold">Program Cost</p>
+                                                    <p className="text-gray-600">{school.cost}</p>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Program Length */}
+                                        {school.programLength && (
+                                            <div className="flex items-start">
+                                                <div className="mr-3 text-mint-500">⏱️</div>
+                                                <div>
+                                                    <p className="font-semibold">Program Length</p>
+                                                    <p className="text-gray-600">{school.programLength}</p>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Housing */}
+                                        {school.housing && (
+                                            <div className="flex items-start">
+                                                <div className="mr-3 text-mint-500">�</div>
+                                                <div>
+                                                    <p className="font-semibold">Housing</p>
+                                                    <p className="text-gray-600">{school.housing}</p>
+                                                </div>
+                                            </div>
+                                        )}                                        </div>
+
+                                    {school.website && (
+                                        <Button
+                                            href={school.website}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            variant="primary"
+                                            className="mr-4"
+                                        >
+                                            Visit Website
+                                        </Button>
+                                    )}
+                                </div>
+                                </div>
                             </div>
-                        </div>
-                        <div className="p-6">
-                            <h3 className="text-2xl font-bold mb-2">{results.secondMatch.title}</h3>
-                            <p className="text-gray-700 mb-4">{results.secondMatch.description}</p>
-
-                            <h4 className="font-semibold text-gray-900 mb-2">Career Options:</h4>
-                            <ul className="space-y-1 mb-6">
-                                {results.secondMatch.careers.map((career, index) => (
-                                    <motion.li
-                                        key={index}
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.5 + (index * 0.1) }}
-                                        className="flex items-center"
-                                    >
-                                        <span className="mr-2">•</span>
-                                        {career}
-                                    </motion.li>
-                                ))}
-                            </ul>
-
-                            <Button variant="outline" className="w-full">Explore Programs</Button>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    ))}
                 </div>
 
+                <div className="mt-8 text-center">
+                    <Button onClick={() => router.push('/questionnaire')} variant="primary">
+                        Find More Matches
+                    </Button>
+                </div>
+
+                {/* Navigation Buttons */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
-                    className="flex flex-col md:flex-row gap-4 justify-center"
+                    className="flex flex-col md:flex-row gap-4 justify-center mt-12"
                 >
                     <Button
                         variant="text"
@@ -302,6 +261,7 @@ export default function ResultsPage() {
                     <Button
                         variant="outline"
                         onClick={() => {
+                            sessionStorage.removeItem('quizAnswers');
                             router.push('/questionnaire');
                         }}
                     >

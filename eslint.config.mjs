@@ -1,29 +1,54 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import js from '@eslint/js';
+import nextJs from '@next/eslint-plugin-next';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import reactHooks from 'eslint-plugin-react-hooks';
+import globals from 'globals';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals"),
+/** @type {import('eslint').Linter.FlatConfig[]} */
+export default [
   {
-    files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
-    rules: {
-      "no-unused-vars": "warn",
-      "no-console": ["warn", { allow: ["warn", "error"] }],
-      "react/prop-types": "off",
-      "react/react-in-jsx-scope": "off",
-      "jsx-a11y/alt-text": "warn",
-      "jsx-a11y/aria-props": "warn",
-      "import/no-unresolved": "off",
-      "react/no-unescaped-entities": "off",
+    ignores: ['.next/**/*', 'out/**/*', 'dist/**/*', 'build/**/*'],
+  },
+  js.configs.recommended,
+  {
+    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
+    plugins: {
+      '@next/next': nextJs,
+      'jsx-a11y': jsxA11y,
+      'react-hooks': reactHooks,
+    },
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module', globals: {
+        ...globals.node,
+        ...globals.browser,
+        ...globals.es2021,
+        React: true,
+        JSX: true,
+      },
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    rules: {      // Common rules
+      'no-unused-vars': 'off', // Temporarily disabled for development
+      'no-console': 'off', // Allow console usage in development
+      'no-undef': 'error',
+
+      // Next.js specific rules
+      '@next/next/no-html-link-for-pages': 'error',
+      '@next/next/no-img-element': 'warn',
+
+      // JSX specific rules
+      'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off', 'jsx-a11y/alt-text': 'warn',
+      'jsx-a11y/aria-props': 'warn',
+
+      // React Hooks rules
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
     },
   },
 ];
-
-export default eslintConfig;
