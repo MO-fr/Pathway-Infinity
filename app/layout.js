@@ -13,21 +13,29 @@ export const metadata = {
     ? `https://${process.env.VERCEL_URL}`
     : `http://localhost:${process.env.PORT || 3001}`,
   title: {
-    template: '%s | Pathway Infinity',
-    default: 'Pathway Infinity - Career Guidance Questionnaire',
+    template: "%s | Pathway Infinity",
+    default: "Pathway Infinity - Career Guidance Questionnaire",
   },
-  description: "Find your ideal career path through our guided questionnaire and discover trade schools that match your interests.",
-  keywords: ['career guidance', 'trade schools', 'vocational training', 'career paths', 'skills assessment'],
+  description:
+    "Find your ideal career path through our guided questionnaire and discover trade schools that match your interests.",
+  keywords: [
+    "career guidance",
+    "trade schools",
+    "vocational training",
+    "career paths",
+    "skills assessment",
+  ],
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="antialiased min-h-screen flex flex-col font-nunito" suppressHydrationWarning={true}>
+      <body
+        className="antialiased min-h-screen flex flex-col font-nunito"
+        suppressHydrationWarning={true}
+      >
         <NextAuthProvider>
-          <NavigationHandler>
-            {children}
-          </NavigationHandler>
+          <NavigationHandler>{children}</NavigationHandler>
           <Footer />
         </NextAuthProvider>
       </body>

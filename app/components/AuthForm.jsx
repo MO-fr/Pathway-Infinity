@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Button from './Button';
+import Button from '../../components/Button';
 
 export function AuthForm({ mode = 'login' }) {
   const router = useRouter();

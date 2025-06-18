@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { AuthForm } from '@/components/AuthForm';
 import AnimatedBackground from '@/components/AnimatedBackground';
+import { AuthForm } from '@/components/AuthForm';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function SignupPage() {
   return (

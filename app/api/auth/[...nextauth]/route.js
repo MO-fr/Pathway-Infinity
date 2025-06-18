@@ -1,80 +1,126 @@
-import { prisma } from "@/lib/db";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { compare } from "bcrypt";
+import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import prisma from "@lib/prisma.js";
 
-// Error: Missing NEXTAUTH_SECRET
-if (!process.env.NEXTAUTH_SECRET) {
-  throw new Error("Please provide process.env.NEXTAUTH_SECRET");
-}
-
-export const authOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
-  adapter: PrismaAdapter(prisma),
+const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Missing credentials");
+          throw new Error("Please enter an email and password");
         }
 
         const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email
-          }
+          where: { email: credentials.email },
         });
 
-        if (!user) {
-          throw new Error("Invalid credentials");
+        console.log(
+          "LOGIN ATTEMPT:",
+          credentials.email,
+          credentials.password,
+          "FOUND USER:",
+          user
+        );
+        console.log("HASH IN DB:", user?.password);
+        console.log(
+          "BCRYPT TEST (direct):",
+          await bcrypt.compare("admin123", user?.password)
+        );
+        console.log(
+          "BCRYPT TEST (input):",
+          await bcrypt.compare(credentials.password, user?.password)
+        );
+        if (!user || !user?.password) {
+          throw new Error("No user found with this email");
         }
 
-        const isPasswordValid = await compare(
+        const isPasswordValid = await bcrypt.compare(
           credentials.password,
           user.password
         );
 
+        console.log("PASSWORD VALID:", isPasswordValid);
+
         if (!isPasswordValid) {
-          throw new Error("Invalid credentials");
+          throw new Error("Invalid password");
         }
 
         return {
-          id: user.id,
+          id: user.id.toString(),
           email: user.email,
           name: user.name,
+          role: user.role,
         };
-      }
-    })
+      },
+    }),
   ],
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
   },
   pages: {
-    signIn: "/login",
-    signUp: "/signup"
+    signIn: "/",
   },
   callbacks: {
-    async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id;
-        session.user.name = token.name;
-        session.user.email = token.email;
-      }
-      return session;
-    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.role = user.role;
+      } else if (!token.role && token.email) {
+        // Fetch role from DB if not present
+        const dbUser = await prisma.user.findUnique({
+          where: { email: token.email },
+        });
+        if (dbUser) {
+          token.role = dbUser.role;
+          token.id = dbUser.id.toString();
+        }
       }
       return token;
-    }
-  }
-};
+    },
+    async session({ session, token }) {
+      if (session?.user) {
+        session.user.id = token.id;
+        session.user.role = token.role;
+      }
+      return session;
+    },
+    async signIn({ user, account, profile, req }) {
+      // Only for Google sign-in
+      if (account?.provider === "google") {
+        let dbUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
 
-const handler = NextAuth(authOptions);
+        if (!dbUser) {
+          // Default all new Google Sign-ups to student role.
+          // The previous method of reading a cookie was causing errors on Vercel.
+          const role = "student";
+
+          dbUser = await prisma.user.create({
+            data: {
+              name: user.name,
+              email: user.email,
+              role,
+              emailVerified: true,
+              status: "active",
+              provider: "google",
+            },
+          });
+        }
+
+        // Set the user ID and role
+        user.id = dbUser.id.toString();
+        user.role = dbUser.role;
+      }
+      return true;
+    },
+  },
+});
+
 export { handler as GET, handler as POST };

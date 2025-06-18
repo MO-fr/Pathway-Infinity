@@ -3,9 +3,9 @@
  * Handles user authentication and session management
  */
 
-import { createAuthToken, setAuthToken, verifyPassword } from '@/lib/auth';
-import { db } from '@/lib/db';
-import { NextResponse } from 'next/server';
+import { createAuthToken, setAuthToken, verifyPassword } from "@/lib/auth";
+import { db } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
@@ -14,7 +14,7 @@ export async function POST(req) {
     // Validate input
     if (!email || !password) {
       return NextResponse.json(
-        { error: 'Email and password are required' },
+        { error: "Email and password are required" },
         { status: 400 }
       );
     }
@@ -32,7 +32,7 @@ export async function POST(req) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid credentials' },
+        { error: "Invalid credentials" },
         { status: 401 }
       );
     }
@@ -41,10 +41,10 @@ export async function POST(req) {
     const isValid = await verifyPassword(password, user.password);
     if (!isValid) {
       return NextResponse.json(
-        { error: 'Invalid credentials' },
+        { error: "Invalid credentials" },
         { status: 401 }
       );
-    }    // Generate auth token
+    } // Generate auth token
     const token = createAuthToken(user.id);
     setAuthToken(token);
 
@@ -53,10 +53,7 @@ export async function POST(req) {
     delete userData.password;
     return NextResponse.json({ user: userData });
   } catch (error) {
-    console.error('Login error:', error);
-    return NextResponse.json(
-      { error: 'Login failed' },
-      { status: 500 }
-    );
+    console.error("Login error:", error);
+    return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }
 }
