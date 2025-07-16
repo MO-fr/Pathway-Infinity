@@ -6,7 +6,7 @@
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "next lint --dir app",
     "studio": "npx prisma studio"
   },
   "dependencies": {
@@ -24,11 +24,16 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/eslint-parser": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "autoprefixer": "^10.4.17",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "^13.5.11",
+    "eslint": "^9.31.0",
+    "eslint-config-next": "^15.3.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "postcss": "^8.4.35",
     "prisma": "^6.9.0",
     "tailwindcss": "^3.4.1"
