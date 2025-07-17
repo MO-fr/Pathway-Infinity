@@ -8,6 +8,7 @@ import { useState } from 'react';
 import Button from './Button';
 
 export function AuthForm({ mode = 'login' }) {
+
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
@@ -43,6 +44,7 @@ export function AuthForm({ mode = 'login' }) {
       setIsLoading(false);
       return;
     } try {
+      
       if (mode === 'signup') {
         // Import the authApi from lib/api
         const { authApi } = await import('@/lib/api');
