@@ -14,17 +14,57 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function ResultsPage() {
+
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const router = useRouter();
 
     const analyzeResults = async () => {
+
         try {
+
             setLoading(true);
             setError(null);
 
             const storedAnswers = sessionStorage.getItem('quizAnswers');
+
+            // Pull the school data for Open AI analysis
+            // This should be replaced with actual school data if available
+            const airTableResponse = await fetch("/api/schools")
+                .then(response => response.json())
+                .then(schools => {
+                    if (!schools || schools.length === 0) {
+                        throw new Error('No schools found for analysis');
+                    }
+                })
+
+                console.log('Fetched schools:', airTableResponse);
+
+            // We need to send a request to OPEN to analyze the quiz results and provide shools that match the questions asked
+            const chatGPTresponse = await fetch("/api/quiz/analyze", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    answers: JSON.parse(storedAnswers || '{}'),
+                    schools: [] // This should be replaced with actual school data if available
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('ChatGPT analysis response:', data);
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    // Set the results state with the data received
+                    setResults(data);
+                })
+                .catch(err => {
+                    console.error('Error analyzing results:', err);
+                    setError(err.message || 'Failed to analyze quiz results. Please try again.');
+                });
 
             if (!storedAnswers) {
                 router.push('/questionnaire');

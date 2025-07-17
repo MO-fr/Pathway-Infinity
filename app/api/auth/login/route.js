@@ -13,6 +13,7 @@ export async function POST(req) {
 
     // Validate input
     if (!email || !password) {
+      
       return NextResponse.json(
         { error: 'Email and password are required' },
         { status: 400 }
@@ -39,6 +40,7 @@ export async function POST(req) {
 
     // Verify password
     const isValid = await verifyPassword(password, user.password);
+
     if (!isValid) {
       return NextResponse.json(
         { error: 'Invalid credentials' },
@@ -51,6 +53,7 @@ export async function POST(req) {
     // Return user data (excluding password field)
     const userData = { ...user };
     delete userData.password;
+
     return NextResponse.json({ user: userData });
   } catch (error) {
     console.error('Login error:', error);

@@ -72,6 +72,7 @@ const questions = [
 ];
 
 export default function QuestionnairePage() {
+
     const [isStarted, setIsStarted] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState({});
@@ -96,6 +97,7 @@ export default function QuestionnairePage() {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prev) => prev + 1);
         } else {			// Save answers to sessionStorage for results page
+
             sessionStorage.setItem(
                 'quizAnswers',
                 JSON.stringify({
@@ -111,13 +113,16 @@ export default function QuestionnairePage() {
 
     // Handle quiz start
     const handleStart = () => {
+
         setIsStarted(true);
         // Reset everything when starting/restarting
         setCurrentQuestionIndex(0);
         setAnswers({});
         setSelectedAnswer(null);
+
     };  // Check if current question is already answered (when navigating back)
     useEffect(() => {
+        
         if (answers[questions[currentQuestionIndex]?.id]) {
             setSelectedAnswer(answers[questions[currentQuestionIndex].id]);
         }

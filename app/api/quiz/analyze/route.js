@@ -6,7 +6,9 @@ const openai = new OpenAI({
 });
 
 export async function POST(req) {
+
     try {
+
         const { answers, schools } = await req.json();
 
         // Use OpenAI to analyze matches
