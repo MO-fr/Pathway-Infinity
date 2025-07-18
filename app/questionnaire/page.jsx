@@ -71,6 +71,8 @@ const questions = [
     },
 ];
 
+
+
 export default function QuestionnairePage() {
 
     const [isStarted, setIsStarted] = useState(false);
@@ -122,7 +124,7 @@ export default function QuestionnairePage() {
 
     };  // Check if current question is already answered (when navigating back)
     useEffect(() => {
-        
+
         if (answers[questions[currentQuestionIndex]?.id]) {
             setSelectedAnswer(answers[questions[currentQuestionIndex].id]);
         }

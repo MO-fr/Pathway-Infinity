@@ -30,18 +30,16 @@ export default function ResultsPage() {
             const storedAnswers = sessionStorage.getItem('quizAnswers');
 
             // Pull the school data for Open AI analysis
-            // This should be replaced with actual school data if available
-            const airTableResponse = await fetch("/api/schools")
-                .then(response => response.json())
-                .then(schools => {
-                    if (!schools || schools.length === 0) {
-                        throw new Error('No schools found for analysis');
-                    }
-                })
+            const schoolsResponse = await fetch("/api/schools");
+            const schools = await schoolsResponse.json();
 
-                console.log('Fetched schools:', airTableResponse);
+            if (!schools || schools.length === 0) {
+                throw new Error('No schools found for analysis');
+            }
 
-            // We need to send a request to OPEN to analyze the quiz results and provide shools that match the questions asked
+            console.log('Fetched schools:', schools);
+
+            // We need to send a request to OPEN to analyze the quiz results and provide schools that match the questions asked
             const chatGPTresponse = await fetch("/api/quiz/analyze", {
                 method: 'POST',
                 headers: {
@@ -49,7 +47,7 @@ export default function ResultsPage() {
                 },
                 body: JSON.stringify({
                     answers: JSON.parse(storedAnswers || '{}'),
-                    schools: [] // This should be replaced with actual school data if available
+                    schools: schools // Pass the actual school data to the analysis
                 }),
             })
                 .then(response => response.json())
@@ -194,83 +192,85 @@ export default function ResultsPage() {
                 <div className="space-y-6">
                     {results.matches.map((school, index) => (
                         <motion.div
-                            key={school.id}
+                            key={index}
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.3 + (index * 0.1) }}
                             className="bg-white rounded-2xl shadow-xl overflow-hidden border border-mint-100"
                         >
                             <div className="p-6 md:p-8">
-                                <div className="flex flex-col md:flex-row justify-between">                                    <div className="flex-1">
-                                    <h3 className="text-2xl font-bold mb-2">{school.name}</h3>
+                                <div className="flex flex-col md:flex-row justify-between">
+                                    <div className="flex-1">
+                                        <h3 className="text-2xl font-bold mb-2">{school.Name}</h3>
 
-                                    {/* Pathway and Industries */}
-                                    {(school.pathway || school.industries) && (
+                                        {/* Pathway and Industries */}
                                         <div className="mb-4">
-                                            {school.pathway && <span className="inline-block bg-mint-100 text-mint-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">{school.pathway}</span>}
-                                            {school.industries && school.industries.split(',').map((industry, i) => (
-                                                <span key={i} className="inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">{industry.trim()}</span>
+                                            {school.Pathway && school.Pathway.map((pathway, i) => (
+                                                <span key={i} className="inline-block bg-mint-100 text-mint-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">{pathway}</span>
+                                            ))}
+                                            {school.Industries && school.Industries.map((industry, i) => (
+                                                <span key={i} className="inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">{industry}</span>
                                             ))}
                                         </div>
-                                    )}
 
-                                    <div className="grid md:grid-cols-2 gap-4 mb-6">
-                                        {/* Location */}
-                                        {school.location && (
-                                            <div className="flex items-start">
-                                                <div className="mr-3 text-mint-500">📍</div>
-                                                <div>
-                                                    <p className="font-semibold">Location</p>
-                                                    <p className="text-gray-600">{school.location}</p>
+                                        <div className="grid md:grid-cols-2 gap-4 mb-6">
+                                            {/* Location */}
+                                            {school.Location && (
+                                                <div className="flex items-start">
+                                                    <div className="mr-3 text-mint-500">📍</div>
+                                                    <div>
+                                                        <p className="font-semibold">Location</p>
+                                                        <p className="text-gray-600">{school.Location}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            )}
+
+                                            {/* Cost */}
+                                            {school.Cost && (
+                                                <div className="flex items-start">
+                                                    <div className="mr-3 text-mint-500">💰</div>
+                                                    <div>
+                                                        <p className="font-semibold">Program Cost</p>
+                                                        <p className="text-gray-600">{Array.isArray(school.Cost) ? school.Cost.join(', ') : school.Cost}</p>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Program Length */}
+                                            {school['Program Length'] && (
+                                                <div className="flex items-start">
+                                                    <div className="mr-3 text-mint-500">⏱️</div>
+                                                    <div>
+                                                        <p className="font-semibold">Program Length</p>
+                                                        <p className="text-gray-600">{Array.isArray(school['Program Length']) ? school['Program Length'].join(', ') : school['Program Length']}</p>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Housing */}
+                                            {school.Housing && (
+                                                <div className="flex items-start">
+                                                    <div className="mr-3 text-mint-500">🏠</div>
+                                                    <div>
+                                                        <p className="font-semibold">Housing</p>
+                                                        <p className="text-gray-600">{school.Housing}</p>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {school.Website && (
+                                            <Button
+                                                href={school.Website}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                variant="primary"
+                                                className="mr-4"
+                                            >
+                                                Visit Website
+                                            </Button>
                                         )}
-
-                                        {/* Cost */}
-                                        {school.cost && (
-                                            <div className="flex items-start">
-                                                <div className="mr-3 text-mint-500">💰</div>
-                                                <div>
-                                                    <p className="font-semibold">Program Cost</p>
-                                                    <p className="text-gray-600">{school.cost}</p>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Program Length */}
-                                        {school.programLength && (
-                                            <div className="flex items-start">
-                                                <div className="mr-3 text-mint-500">⏱️</div>
-                                                <div>
-                                                    <p className="font-semibold">Program Length</p>
-                                                    <p className="text-gray-600">{school.programLength}</p>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Housing */}
-                                        {school.housing && (
-                                            <div className="flex items-start">
-                                                <div className="mr-3 text-mint-500">�</div>
-                                                <div>
-                                                    <p className="font-semibold">Housing</p>
-                                                    <p className="text-gray-600">{school.housing}</p>
-                                                </div>
-                                            </div>
-                                        )}                                        </div>
-
-                                    {school.website && (
-                                        <Button
-                                            href={school.website}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            variant="primary"
-                                            className="mr-4"
-                                        >
-                                            Visit Website
-                                        </Button>
-                                    )}
-                                </div>
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>
