@@ -37,7 +37,7 @@ export async function GET(request) {
         const records = await table.select(queryOptions).all();
         const schools = transformRecords(records);
 
-        console.log(`[Schools GET] transformResults schools ${NextResponse.json(schools)}`)
+        console.log(`transformResults schools ${NextResponse.json(schools)}`)
 
         return NextResponse.json(schools);
 

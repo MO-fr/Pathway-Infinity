@@ -78,7 +78,7 @@ export default function ResultsPage() {
                 throw new Error('No quiz answers found. Please take the quiz first.');
             }
 
-            console.log('[RESULTS] Stored answers:', storedAnswers);
+            console.log('Stored answers:', storedAnswers);
 
             // 1. Fetch school data for AI analysis
             setLoadingStep('Loading school database...');
@@ -89,7 +89,7 @@ export default function ResultsPage() {
             }
             
             const schoolsData = await schoolsResponse.json();
-            console.log('[RESULTS] Schools data count:', schoolsData?.length || 0);
+            console.log('Schools data count:', schoolsData?.length || 0);
 
             // 2. Send request to AI analysis endpoint
             setLoadingStep('Analyzing your preferences with AI...');
@@ -111,7 +111,7 @@ export default function ResultsPage() {
 
             setLoadingStep('Processing your matches...');
             const analysisData = await aiResponse.json();
-            console.log('[RESULTS] AI Analysis response:', analysisData);
+            console.log('AI Analysis response:', analysisData);
             
             // 3. Validate response structure
             if (!analysisData || typeof analysisData !== 'object') {
