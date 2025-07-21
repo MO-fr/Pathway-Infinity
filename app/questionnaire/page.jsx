@@ -71,6 +71,8 @@ const questions = [
     },
 ];
 
+
+
 export default function QuestionnairePage() {
 
     const [isStarted, setIsStarted] = useState(false);
@@ -130,6 +132,7 @@ export default function QuestionnairePage() {
 
     // Handle quiz start
     const handleStart = () => {
+
 
         setIsStarted(true);
         

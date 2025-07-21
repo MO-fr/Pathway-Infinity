@@ -1,9 +1,13 @@
 'use client';
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { AuthForm } from '@/components/AuthForm';
 import AnimatedBackground from '@/components/AnimatedBackground';
+import { AuthForm } from '@/components/AuthForm';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+
+export const metadata = {
+  viewport: 'width=device-width, initial-scale=1',
+};
 
 export default function SignupPage() {
   return (
@@ -26,7 +30,7 @@ export default function SignupPage() {
 
         <AuthForm mode="signup" />
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}

@@ -1,14 +1,17 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  theme: {    extend: {
+  theme: {
+    extend: {
       fontFamily: {
-        'nunito': ['Nunito', 'sans-serif'],
-      },      colors: {        'mint': {
+        nunito: ['Nunito', 'sans-serif'],
+      },
+      colors: {
+        mint: {
           50: '#f6fdf8',
           100: '#e8fbee',
           200: '#c9f7d4',
@@ -20,7 +23,7 @@ module.exports = {
           800: '#23633c',
           900: '#1f5135',
         },
-        'sky': {
+        sky: {
           50: '#f0f9ff',
           100: '#e0f2fe',
           200: '#bae6fd',
@@ -32,7 +35,7 @@ module.exports = {
           800: '#075985',
           900: '#0c4a6e',
         },
-        'azure': {
+        azure: {
           50: '#ecfeff',
           100: '#cffafe',
           200: '#a5f3fc',
@@ -44,7 +47,7 @@ module.exports = {
           800: '#155e75',
           900: '#164e63',
         },
-        'slate': {
+        slate: {
           50: '#f8fafc',
           100: '#f1f5f9',
           200: '#e2e8f0',
@@ -64,4 +67,6 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};
+
+export default config;

@@ -1,77 +1,53 @@
+// src/app/api/auth/[...nextauth]/route.js
 import { prisma } from "@/lib/db";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { compare } from "bcrypt";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-// Error: Missing NEXTAUTH_SECRET
-if (!process.env.NEXTAUTH_SECRET) {
-  throw new Error("Please provide process.env.NEXTAUTH_SECRET");
-}
+console.log(process.env.NEXTAUTH_SECRET)
 
 export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
-  adapter: PrismaAdapter(prisma),
+  // Remove PrismaAdapter when using JWT strategy
+  // adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Missing credentials");
+          throw new Error("Missing credentials.");
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email
-          }
-        });
+        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
 
         if (!user) {
-          throw new Error("Invalid credentials");
+          throw new Error("Invalid credentials.");
         }
 
-        const isPasswordValid = await compare(
-          credentials.password,
-          user.password
-        );
-
-        if (!isPasswordValid) {
-          throw new Error("Invalid credentials");
+        const isValid = await compare(credentials.password, user.password);
+        if (!isValid) {
+          throw new Error("Invalid credentials.");
         }
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        };
+        return { id: user.id, email: user.email, name: user.name };
       }
     })
   ],
-  session: {
-    strategy: "jwt"
-  },
-  pages: {
-    signIn: "/login",
-    signUp: "/signup"
-  },
+  session: { strategy: "jwt" },
   callbacks: {
-    async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id;
-        session.user.name = token.name;
-        session.user.email = token.email;
-      }
-      return session;
-    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
       }
       return token;
+    },
+    async session({ session, token }) {
+      session.user.id = token.id;
+      return session;
     }
   }
 };
