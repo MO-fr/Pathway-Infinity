@@ -11,304 +11,411 @@ import ErrorMessage from '@/app/components/ErrorMessage';
 import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function ResultsPage() {
-
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [loadingStep, setLoadingStep] = useState('Preparing analysis...');
     const [error, setError] = useState(null);
     const router = useRouter();
-
-    const analyzeResults = async () => {
-
-        try {
-
-            setLoading(true);
-            setError(null);
-
-            const storedAnswers = sessionStorage.getItem('quizAnswers');
-
-            // Pull the school data for Open AI analysis
-            const schoolsResponse = await fetch("/api/schools");
-            const schools = await schoolsResponse.json();
-
-            if (!schools || schools.length === 0) {
-                throw new Error('No schools found for analysis');
-            }
-
-            console.log('Fetched schools:', schools);
-
-            // We need to send a request to OPEN to analyze the quiz results and provide schools that match the questions asked
-            const chatGPTresponse = await fetch("/api/quiz/analyze", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    answers: JSON.parse(storedAnswers || '{}'),
-                    schools: schools // Pass the actual school data to the analysis
-                }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('ChatGPT analysis response:', data);
-                    if (data.error) {
-                        throw new Error(data.error);
-                    }
-                    // Set the results state with the data received
-                    setResults(data);
-                })
-                .catch(err => {
-                    console.error('Error analyzing results:', err);
-                    setError(err.message || 'Failed to analyze quiz results. Please try again.');
-                });
-
-            if (!storedAnswers) {
-                router.push('/questionnaire');
-                return;
-            }
-
-            const answers = JSON.parse(storedAnswers);
-            // eslint-disable-next-line no-console
-            console.log('Quiz answers:', answers);
-
-            // Import here to avoid server-side issues with client-only components
-            const { analyzeQuizResults } = await import('@/lib/services/analysis');
-            const results = await analyzeQuizResults(answers);
-
-            // eslint-disable-next-line no-console
-            console.log('Analysis results:', results);
-
-            if (!results || !results.matches || results.matches.length === 0) {
-                // eslint-disable-next-line no-console
-                console.warn('No matches found in results:', results);
-            }
-
-            setResults(results);
-        } catch (error) {
-            console.error('Failed to analyze results:', error);
-            setError(error.message || 'Failed to analyze quiz results. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
+    
     useEffect(() => {
         analyzeResults();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-center"
-                >                    <div className="w-16 h-16 border-4 border-mint-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                    <p className="text-xl text-gray-700">Analyzing your answers...</p>
-                </motion.div>
-            </div>
-        );
-    }
+    /**
+     * Helper function to safely get school property values
+     * Handles case variations (e.g., 'Name' vs 'name')
+     */
+    const getSchoolProperty = (school, propertyName) => {
+        if (!school || typeof school !== 'object') return null;
+        
+        // Try exact match first
+        if (school[propertyName]) return school[propertyName];
+        
+        // Try capitalized version
+        const capitalized = propertyName.charAt(0).toUpperCase() + propertyName.slice(1);
+        if (school[capitalized]) return school[capitalized];
+        
+        // Try lowercase version
+        const lowercase = propertyName.toLowerCase();
+        if (school[lowercase]) return school[lowercase];
+        
+        return null;
+    };
 
-    if (error) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
-                <div className="max-w-md text-center">
-                    <h1 className="text-2xl font-bold mb-4">Error</h1>
-                    <ErrorMessage
-                        message={error}
-                        onRetry={analyzeResults}
-                    />
-                    <Button
-                        onClick={() => router.push('/questionnaire')}
-                        variant="primary"
-                        className="mt-4"
+    /**
+     * Helper function to safely render arrays (for pathways, industries, etc.)
+     */
+    const renderArray = (items, className, ariaLabel) => {
+        if (!items) return null;
+        
+        const itemsArray = Array.isArray(items) ? items : [items];
+        
+        return itemsArray.map((item, i) => (
+            <span 
+                key={`${ariaLabel}-${i}-${item}`} 
+                className={className}
+                role="badge"
+                aria-label={`${ariaLabel}: ${item}`}
+            >
+                {item}
+            </span>
+        ));
+    };
+
+    const analyzeResults = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            setLoadingStep('Retrieving your quiz answers...');
+
+            const storedAnswers = sessionStorage.getItem('quizAnswers');
+
+            if (!storedAnswers) {
+                throw new Error('No quiz answers found. Please take the quiz first.');
+            }
+
+            console.log('[RESULTS] Stored answers:', storedAnswers);
+
+            // 1. Fetch school data for AI analysis
+            setLoadingStep('Loading school database...');
+            const schoolsResponse = await fetch("/api/schools");
+            
+            if (!schoolsResponse.ok) {
+                throw new Error(`Failed to fetch schools data: ${schoolsResponse.status}`);
+            }
+            
+            const schoolsData = await schoolsResponse.json();
+            console.log('[RESULTS] Schools data count:', schoolsData?.length || 0);
+
+            // 2. Send request to AI analysis endpoint
+            setLoadingStep('Analyzing your preferences with AI...');
+            const aiResponse = await fetch("/api/quiz/analyze", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    answers: storedAnswers, 
+                    schools: schoolsData 
+                })
+            });
+
+            if (!aiResponse.ok) {
+                const errorData = await aiResponse.json();
+                throw new Error(errorData.error || `Analysis failed: ${aiResponse.status}`);
+            }
+
+            setLoadingStep('Processing your matches...');
+            const analysisData = await aiResponse.json();
+            console.log('[RESULTS] AI Analysis response:', analysisData);
+            
+            // 3. Validate response structure
+            if (!analysisData || typeof analysisData !== 'object') {
+                throw new Error('Invalid response format from analysis API');
+            }
+
+            if (analysisData.error) {
+                throw new Error(analysisData.error);
+            }
+
+            if (!analysisData.matches || !Array.isArray(analysisData.matches)) {
+                throw new Error('No school matches found in response');
+            }
+            
+            // 4. Set the results state with validated data
+            setLoadingStep('Finalizing results...');
+            setResults(analysisData);
+
+        } catch (err) {
+            console.error('Error occurred while analyzing results:', err);
+            setError(err.message || 'Failed to analyze quiz results. Please try again.');
+        } finally {
+            setLoading(false);
+            setLoadingStep('');
+        }
+    };
+
+    const handleRetakeQuiz = () => {
+        sessionStorage.removeItem('quizAnswers');
+        router.push('/questionnaire');
+    };
+
+    return (
+        <React.Fragment>
+            {loading && (
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-center"
+                        role="status"
+                        aria-live="polite"
                     >
-                        Retake Quiz
-                    </Button>
+                        <div 
+                            className="w-16 h-16 border-4 border-mint-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+                            aria-hidden="true"
+                        />
+                        <p className="text-xl text-gray-700 mb-2">Analyzing your answers...</p>
+                        <p className="text-sm text-gray-500">{loadingStep}</p>
+                        <span className="sr-only">Loading results, please wait</span>
+                    </motion.div>
                 </div>
-            </div>
-        );
-    }
+            )}
 
-    if (!results?.matches?.length) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
-                <div className="max-w-md text-center">
-                    <h1 className="text-2xl font-bold mb-4">No matching schools found</h1>
-                    <p className="mb-6">
-                        We couldn&apos;t find any schools matching your criteria. This could be because:
-                        <ul className="list-disc text-left mt-3 ml-6">
-                            <li>Your answers were very specific</li>
-                            <li>We don&apos;t have schools in our database that match your preferences</li>
-                            <li>There might be a temporary issue with our school database</li>
-                        </ul>
-                    </p>
-                    <div className="space-y-4">
-                        <Button onClick={analyzeResults} variant="secondary" className="w-full">
-                            Try Again
-                        </Button>
-                        <Button onClick={() => router.push('/questionnaire')} variant="primary" className="w-full">
+            {error && !loading && (
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+                    <div className="max-w-md text-center" role="alert" aria-live="assertive">
+                        <h1 className="text-2xl font-bold mb-4" id="error-title">Error</h1>
+                        <ErrorMessage
+                            message={error}
+                            onRetry={analyzeResults}
+                            aria-describedby="error-title"
+                        />
+                        <Button
+                            onClick={handleRetakeQuiz}
+                            variant="primary"
+                            className="mt-4"
+                            aria-label="Retake the quiz to try again"
+                        >
                             Retake Quiz
                         </Button>
                     </div>
                 </div>
-            </div>
-        );
-    }
+            )}
 
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-10 px-4">
-            <div className="max-w-5xl mx-auto">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center mb-12"
-                >
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4">Your Best Career Path Matches</h1>
-                    <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-                        Based on your answers, we&apos;ve found these trade schools that match your interests and goals.
-                    </p>
-                </motion.div>
+            {!loading && !error && !results?.matches?.length && (
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+                    <div className="max-w-md text-center" role="main">
+                        <h1 className="text-2xl font-bold mb-4" id="no-results-title">No matching schools found</h1>
+                        <div className="mb-6" aria-describedby="no-results-title">
+                            <p className="mb-3">
+                                We couldn&apos;t find any schools matching your criteria. This could be because:
+                            </p>
+                            <ul className="list-disc text-left mt-3 ml-6" role="list">
+                                <li>Your answers were very specific</li>
+                                <li>We don&apos;t have schools in our database that match your preferences</li>
+                                <li>There might be a temporary issue with our school database</li>
+                            </ul>
+                        </div>
+                        <div className="space-y-4">
+                            <Button 
+                                onClick={analyzeResults} 
+                                variant="secondary" 
+                                className="w-full"
+                                aria-label="Try searching for schools again"
+                            >
+                                Try Again
+                            </Button>
+                            <Button 
+                                onClick={handleRetakeQuiz} 
+                                variant="primary" 
+                                className="w-full"
+                                aria-label="Start over with a new quiz"
+                            >
+                                Retake Quiz
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
-                {/* AI Analysis */}
-                {results.analysis && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="bg-white/80 backdrop-blur-sm rounded-xl p-6 mb-8 shadow-lg border border-mint-100"
-                    >
-                        <h2 className="text-xl font-semibold mb-3">Analysis of Your Results</h2>
-                        <p className="text-gray-700 whitespace-pre-line">{results.analysis}</p>
-                    </motion.div>
-                )}
-
-                {/* School Matches */}
-                <div className="space-y-6">
-                    {results.matches.map((school, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.3 + (index * 0.1) }}
-                            className="bg-white rounded-2xl shadow-xl overflow-hidden border border-mint-100"
+            {!loading && !error && results?.matches?.length > 0 && (
+                <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-10 px-4">
+                    <div className="max-w-5xl mx-auto">
+                        <motion.header
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="text-center mb-12"
                         >
-                            <div className="p-6 md:p-8">
-                                <div className="flex flex-col md:flex-row justify-between">
-                                    <div className="flex-1">
-                                        <h3 className="text-2xl font-bold mb-2">{school.Name}</h3>
+                            <h1 className="text-3xl md:text-4xl font-bold mb-4">Your Best Career Path Matches</h1>
+                            <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+                                Based on your answers, we&apos;ve found these trade schools that match your interests and goals.
+                            </p>
+                        </motion.header>
 
-                                        {/* Pathway and Industries */}
-                                        <div className="mb-4">
-                                            {school.Pathway && school.Pathway.map((pathway, i) => (
-                                                <span key={i} className="inline-block bg-mint-100 text-mint-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">{pathway}</span>
-                                            ))}
-                                            {school.Industries && school.Industries.map((industry, i) => (
-                                                <span key={i} className="inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">{industry}</span>
-                                            ))}
-                                        </div>
+                        {/* AI Analysis */}
+                        {results.analysis && (
+                            <motion.section
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="bg-white/80 backdrop-blur-sm rounded-xl p-6 mb-8 shadow-lg border border-mint-100"
+                                aria-labelledby="analysis-title"
+                            >
+                                <h2 className="text-xl font-semibold mb-3" id="analysis-title">Analysis of Your Results</h2>
+                                <p className="text-gray-700 whitespace-pre-line">{results.analysis}</p>
+                            </motion.section>
+                        )}
 
-                                        <div className="grid md:grid-cols-2 gap-4 mb-6">
-                                            {/* Location */}
-                                            {school.Location && (
-                                                <div className="flex items-start">
-                                                    <div className="mr-3 text-mint-500">📍</div>
-                                                    <div>
-                                                        <p className="font-semibold">Location</p>
-                                                        <p className="text-gray-600">{school.Location}</p>
+                        {/* School Matches */}
+                        <section aria-labelledby="matches-title">
+                            <h2 className="sr-only" id="matches-title">Matching Schools</h2>
+                            <div className="space-y-6" role="list">
+                                {results.matches.map((school, index) => {
+                                    // Normalize school data using helper functions
+                                    const schoolName = getSchoolProperty(school, 'name') || getSchoolProperty(school, 'Name') || 'Unnamed School';
+                                    const pathways = getSchoolProperty(school, 'pathway') || getSchoolProperty(school, 'Pathway');
+                                    const industries = getSchoolProperty(school, 'industries') || getSchoolProperty(school, 'Industries');
+                                    const location = getSchoolProperty(school, 'location') || getSchoolProperty(school, 'Location');
+                                    const cost = getSchoolProperty(school, 'cost') || getSchoolProperty(school, 'Cost');
+                                    const programLength = getSchoolProperty(school, 'Program Length');
+                                    const housing = getSchoolProperty(school, 'Housing');
+                                    const website = getSchoolProperty(school, 'website') || getSchoolProperty(school, 'Website');
+                                    const reasoning = getSchoolProperty(school, 'reasoning');
+
+                                    return (
+                                        <motion.div
+                                            key={`school-${schoolName}-${index}`}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.3 + (index * 0.1) }}
+                                            className="bg-white rounded-2xl shadow-xl overflow-hidden border border-mint-100"
+                                            role="article"
+                                            aria-labelledby={`school-title-${index}`}
+                                        >
+                                            <div className="p-6 md:p-8">
+                                                <div className="flex flex-col md:flex-row justify-between">
+                                                    <div className="flex-1">
+                                                        <h3 
+                                                            className="text-2xl font-bold mb-2" 
+                                                            id={`school-title-${index}`}
+                                                        >
+                                                            {schoolName}
+                                                        </h3>
+
+                                                        {/* AI Reasoning (if available) */}
+                                                        {reasoning && (
+                                                            <div className="mb-4 p-3 bg-mint-50 rounded-lg border-l-4 border-mint-400">
+                                                                <p className="text-sm text-mint-800">
+                                                                    <strong>Why this school matches:</strong> {reasoning}
+                                                                </p>
+                                                            </div>
+                                                        )}
+
+                                                        {/* Pathways and Industries */}
+                                                        <div className="mb-4" role="group" aria-label="School pathways and industries">
+                                                            {pathways && renderArray(
+                                                                pathways,
+                                                                "inline-block bg-mint-100 text-mint-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2",
+                                                                "Pathway"
+                                                            )}
+                                                            {industries && renderArray(
+                                                                industries,
+                                                                "inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2",
+                                                                "Industry"
+                                                            )}
+                                                        </div>
+
+                                                        <dl className="grid md:grid-cols-2 gap-4 mb-6">
+                                                            {/* Location */}
+                                                            {location && (
+                                                                <div className="flex items-start">
+                                                                    <div className="mr-3 text-mint-500" aria-hidden="true">📍</div>
+                                                                    <div>
+                                                                        <dt className="font-semibold">Location</dt>
+                                                                        <dd className="text-gray-600">{location}</dd>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {/* Cost */}
+                                                            {cost && (
+                                                                <div className="flex items-start">
+                                                                    <div className="mr-3 text-mint-500" aria-hidden="true">💰</div>
+                                                                    <div>
+                                                                        <dt className="font-semibold">Program Cost</dt>
+                                                                        <dd className="text-gray-600">{Array.isArray(cost) ? cost.join(', ') : cost}</dd>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {/* Program Length */}
+                                                            {programLength && (
+                                                                <div className="flex items-start">
+                                                                    <div className="mr-3 text-mint-500" aria-hidden="true">⏱️</div>
+                                                                    <div>
+                                                                        <dt className="font-semibold">Program Length</dt>
+                                                                        <dd className="text-gray-600">{Array.isArray(programLength) ? programLength.join(', ') : programLength}</dd>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {/* Housing */}
+                                                            {housing && (
+                                                                <div className="flex items-start">
+                                                                    <div className="mr-3 text-mint-500" aria-hidden="true">🏠</div>
+                                                                    <div>
+                                                                        <dt className="font-semibold">Housing</dt>
+                                                                        <dd className="text-gray-600">{housing}</dd>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </dl>
+
+                                                        {website && (
+                                                            <Button
+                                                                href={website}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                variant="primary"
+                                                                className="mr-4"
+                                                                aria-label={`Visit ${schoolName} website (opens in new tab)`}
+                                                            >
+                                                                Visit Website
+                                                            </Button>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            )}
-
-                                            {/* Cost */}
-                                            {school.Cost && (
-                                                <div className="flex items-start">
-                                                    <div className="mr-3 text-mint-500">💰</div>
-                                                    <div>
-                                                        <p className="font-semibold">Program Cost</p>
-                                                        <p className="text-gray-600">{Array.isArray(school.Cost) ? school.Cost.join(', ') : school.Cost}</p>
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {/* Program Length */}
-                                            {school['Program Length'] && (
-                                                <div className="flex items-start">
-                                                    <div className="mr-3 text-mint-500">⏱️</div>
-                                                    <div>
-                                                        <p className="font-semibold">Program Length</p>
-                                                        <p className="text-gray-600">{Array.isArray(school['Program Length']) ? school['Program Length'].join(', ') : school['Program Length']}</p>
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {/* Housing */}
-                                            {school.Housing && (
-                                                <div className="flex items-start">
-                                                    <div className="mr-3 text-mint-500">🏠</div>
-                                                    <div>
-                                                        <p className="font-semibold">Housing</p>
-                                                        <p className="text-gray-600">{school.Housing}</p>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {school.Website && (
-                                            <Button
-                                                href={school.Website}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                variant="primary"
-                                                className="mr-4"
-                                            >
-                                                Visit Website
-                                            </Button>
-                                        )}
-                                    </div>
-                                </div>
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
                             </div>
-                        </motion.div>
-                    ))}
-                </div>
+                        </section>
 
-                <div className="mt-8 text-center">
-                    <Button onClick={() => router.push('/questionnaire')} variant="primary">
-                        Find More Matches
-                    </Button>
-                </div>
+                        <div className="mt-8 text-center">
+                            <Button 
+                                onClick={() => router.push('/questionnaire')} 
+                                variant="primary"
+                                aria-label="Find more matching schools"
+                            >
+                                Find More Matches
+                            </Button>
+                        </div>
 
-                {/* Navigation Buttons */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                    className="flex flex-col md:flex-row gap-4 justify-center mt-12"
-                >
-                    <Button
-                        variant="text"
-                        onClick={() => router.push('/dashboard')}
-                        className="text-sky-600 hover:text-sky-700"
-                    >
-                        Back to Dashboard
-                    </Button>
+                        {/* Navigation Buttons */}
+                        <motion.nav
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6 }}
+                            className="flex flex-col md:flex-row gap-4 justify-center mt-12"
+                            aria-label="Page navigation"
+                        >
+                            <Button
+                                variant="text"
+                                onClick={() => router.push('/dashboard')}
+                                className="text-sky-600 hover:text-sky-700"
+                                aria-label="Go back to dashboard"
+                            >
+                                Back to Dashboard
+                            </Button>
 
-                    <Button
-                        variant="outline"
-                        onClick={() => {
-                            sessionStorage.removeItem('quizAnswers');
-                            router.push('/questionnaire');
-                        }}
-                    >
-                        Retake Quiz
-                    </Button>
-                </motion.div>
-            </div>
-        </div>
+                            <Button
+                                variant="outline"
+                                onClick={handleRetakeQuiz}
+                                aria-label="Start quiz over from the beginning"
+                            >
+                                Retake Quiz
+                            </Button>
+                        </motion.nav>
+                    </div>
+                </main>
+            )}
+        </React.Fragment>
     );
 }
