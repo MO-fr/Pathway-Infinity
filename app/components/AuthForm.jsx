@@ -8,7 +8,9 @@ import { useState } from 'react';
 import Button from './Button';
 
 export function AuthForm({ mode = 'login' }) {
+
   const router = useRouter();
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -24,16 +26,23 @@ export function AuthForm({ mode = 'login' }) {
 
     // Validation
     const newErrors = {};
+
     if (!formData.email) {
+    
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } 
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
     }
+    
     if (!formData.password) {
+    
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
+    }
+     else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
     }
+    
     if (mode === 'signup' && !formData.name) {
       newErrors.name = 'Name is required';
     }

@@ -7,15 +7,24 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function ResultsPage() {
+
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(true);
-    const router = useRouter(); useEffect(() => {
+    
+    const router = useRouter(); 
+    
+    useEffect(() => {
+
         // Process the quiz answers from sessionStorage
         const processQuizResults = () => {
+
             try {
+
                 const storedAnswers = sessionStorage.getItem('quizAnswers');
+                console.log("[RESULTS] Stored Answers:", storedAnswers);
 
                 if (!storedAnswers) {
+
                     // No answers found, use fallback data
                     setResults({
                         topMatch: {
@@ -42,7 +51,15 @@ export default function ResultsPage() {
                 }
 
                 const userAnswers = JSON.parse(storedAnswers);
+                console.log("[RESULTS] User Answers:", userAnswers);
 
+                const response = fetch('/api/career-matches', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ answers: userAnswers }),
+                });
                 // Based on user answers, determine career matches
                 // In a real app, this would be a more sophisticated algorithm
                 // For now, we'll use the answers to choose between predefined matches
@@ -151,6 +168,7 @@ export default function ResultsPage() {
                 });
 
                 setLoading(false);
+
             } catch (error) {
                 console.error("Error processing quiz results:", error);
                 setLoading(false);
