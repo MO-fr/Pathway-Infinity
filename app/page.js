@@ -1,10 +1,10 @@
-import HeroSection from '@/components/HeroSection';
-import FeaturesSection from '@/components/FeaturesSection';
-import HowItWorksSection from '@/components/HowItWorksSection';
-import CTASection from '@/components/CTASection';
+import CTASection from "@/components/CTASection";
+import FeaturesSection from "@/components/FeaturesSection";
+import HeroSection from "@/components/HeroSection";
+import HowItWorksSection from "@/components/HowItWorksSection";
 
-import AnimatedBackground from '@/components/AnimatedBackground';
-import './globals.css';
+import AnimatedBackground from "@/components/AnimatedBackground";
+// import './globals.css';
 
 export default function Home() {
   return (

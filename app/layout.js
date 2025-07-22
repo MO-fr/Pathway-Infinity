@@ -21,8 +21,8 @@ export const metadata = {
     // eslint-disable-next-line no-undef
     : `http://localhost:${process.env.PORT || 3001}`),
   title: {
-    template: '%s | Pathway Infinity',
-    default: 'Pathway Infinity - Career Guidance Questionnaire',
+    template: "%s | Pathway Infinity",
+    default: "Pathway Infinity - Career Guidance Questionnaire",
   },
   description: "Find your ideal career path through our guided questionnaire and discover trade schools that match your interests.",
   keywords: ['career guidance', 'trade schools', 'vocational training', 'career paths', 'skills assessment'],
@@ -58,9 +58,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className="scroll-smooth">
       <body className="antialiased min-h-screen flex flex-col font-nunito" suppressHydrationWarning={true}>
         <NextAuthProvider>
-          <NavigationHandler>
-            {children}
-          </NavigationHandler>
+          <NavigationHandler>{children}</NavigationHandler>
           <Footer />
         </NextAuthProvider>
       </body>

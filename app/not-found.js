@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Button from '@/components/Button';
-import { motion } from 'framer-motion';
+import Button from "@/components/Button";
+import { motion } from "framer-motion";
 
 export default function NotFound() {
   return (
@@ -29,7 +29,8 @@ export default function NotFound() {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="text-lg text-gray-600 mb-8 max-w-md"
       >
-        It seems you&#39;ve wandered off the path. Don&#39;t worry, finding the right way is what we do best!
+        It seems you&#39;ve wandered off the path. Don&#39;t worry, finding the
+        right way is what we do best!
       </motion.p>
 
       <motion.div
