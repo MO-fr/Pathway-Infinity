@@ -5,7 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import Button from '../components/Button.jsx';
+import Button from '@/components/Button.jsx';
 
 export default function Navbar() {
   const { data: session } = useSession();

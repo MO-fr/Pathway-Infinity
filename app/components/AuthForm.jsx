@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Button from '../../components/Button';
+import Button from './Button';
 
 export function AuthForm({ mode = 'login' }) {
 
@@ -21,6 +21,7 @@ export function AuthForm({ mode = 'login' }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
     setIsLoading(true);
 
@@ -48,14 +49,21 @@ export function AuthForm({ mode = 'login' }) {
     }
 
     if (Object.keys(newErrors).length > 0) {
+
       setErrors(newErrors);
       setIsLoading(false);
+      
       return;
-    } try {
+
+    } 
+    
+    try {
       
       if (mode === 'signup') {
+
         // Import the authApi from lib/api
         const { authApi } = await import('@/lib/api');
+        
         await authApi.signup(formData);
         // Axios errors will be caught in the catch block
 
@@ -71,7 +79,9 @@ export function AuthForm({ mode = 'login' }) {
         }
 
         router.push('/dashboard');
+
       } else {
+
         // Login mode
         const result = await signIn('credentials', {
           redirect: false,
@@ -80,14 +90,20 @@ export function AuthForm({ mode = 'login' }) {
         });
 
         if (result?.error) {
+
           setErrors({ auth: 'Invalid credentials' });
+        
         } else {
+        
           router.push('/dashboard');
         }
       }
+
     } catch (error) {
+      
       console.error('Auth error:', error);
       setErrors({ auth: error.message });
+
     } finally {
       setIsLoading(false);
     }

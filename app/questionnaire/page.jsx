@@ -117,6 +117,7 @@ export default function QuestionnairePage() {
         
         // Save answers to sessionStorage for results page
         else {	
+            
             sessionStorage.setItem(
                 'quizAnswers',
                 JSON.stringify({

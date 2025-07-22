@@ -1,25 +1,36 @@
-/**
- * Next.js configuration file for Pathway Infinity
- * Configured for Next.js 15+ standards
- */
-
 /** @type {import('next').NextConfig} */
+
+import path from "path";
+// const path = require('path');
+
+import { fileURLToPath } from "url";
+// const fileURLToPath = require('url'); 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const nextConfig = {
-  // Image configuration with remotePatterns (Next.js 15 format)
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'files.stripe.com',
+        protocol: "https",
+        hostname: "**",
       },
-      // Add additional hostnames as needed
     ],
-    formats: ['image/avif', 'image/webp'],
   },
-  // Experimental features (if needed)
-  experimental: {
-    // Any experimental features can be enabled here
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": path.join(__dirname),
+      "@components": path.join(__dirname, "components"),
+      "@styles": path.join(__dirname, "styles"),
+      "@lib": path.join(__dirname, "lib"),
+      "@utils": path.join(__dirname, "utils"),
+      "@hooks": path.join(__dirname, "hooks"),
+      "@context": path.join(__dirname, "context"),
+    };
+    return config;
   },
-}
+};
 
 export default nextConfig;

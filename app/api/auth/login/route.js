@@ -8,7 +8,9 @@ import { db } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
+
   try {
+
     const { email, password } = await req.json();
 
     // Validate input
@@ -47,6 +49,7 @@ export async function POST(req) {
         { status: 401 }
       );
     } // Generate auth token
+    
     const token = createAuthToken(user.id);
     setAuthToken(token);
 
@@ -55,6 +58,7 @@ export async function POST(req) {
     delete userData.password;
 
     return NextResponse.json({ user: userData });
+
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
