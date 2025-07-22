@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "studio": "npx prisma studio"
+    "studio": "npx prisma studio",
+    "reset": "rm -rf node_modules .next/ pnpm-lock.yaml && pnpm install && npx prisma generate"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.0.0",

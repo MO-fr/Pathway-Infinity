@@ -1,314 +1,421 @@
-// Results page
 'use client';
 
+/**
+ * Results Page Component
+ * 
+ * Displays the analysis results and matching schools based on user's quiz answers.
+ * This is a client component that fetches and displays data from the quiz.
+ */
+
+import ErrorMessage from '@/app/components/ErrorMessage';
 import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function ResultsPage() {
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(true);
-    const router = useRouter(); useEffect(() => {
-        // Process the quiz answers from sessionStorage
-        const processQuizResults = () => {
-            try {
-                const storedAnswers = sessionStorage.getItem('quizAnswers');
+    const [loadingStep, setLoadingStep] = useState('Preparing analysis...');
+    const [error, setError] = useState(null);
+    const router = useRouter();
+    
+    useEffect(() => {
+        analyzeResults();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-                if (!storedAnswers) {
-                    // No answers found, use fallback data
-                    setResults({
-                        topMatch: {
-                            title: "Construction Trades",
-                            description: "Building, renovating, and maintaining structures.",
-                            careers: [
-                                "Carpenter", "Electrician", "Plumber", "HVAC Technician",
-                                "Construction Manager", "Welder", "Masonry Worker"
-                            ],
-                            icon: "🏗️"
-                        },
-                        secondMatch: {
-                            title: "Automotive & Mechanical",
-                            description: "Working with vehicles and mechanical systems.",
-                            careers: [
-                                "Automotive Mechanic", "Diesel Technician", "Auto Body Repair",
-                                "Heavy Equipment Operator", "Aviation Mechanic"
-                            ],
-                            icon: "🔧"
-                        }
-                    });
-                    setLoading(false);
-                    return;
-                }
+    /**
+     * Helper function to safely get school property values
+     * Handles case variations (e.g., 'Name' vs 'name')
+     */
+    const getSchoolProperty = (school, propertyName) => {
+        if (!school || typeof school !== 'object') return null;
+        
+        // Try exact match first
+        if (school[propertyName]) return school[propertyName];
+        
+        // Try capitalized version
+        const capitalized = propertyName.charAt(0).toUpperCase() + propertyName.slice(1);
+        if (school[capitalized]) return school[capitalized];
+        
+        // Try lowercase version
+        const lowercase = propertyName.toLowerCase();
+        if (school[lowercase]) return school[lowercase];
+        
+        return null;
+    };
 
-                const userAnswers = JSON.parse(storedAnswers);
+    /**
+     * Helper function to safely render arrays (for pathways, industries, etc.)
+     */
+    const renderArray = (items, className, ariaLabel) => {
+        if (!items) return null;
+        
+        const itemsArray = Array.isArray(items) ? items : [items];
+        
+        return itemsArray.map((item, i) => (
+            <span 
+                key={`${ariaLabel}-${i}-${item}`} 
+                className={className}
+                role="badge"
+                aria-label={`${ariaLabel}: ${item}`}
+            >
+                {item}
+            </span>
+        ));
+    };
 
-                // Based on user answers, determine career matches
-                // In a real app, this would be a more sophisticated algorithm
-                // For now, we'll use the answers to choose between predefined matches
+    const analyzeResults = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            setLoadingStep('Retrieving your quiz answers...');
 
-                // Example career matches based on answer patterns
-                const careerMatches = {
-                    // Construction & Trades focused
-                    constructionTrades: {
-                        title: "Construction Trades",
-                        description: "Building, renovating, and maintaining structures.",
-                        careers: [
-                            "Carpenter", "Electrician", "Plumber", "HVAC Technician",
-                            "Construction Manager", "Welder", "Masonry Worker"
-                        ],
-                        icon: "🏗️"
-                    },
-                    // Automotive & Mechanical focused
-                    automotiveMechanical: {
-                        title: "Automotive & Mechanical",
-                        description: "Working with vehicles and mechanical systems.",
-                        careers: [
-                            "Automotive Mechanic", "Diesel Technician", "Auto Body Repair",
-                            "Heavy Equipment Operator", "Aviation Mechanic"
-                        ],
-                        icon: "🔧"
-                    },
-                    // Healthcare & Medical focused
-                    healthcareMedical: {
-                        title: "Healthcare & Medical",
-                        description: "Providing care and support in medical settings.",
-                        careers: [
-                            "Medical Assistant", "Dental Hygienist", "Pharmacy Technician",
-                            "Nursing Assistant", "Physical Therapy Assistant"
-                        ],
-                        icon: "⚕️"
-                    },
-                    // Tech & IT focused
-                    technologyIT: {
-                        title: "Technology & IT",
-                        description: "Working with computers, networks, and digital systems.",
-                        careers: [
-                            "IT Support Specialist", "Network Technician", "Computer Repair Technician",
-                            "Cybersecurity Specialist", "Web Developer"
-                        ],
-                        icon: "💻"
-                    }
-                };
+            const storedAnswers = sessionStorage.getItem('quizAnswers');
 
-                // Simple scoring algorithm based on answers
-                let scores = {
-                    constructionTrades: 0,
-                    automotiveMechanical: 0,
-                    healthcareMedical: 0,
-                    technologyIT: 0
-                };
-
-                // Question 1: Work environment preference
-                if (userAnswers[1] === 'outdoor') {
-                    scores.constructionTrades += 2;
-                } else if (userAnswers[1] === 'mechanical') {
-                    scores.automotiveMechanical += 2;
-                } else if (userAnswers[1] === 'indoor') {
-                    scores.healthcareMedical += 1;
-                    scores.technologyIT += 1;
-                }
-
-                // Question 2: Activity preference
-                if (userAnswers[2] === 'hands_on') {
-                    scores.constructionTrades += 1;
-                    scores.automotiveMechanical += 1;
-                } else if (userAnswers[2] === 'analytical') {
-                    scores.technologyIT += 2;
-                } else if (userAnswers[2] === 'social') {
-                    scores.healthcareMedical += 2;
-                }
-
-                // Question 3: Learning style
-                if (userAnswers[3] === 'practical') {
-                    scores.constructionTrades += 1;
-                    scores.automotiveMechanical += 1;
-                }
-
-                // Question 4: Career values
-                if (userAnswers[4] === 'stability') {
-                    scores.healthcareMedical += 1;
-                } else if (userAnswers[4] === 'financial') {
-                    scores.technologyIT += 1;
-                }
-
-                // Question 5: Technology preference
-                if (userAnswers[5] === 'tech_focused') {
-                    scores.technologyIT += 2;
-                } else if (userAnswers[5] === 'low_tech') {
-                    scores.constructionTrades += 1;
-                }
-
-                // Sort scores to find top matches
-                const sortedScores = Object.entries(scores)
-                    .sort((a, b) => b[1] - a[1])
-                    .map(item => item[0]);
-
-                // Set the top two matches
-                setResults({
-                    topMatch: careerMatches[sortedScores[0]],
-                    secondMatch: careerMatches[sortedScores[1]]
-                });
-
-                setLoading(false);
-            } catch (error) {
-                console.error("Error processing quiz results:", error);
-                setLoading(false);
+            if (!storedAnswers) {
+                throw new Error('No quiz answers found. Please take the quiz first.');
             }
-        };
 
-        // Add a slight delay to simulate processing
-        const timer = setTimeout(() => {
-            processQuizResults();
-        }, 1500);
+            console.log('Stored answers:', storedAnswers);
 
-        return () => clearTimeout(timer);
-    }, [router]);
+            // 1. Fetch school data for AI analysis
+            setLoadingStep('Loading school database...');
+            const schoolsResponse = await fetch("/api/schools");
+            
+            if (!schoolsResponse.ok) {
+                throw new Error(`Failed to fetch schools data: ${schoolsResponse.status}`);
+            }
+            
+            const schoolsData = await schoolsResponse.json();
+            console.log('Schools data count:', schoolsData?.length || 0);
 
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-center"
-                >
-                    <div className="w-16 h-16 border-4 border-mint-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-xl text-gray-700">Analyzing your answers...</p>
-                </motion.div>
-            </div>
-        );
-    }
+            // 2. Send request to AI analysis endpoint
+            setLoadingStep('Analyzing your preferences with AI...');
+            const aiResponse = await fetch("/api/quiz/analyze", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    answers: storedAnswers, 
+                    schools: schoolsData 
+                })
+            });
 
-    if (!results) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
-                <div className="max-w-md text-center">
-                    <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
-                    <p className="mb-6">We couldn't process your quiz results. Please try taking the quiz again.</p>
-                    <Button onClick={() => router.push('/questionnaire')} variant="primary">
-                        Retake Quiz
-                    </Button>
-                </div>
-            </div>
-        );
-    }
+            if (!aiResponse.ok) {
+                const errorData = await aiResponse.json();
+                throw new Error(errorData.error || `Analysis failed: ${aiResponse.status}`);
+            }
+
+            setLoadingStep('Processing your matches...');
+            const analysisData = await aiResponse.json();
+            console.log('AI Analysis response:', analysisData);
+            
+            // 3. Validate response structure
+            if (!analysisData || typeof analysisData !== 'object') {
+                throw new Error('Invalid response format from analysis API');
+            }
+
+            if (analysisData.error) {
+                throw new Error(analysisData.error);
+            }
+
+            if (!analysisData.matches || !Array.isArray(analysisData.matches)) {
+                throw new Error('No school matches found in response');
+            }
+            
+            // 4. Set the results state with validated data
+            setLoadingStep('Finalizing results...');
+            setResults(analysisData);
+
+        } catch (err) {
+            console.error('Error occurred while analyzing results:', err);
+            setError(err.message || 'Failed to analyze quiz results. Please try again.');
+        } finally {
+            setLoading(false);
+            setLoadingStep('');
+        }
+    };
+
+    const handleRetakeQuiz = () => {
+        sessionStorage.removeItem('quizAnswers');
+        router.push('/questionnaire');
+    };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-10 px-4">
-            <div className="max-w-4xl mx-auto">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center mb-12"
-                >
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4">Your Career Path Results</h1>
-                    <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-                        Based on your answers, we've identified career paths that align with your interests and preferences.
-                    </p>
-                </motion.div>
-
-                <div className="grid md:grid-cols-2 gap-8 mb-12">
-                    {/* Top Match */}
+        <React.Fragment>
+            {loading && (
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
                     <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="bg-white rounded-2xl shadow-xl overflow-hidden border border-mint-100"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-center"
+                        role="status"
+                        aria-live="polite"
                     >
-                        <div className="p-4 text-white bg-mint-500">
-                            <div className="flex items-center justify-between">
-                                <h2 className="text-xl font-bold">Top Match</h2>
-                                <span className="text-3xl">{results.topMatch.icon}</span>
-                            </div>
-                        </div>
-                        <div className="p-6">
-                            <h3 className="text-2xl font-bold mb-2">{results.topMatch.title}</h3>
-                            <p className="text-gray-700 mb-4">{results.topMatch.description}</p>
-
-                            <h4 className="font-semibold text-gray-900 mb-2">Career Options:</h4>
-                            <ul className="space-y-1 mb-6">
-                                {results.topMatch.careers.map((career, index) => (
-                                    <motion.li
-                                        key={index}
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.3 + (index * 0.1) }}
-                                        className="flex items-center"
-                                    >
-                                        <span className="mr-2">•</span>
-                                        {career}
-                                    </motion.li>
-                                ))}
-                            </ul>
-
-                            <Button variant="primary" className="w-full">Explore Programs</Button>
-                        </div>
-                    </motion.div>
-
-                    {/* Second Match */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.4 }}
-                        className="bg-white rounded-2xl shadow-xl overflow-hidden border border-mint-100"
-                    >
-                        <div className="p-4 text-white bg-sky-500">
-                            <div className="flex items-center justify-between">
-                                <h2 className="text-xl font-bold">Second Match</h2>
-                                <span className="text-3xl">{results.secondMatch.icon}</span>
-                            </div>
-                        </div>
-                        <div className="p-6">
-                            <h3 className="text-2xl font-bold mb-2">{results.secondMatch.title}</h3>
-                            <p className="text-gray-700 mb-4">{results.secondMatch.description}</p>
-
-                            <h4 className="font-semibold text-gray-900 mb-2">Career Options:</h4>
-                            <ul className="space-y-1 mb-6">
-                                {results.secondMatch.careers.map((career, index) => (
-                                    <motion.li
-                                        key={index}
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.5 + (index * 0.1) }}
-                                        className="flex items-center"
-                                    >
-                                        <span className="mr-2">•</span>
-                                        {career}
-                                    </motion.li>
-                                ))}
-                            </ul>
-
-                            <Button variant="outline" className="w-full">Explore Programs</Button>
-                        </div>
+                        <div 
+                            className="w-16 h-16 border-4 border-mint-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+                            aria-hidden="true"
+                        />
+                        <p className="text-xl text-gray-700 mb-2">Analyzing your answers...</p>
+                        <p className="text-sm text-gray-500">{loadingStep}</p>
+                        <span className="sr-only">Loading results, please wait</span>
                     </motion.div>
                 </div>
+            )}
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                    className="flex flex-col md:flex-row gap-4 justify-center"
-                >
-                    <Button
-                        variant="text"
-                        onClick={() => router.push('/dashboard')}
-                        className="text-sky-600 hover:text-sky-700"
-                    >
-                        Back to Dashboard
-                    </Button>
+            {error && !loading && (
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+                    <div className="max-w-md text-center" role="alert" aria-live="assertive">
+                        <h1 className="text-2xl font-bold mb-4" id="error-title">Error</h1>
+                        <ErrorMessage
+                            message={error}
+                            onRetry={analyzeResults}
+                            aria-describedby="error-title"
+                        />
+                        <Button
+                            onClick={handleRetakeQuiz}
+                            variant="primary"
+                            className="mt-4"
+                            aria-label="Retake the quiz to try again"
+                        >
+                            Retake Quiz
+                        </Button>
+                    </div>
+                </div>
+            )}
 
-                    <Button
-                        variant="outline"
-                        onClick={() => {
-                            router.push('/questionnaire');
-                        }}
-                    >
-                        Retake Quiz
-                    </Button>
-                </motion.div>
-            </div>
-        </div>
+            {!loading && !error && !results?.matches?.length && (
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+                    <div className="max-w-md text-center" role="main">
+                        <h1 className="text-2xl font-bold mb-4" id="no-results-title">No matching schools found</h1>
+                        <div className="mb-6" aria-describedby="no-results-title">
+                            <p className="mb-3">
+                                We couldn&apos;t find any schools matching your criteria. This could be because:
+                            </p>
+                            <ul className="list-disc text-left mt-3 ml-6" role="list">
+                                <li>Your answers were very specific</li>
+                                <li>We don&apos;t have schools in our database that match your preferences</li>
+                                <li>There might be a temporary issue with our school database</li>
+                            </ul>
+                        </div>
+                        <div className="space-y-4">
+                            <Button 
+                                onClick={analyzeResults} 
+                                variant="secondary" 
+                                className="w-full"
+                                aria-label="Try searching for schools again"
+                            >
+                                Try Again
+                            </Button>
+                            <Button 
+                                onClick={handleRetakeQuiz} 
+                                variant="primary" 
+                                className="w-full"
+                                aria-label="Start over with a new quiz"
+                            >
+                                Retake Quiz
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {!loading && !error && results?.matches?.length > 0 && (
+                <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-10 px-4">
+                    <div className="max-w-5xl mx-auto">
+                        <motion.header
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="text-center mb-12"
+                        >
+                            <h1 className="text-3xl md:text-4xl font-bold mb-4">Your Best Career Path Matches</h1>
+                            <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+                                Based on your answers, we&apos;ve found these trade schools that match your interests and goals.
+                            </p>
+                        </motion.header>
+
+                        {/* AI Analysis */}
+                        {results.analysis && (
+                            <motion.section
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="bg-white/80 backdrop-blur-sm rounded-xl p-6 mb-8 shadow-lg border border-mint-100"
+                                aria-labelledby="analysis-title"
+                            >
+                                <h2 className="text-xl font-semibold mb-3" id="analysis-title">Analysis of Your Results</h2>
+                                <p className="text-gray-700 whitespace-pre-line">{results.analysis}</p>
+                            </motion.section>
+                        )}
+
+                        {/* School Matches */}
+                        <section aria-labelledby="matches-title">
+                            <h2 className="sr-only" id="matches-title">Matching Schools</h2>
+                            <div className="space-y-6" role="list">
+                                {results.matches.map((school, index) => {
+                                    // Normalize school data using helper functions
+                                    const schoolName = getSchoolProperty(school, 'name') || getSchoolProperty(school, 'Name') || 'Unnamed School';
+                                    const pathways = getSchoolProperty(school, 'pathway') || getSchoolProperty(school, 'Pathway');
+                                    const industries = getSchoolProperty(school, 'industries') || getSchoolProperty(school, 'Industries');
+                                    const location = getSchoolProperty(school, 'location') || getSchoolProperty(school, 'Location');
+                                    const cost = getSchoolProperty(school, 'cost') || getSchoolProperty(school, 'Cost');
+                                    const programLength = getSchoolProperty(school, 'Program Length');
+                                    const housing = getSchoolProperty(school, 'Housing');
+                                    const website = getSchoolProperty(school, 'website') || getSchoolProperty(school, 'Website');
+                                    const reasoning = getSchoolProperty(school, 'reasoning');
+
+                                    return (
+                                        <motion.div
+                                            key={`school-${schoolName}-${index}`}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.3 + (index * 0.1) }}
+                                            className="bg-white rounded-2xl shadow-xl overflow-hidden border border-mint-100"
+                                            role="article"
+                                            aria-labelledby={`school-title-${index}`}
+                                        >
+                                            <div className="p-6 md:p-8">
+                                                <div className="flex flex-col md:flex-row justify-between">
+                                                    <div className="flex-1">
+                                                        <h3 
+                                                            className="text-2xl font-bold mb-2" 
+                                                            id={`school-title-${index}`}
+                                                        >
+                                                            {schoolName}
+                                                        </h3>
+
+                                                        {/* AI Reasoning (if available) */}
+                                                        {reasoning && (
+                                                            <div className="mb-4 p-3 bg-mint-50 rounded-lg border-l-4 border-mint-400">
+                                                                <p className="text-sm text-mint-800">
+                                                                    <strong>Why this school matches:</strong> {reasoning}
+                                                                </p>
+                                                            </div>
+                                                        )}
+
+                                                        {/* Pathways and Industries */}
+                                                        <div className="mb-4" role="group" aria-label="School pathways and industries">
+                                                            {pathways && renderArray(
+                                                                pathways,
+                                                                "inline-block bg-mint-100 text-mint-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2",
+                                                                "Pathway"
+                                                            )}
+                                                            {industries && renderArray(
+                                                                industries,
+                                                                "inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2",
+                                                                "Industry"
+                                                            )}
+                                                        </div>
+
+                                                        <dl className="grid md:grid-cols-2 gap-4 mb-6">
+                                                            {/* Location */}
+                                                            {location && (
+                                                                <div className="flex items-start">
+                                                                    <div className="mr-3 text-mint-500" aria-hidden="true">📍</div>
+                                                                    <div>
+                                                                        <dt className="font-semibold">Location</dt>
+                                                                        <dd className="text-gray-600">{location}</dd>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {/* Cost */}
+                                                            {cost && (
+                                                                <div className="flex items-start">
+                                                                    <div className="mr-3 text-mint-500" aria-hidden="true">💰</div>
+                                                                    <div>
+                                                                        <dt className="font-semibold">Program Cost</dt>
+                                                                        <dd className="text-gray-600">{Array.isArray(cost) ? cost.join(', ') : cost}</dd>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {/* Program Length */}
+                                                            {programLength && (
+                                                                <div className="flex items-start">
+                                                                    <div className="mr-3 text-mint-500" aria-hidden="true">⏱️</div>
+                                                                    <div>
+                                                                        <dt className="font-semibold">Program Length</dt>
+                                                                        <dd className="text-gray-600">{Array.isArray(programLength) ? programLength.join(', ') : programLength}</dd>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {/* Housing */}
+                                                            {housing && (
+                                                                <div className="flex items-start">
+                                                                    <div className="mr-3 text-mint-500" aria-hidden="true">🏠</div>
+                                                                    <div>
+                                                                        <dt className="font-semibold">Housing</dt>
+                                                                        <dd className="text-gray-600">{housing}</dd>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </dl>
+
+                                                        {website && (
+                                                            <Button
+                                                                href={website}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                variant="primary"
+                                                                className="mr-4"
+                                                                aria-label={`Visit ${schoolName} website (opens in new tab)`}
+                                                            >
+                                                                Visit Website
+                                                            </Button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
+                            </div>
+                        </section>
+
+                        <div className="mt-8 text-center">
+                            <Button 
+                                onClick={() => router.push('/questionnaire')} 
+                                variant="primary"
+                                aria-label="Find more matching schools"
+                            >
+                                Find More Matches
+                            </Button>
+                        </div>
+
+                        {/* Navigation Buttons */}
+                        <motion.nav
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6 }}
+                            className="flex flex-col md:flex-row gap-4 justify-center mt-12"
+                            aria-label="Page navigation"
+                        >
+                            <Button
+                                variant="text"
+                                onClick={() => router.push('/dashboard')}
+                                className="text-sky-600 hover:text-sky-700"
+                                aria-label="Go back to dashboard"
+                            >
+                                Back to Dashboard
+                            </Button>
+
+                            <Button
+                                variant="outline"
+                                onClick={handleRetakeQuiz}
+                                aria-label="Start quiz over from the beginning"
+                            >
+                                Retake Quiz
+                            </Button>
+                        </motion.nav>
+                    </div>
+                </main>
+            )}
+        </React.Fragment>
     );
 }

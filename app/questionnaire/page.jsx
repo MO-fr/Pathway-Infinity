@@ -71,7 +71,10 @@ const questions = [
     },
 ];
 
+
+
 export default function QuestionnairePage() {
+
     const [isStarted, setIsStarted] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState({});
@@ -82,8 +85,21 @@ export default function QuestionnairePage() {
         setSelectedAnswer(answer);
     };
 
+    
+    useEffect(() => {
+
+        if (answers[questions[currentQuestionIndex]?.id]) {
+
+            setSelectedAnswer(answers[questions[currentQuestionIndex].id]);
+        }
+    }, [currentQuestionIndex, answers]);
+
+
     const handleNextQuestion = () => {
-        // Save the current answer
+
+        // Save the current question id and the selected answer
+        if (selectedAnswer === null) return; // Prevent proceeding without an answer
+
         setAnswers((prev) => ({
             ...prev,
             [questions[currentQuestionIndex].id]: selectedAnswer,
@@ -94,8 +110,13 @@ export default function QuestionnairePage() {
 
         // Move to next question or finish quiz
         if (currentQuestionIndex < questions.length - 1) {
+
             setCurrentQuestionIndex((prev) => prev + 1);
-        } else {			// Save answers to sessionStorage for results page
+        
+        } 
+        
+        // Save answers to sessionStorage for results page
+        else {	
             sessionStorage.setItem(
                 'quizAnswers',
                 JSON.stringify({
@@ -111,48 +132,48 @@ export default function QuestionnairePage() {
 
     // Handle quiz start
     const handleStart = () => {
+
+
         setIsStarted(true);
+        
         // Reset everything when starting/restarting
         setCurrentQuestionIndex(0);
         setAnswers({});
         setSelectedAnswer(null);
+    
     };  // Check if current question is already answered (when navigating back)
-    useEffect(() => {
-        if (answers[questions[currentQuestionIndex]?.id]) {
-            setSelectedAnswer(answers[questions[currentQuestionIndex].id]);
-        }
-    }, [currentQuestionIndex, answers]);
-
-    if (!isStarted) {
-        return <QuizIntro onStart={handleStart} />;
-    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
             <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
                 <AnimatePresence mode="wait">
-                    <motion.div
-                        key={currentQuestionIndex}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="w-full flex flex-col items-center"
-                    >
-                        <QuestionCard
-                            question={questions[currentQuestionIndex]}
-                            onAnswer={handleAnswer}
-                            currentQuestionIndex={currentQuestionIndex}
-                            totalQuestions={questions.length}
-                        />
+                    {!isStarted ? (
+                        <QuizIntro key="intro" onStart={handleStart} />
+                    ) : (
+                        <motion.div
+                            key={currentQuestionIndex}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.4 }}
+                            className="w-full flex flex-col items-center"
+                        >
+                            <QuestionCard
+                                question={questions[currentQuestionIndex]}
+                                onAnswer={handleAnswer}
+                                currentQuestionIndex={currentQuestionIndex}
+                                totalQuestions={questions.length}
+                            />
 
-                        <QuizProgress
-                            currentQuestionIndex={currentQuestionIndex}
-                            totalQuestions={questions.length}
-                            onNextQuestion={handleNextQuestion}
-                            isLastQuestion={currentQuestionIndex === questions.length - 1}
-                            isAnswerSelected={selectedAnswer !== null}
-                        />
-                    </motion.div>
+                            <QuizProgress
+                                currentQuestionIndex={currentQuestionIndex}
+                                totalQuestions={questions.length}
+                                onNextQuestion={handleNextQuestion}
+                                isLastQuestion={currentQuestionIndex === questions.length - 1}
+                                isAnswerSelected={selectedAnswer !== null}
+                            />
+                        </motion.div>
+                    )}
                 </AnimatePresence>
             </div>
         </div>

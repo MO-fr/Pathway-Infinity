@@ -3,16 +3,11 @@
 import { motion } from 'framer-motion';
 
 export default function QuestionCard({ question, onAnswer, currentQuestionIndex, totalQuestions }) {
+   
     if (!question) return null;
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
-            className="max-w-2xl w-full bg-white/80 backdrop-blur-sm p-8 md:p-12 rounded-2xl shadow-xl border border-mint-100"
-        >
+        <div className="max-w-2xl w-full bg-white/80 backdrop-blur-sm p-8 md:p-12 rounded-2xl shadow-xl border border-mint-100">
             <div className="mb-8">
                 <span className="text-sm uppercase text-sky-600 font-semibold tracking-wider">
                     Question {currentQuestionIndex + 1} of {totalQuestions}
@@ -46,6 +41,6 @@ export default function QuestionCard({ question, onAnswer, currentQuestionIndex,
                     </motion.div>
                 ))}
             </form>
-        </motion.div>
+        </div>
     );
 }

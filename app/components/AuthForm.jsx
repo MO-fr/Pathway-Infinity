@@ -8,7 +8,9 @@ import { useState } from 'react';
 import Button from '../../components/Button';
 
 export function AuthForm({ mode = 'login' }) {
+
   const router = useRouter();
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -24,16 +26,23 @@ export function AuthForm({ mode = 'login' }) {
 
     // Validation
     const newErrors = {};
+
     if (!formData.email) {
+    
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } 
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
     }
+    
     if (!formData.password) {
+    
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
+    }
+     else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
     }
+    
     if (mode === 'signup' && !formData.name) {
       newErrors.name = 'Name is required';
     }
@@ -42,22 +51,13 @@ export function AuthForm({ mode = 'login' }) {
       setErrors(newErrors);
       setIsLoading(false);
       return;
-    }
-
-    try {
+    } try {
+      
       if (mode === 'signup') {
-        const res = await fetch('/api/auth/signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-
-        if (!res.ok) {
-          const data = await res.json();
-          throw new Error(data.error || 'Failed to sign up');
-        }
+        // Import the authApi from lib/api
+        const { authApi } = await import('@/lib/api');
+        await authApi.signup(formData);
+        // Axios errors will be caught in the catch block
 
         // Automatically sign in after successful signup
         const signInResult = await signIn('credentials', {
@@ -116,14 +116,14 @@ export function AuthForm({ mode = 'login' }) {
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-sky-700">
               Name
-            </label>
-            <input
+            </label>            <input
               type="text"
               name="name"
               id="name"
               autoComplete="name"
               value={formData.name || ''}
               onChange={handleChange}
+              suppressHydrationWarning
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-mint-500 focus:outline-none focus:ring-1 focus:ring-mint-500"
             />
             {errors.name && (
@@ -135,14 +135,14 @@ export function AuthForm({ mode = 'login' }) {
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-sky-700">
             Email
-          </label>
-          <input
+          </label>          <input
             type="email"
             name="email"
             id="email"
             autoComplete="email"
             value={formData.email}
             onChange={handleChange}
+            suppressHydrationWarning
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-mint-500 focus:outline-none focus:ring-1 focus:ring-mint-500"
           />
           {errors.email && (
@@ -153,11 +153,11 @@ export function AuthForm({ mode = 'login' }) {
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-sky-700">
             Password
-          </label>
-          <input
+          </label>          <input
             type="password"
             name="password"
             id="password"
+            suppressHydrationWarning
             autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
             value={formData.password}
             onChange={handleChange}

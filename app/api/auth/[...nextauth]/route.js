@@ -1,9 +1,24 @@
+<<<<<<< HEAD
 import bcrypt from "bcryptjs";
+=======
+// src/app/api/auth/[...nextauth]/route.js
+import { prisma } from "@/lib/db";
+import { compare } from "bcrypt";
+>>>>>>> main
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@lib/prisma.js";
 
+<<<<<<< HEAD
 const handler = NextAuth({
+=======
+console.log(process.env.NEXTAUTH_SECRET)
+
+export const authOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
+  // Remove PrismaAdapter when using JWT strategy
+  // adapter: PrismaAdapter(prisma),
+>>>>>>> main
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -13,6 +28,7 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
+<<<<<<< HEAD
           throw new Error("Please enter an email and password");
         }
 
@@ -66,6 +82,27 @@ const handler = NextAuth({
   pages: {
     signIn: "/",
   },
+=======
+          throw new Error("Missing credentials.");
+        }
+
+        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+
+        if (!user) {
+          throw new Error("Invalid credentials.");
+        }
+
+        const isValid = await compare(credentials.password, user.password);
+        if (!isValid) {
+          throw new Error("Invalid credentials.");
+        }
+
+        return { id: user.id, email: user.email, name: user.name };
+      }
+    })
+  ],
+  session: { strategy: "jwt" },
+>>>>>>> main
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -84,6 +121,7 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
+<<<<<<< HEAD
       if (session?.user) {
         session.user.id = token.id;
         session.user.role = token.role;
@@ -123,4 +161,18 @@ const handler = NextAuth({
   },
 });
 
+=======
+      session.user.id = token.id;
+      return session;
+    }
+  }
+};
+
+const handler = NextAuth(authOptions);
+
+if (process.env.NODE_ENV === "development") {
+  console.log("NextAuth handler initialized");
+}
+
+>>>>>>> main
 export { handler as GET, handler as POST };
