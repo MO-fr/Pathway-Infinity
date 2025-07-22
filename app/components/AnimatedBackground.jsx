@@ -1,8 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+// import useIsTouchDevice from '../../lib/useIsTouchDevice';
+import useIsTouchDevice from '@lib/useIsTouchDevice';
+
+
 import { motion } from 'framer-motion';
-import useIsTouchDevice from '@/lib/useIsTouchDevice';
+import { useEffect, useState } from 'react';
 
 export default function AnimatedBackground() {
   const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });

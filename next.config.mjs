@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 // const fileURLToPath = require('url'); 
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(__filename );
 
 const nextConfig = {
   images: {
@@ -21,7 +21,7 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@": path.join(__dirname),
+      "@": path.join(__dirname, "app"),
       "@components": path.join(__dirname, "components"),
       "@styles": path.join(__dirname, "styles"),
       "@lib": path.join(__dirname, "lib"),

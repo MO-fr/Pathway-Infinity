@@ -4,13 +4,10 @@ import AnimatedBackground from '@/components/AnimatedBackground';
 import { AuthForm } from '@/components/AuthForm';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-<<<<<<< HEAD
-=======
 
-export const metadata = {
-  viewport: 'width=device-width, initial-scale=1',
-};
->>>>>>> main
+// export const metadata = {
+//   viewport: 'width=device-width, initial-scale=1',
+// };
 
 export default function SignupPage() {
   return (

@@ -62,7 +62,7 @@ export function AuthForm({ mode = 'login' }) {
       if (mode === 'signup') {
 
         // Import the authApi from lib/api
-        const { authApi } = await import('@/lib/api');
+        const { authApi } = await import('@lib/api');
         
         await authApi.signup(formData);
         // Axios errors will be caught in the catch block
@@ -100,7 +100,7 @@ export function AuthForm({ mode = 'login' }) {
       }
 
     } catch (error) {
-      
+
       console.error('Auth error:', error);
       setErrors({ auth: error.message });
 

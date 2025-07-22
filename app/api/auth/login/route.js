@@ -3,19 +3,16 @@
  * Handles user authentication and session management
  */
 
-import { createAuthToken, setAuthToken, verifyPassword } from "@/lib/auth";
-import { db } from "@/lib/prisma";
+import { createAuthToken, setAuthToken, verifyPassword } from "@/app/lib/auth";
+import { db } from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
-
   try {
-
     const { email, password } = await req.json();
 
     // Validate input
     if (!email || !password) {
-      
       return NextResponse.json(
         { error: "Email and password are required" },
         { status: 400 }
@@ -49,7 +46,7 @@ export async function POST(req) {
         { status: 401 }
       );
     } // Generate auth token
-    
+
     const token = createAuthToken(user.id);
     setAuthToken(token);
 
@@ -58,7 +55,6 @@ export async function POST(req) {
     delete userData.password;
 
     return NextResponse.json({ user: userData });
-
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json({ error: "Login failed" }, { status: 500 });

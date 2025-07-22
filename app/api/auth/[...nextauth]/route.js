@@ -7,6 +7,7 @@ import prisma from "@lib/prisma.js";
 console.log(process.env.NEXTAUTH_SECRET)
 
 export const authOptions = {
+  
   secret: process.env.NEXTAUTH_SECRET,
   // Remove PrismaAdapter when using JWT strategy
   // adapter: PrismaAdapter(prisma),
@@ -18,6 +19,7 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing credentials.");
         }
@@ -38,8 +40,19 @@ export const authOptions = {
     })
   ],
   session: { strategy: "jwt" },
+  pages: {
+    signIn: "/login",
+    signOut: "/login",
+    error: "/login",
+    verifyRequest: "/login",
+    newUser: "/login",
+  },
   callbacks: {
+    
     async jwt({ token, user }) {
+      
+      console.log("JWT Callback:", { token, user });
+
       if (user) {
         token.id = user.id;
         token.role = user.role;
