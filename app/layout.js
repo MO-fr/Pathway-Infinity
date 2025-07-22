@@ -24,17 +24,6 @@ export const metadata = {
     template: "%s | Pathway Infinity",
     default: "Pathway Infinity - Career Guidance Questionnaire",
   },
-<<<<<<< HEAD
-  description:
-    "Find your ideal career path through our guided questionnaire and discover trade schools that match your interests.",
-  keywords: [
-    "career guidance",
-    "trade schools",
-    "vocational training",
-    "career paths",
-    "skills assessment",
-  ],
-=======
   description: "Find your ideal career path through our guided questionnaire and discover trade schools that match your interests.",
   keywords: ['career guidance', 'trade schools', 'vocational training', 'career paths', 'skills assessment'],
   openGraph: {
@@ -62,21 +51,12 @@ export const metadata = {
     initialScale: 1,
     maximumScale: 1,
   },
->>>>>>> main
 };
 
 export default function RootLayout({ children }) {
   return (
-<<<<<<< HEAD
-    <html lang="en">
-      <body
-        className="antialiased min-h-screen flex flex-col font-nunito"
-        suppressHydrationWarning={true}
-      >
-=======
     <html lang="en" className="scroll-smooth">
       <body className="antialiased min-h-screen flex flex-col font-nunito" suppressHydrationWarning={true}>
->>>>>>> main
         <NextAuthProvider>
           <NavigationHandler>{children}</NavigationHandler>
           <Footer />
