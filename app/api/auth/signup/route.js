@@ -3,9 +3,9 @@
  * Handles new user creation with secure password hashing
  */
 
-import { hashPassword } from '@/lib/auth';
-import { db } from '@/lib/db';
-import { NextResponse } from 'next/server';
+import { hashPassword } from "@/lib/auth";
+import { db } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
@@ -14,19 +14,19 @@ export async function POST(req) {
     // Validate input
     if (!email || !password || !name) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
     // Check if user exists
     const existingUser = await db.user.findUnique({
-      where: { email }
+      where: { email },
     });
 
     if (existingUser) {
       return NextResponse.json(
-        { error: 'Email already registered' },
+        { error: "Email already registered" },
         { status: 400 }
       );
     }
@@ -44,15 +44,13 @@ export async function POST(req) {
         name: true,
         email: true,
       },
-    }); return NextResponse.json({
+    });
+    return NextResponse.json({
       user,
-      message: 'User created successfully'
+      message: "User created successfully",
     });
   } catch (error) {
-    console.error('Signup error:', error);
-    return NextResponse.json(
-      { error: 'Registration failed' },
-      { status: 500 }
-    );
+    console.error("Signup error:", error);
+    return NextResponse.json({ error: "Registration failed" }, { status: 500 });
   }
 }
