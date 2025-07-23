@@ -3,14 +3,15 @@
  * Handles new user creation with secure password hashing
  */
 
-import { hashPassword } from "@/app/lib/auth";
-import { db } from "@/app/lib/prisma";
+import { hashPassword } from "@lib/auth";
+import { db } from "@lib/db";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
 
   try {
 
+    console.log("[@app/api/auth/signup/route] Signup request received");
     const { name, email, password } = await req.json();
 
     // Validate input
