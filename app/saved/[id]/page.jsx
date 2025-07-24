@@ -1,6 +1,6 @@
 'use client';
 
-import ErrorMessage from '@/app/components/ErrorMessage';
+import ErrorMessage from '@/components/ErrorMessage';
 import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { useSession } from 'next-auth/react';

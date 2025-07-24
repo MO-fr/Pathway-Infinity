@@ -7,8 +7,8 @@
  * This is a client component that fetches and displays data from the quiz.
  */
 
-import ErrorMessage from '@/app/components/ErrorMessage';
-import SaveResultsButton from '@/app/components/SaveResultsButton';
+import ErrorMessage from '@/components/ErrorMessage';
+import SaveResultsButton from '@/components/SaveResultsButton';
 import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';

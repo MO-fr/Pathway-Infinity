@@ -1,6 +1,6 @@
 'use client';
 
-import { quizApi, schoolsApi } from '@/lib/api';
+import { quizApi, schoolsApi } from '@/app/lib/api';
 
 /**
  * Analyzes quiz answers and finds matching schools

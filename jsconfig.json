@@ -12,7 +12,7 @@
         "./app/components/*"
       ],
       "@/lib/*": [
-        "./lib/*"
+        "app/lib/*"
       ]
     },
     "jsx": "preserve",

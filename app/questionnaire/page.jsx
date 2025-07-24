@@ -1,12 +1,12 @@
 'use client';
 
 import QuizIntro from '@/components/QuizIntro';
-import QuestionCard from '@/components/questionnaire/QuestionCard';
-import QuizProgress from '@/components/questionnaire/QuizProgress';
+import QuestionCard from '@/components/QuestionCard';
+import QuizProgress from '@/components/QuizProgress';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-
+``
 // Quiz questions data
 const questions = [
     {

@@ -2,7 +2,7 @@
 import { compare } from "bcrypt";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "@lib/prisma.js";
+import prisma from "@/lib/prisma.js";
 
 console.log(process.env.NEXTAUTH_SECRET)
 

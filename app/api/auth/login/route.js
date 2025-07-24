@@ -13,7 +13,7 @@ export async function POST(req) {
 
     // Validate input
     if (!email || !password) {
-      
+
       return NextResponse.json(
         { error: "Email and password are required" },
         { status: 400 }
