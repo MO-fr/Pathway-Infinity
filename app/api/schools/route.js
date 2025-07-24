@@ -35,9 +35,8 @@ export async function GET(request) {
 
         // Fetch records from Airtable
         const records = await table.select(queryOptions).all();
-        const schools = transformRecords(records);
 
-        console.log(`transformResults schools ${NextResponse.json(schools)}`)
+        const schools = transformRecords(records);
 
         return NextResponse.json(schools);
 
@@ -47,7 +46,9 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+
     if (!table) {
+
         return NextResponse.json(
             { error: 'Airtable not initialized' },
             { status: 500 }
@@ -55,7 +56,9 @@ export async function POST(request) {
     }
 
     try {
+
         const { answers, filters } = await request.json();
+        
         let filterFormula = '';
 
         // Build filter based on quiz answers or explicit filters
@@ -127,9 +130,7 @@ function initializeAirtable() {
  */
 function transformRecords(records) {
 
-    console.log(`[School Route ] transformingRecords`)
-    
-    if (records && records.length > 0) {
+  if (records && records.length > 0) {
         console.log('Airtable fields available:', Object.keys(records[0].fields));
         console.log('First record sample:', JSON.stringify(records[0].fields, null, 2));
     }

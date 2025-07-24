@@ -34,9 +34,14 @@ export const authApi = {
      * @returns {Promise<Object>} Registered user data
      */
     signup: async (userData) => {
+
         try {
+
+            console.log("[authApi.signup] Signing up user:", userData);
+
             const { data } = await api.post('/api/auth/signup', userData);
             return data;
+
         } catch (error) {
             throw new Error(error?.response?.data?.error || 'Failed to sign up');
         }
@@ -48,9 +53,13 @@ export const authApi = {
      * @returns {Promise<Object>} Authentication result
      */
     login: async (credentials) => {
+
         try {
+        
             const { data } = await api.post('/api/auth/login', credentials);
+            
             return data;
+        
         } catch (error) {
             throw new Error(error?.response?.data?.error || 'Failed to log in');
         }

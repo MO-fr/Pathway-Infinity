@@ -1,6 +1,7 @@
 'use client';
 
-import useIsTouchDevice from '../lib/useIsTouchDevice';
+// import useIsTouchDevice from '../../lib/useIsTouchDevice';
+import useIsTouchDevice from '@lib/useIsTouchDevice';
 
 
 import { motion } from 'framer-motion';

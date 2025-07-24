@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "components/NextAuthProvider.jsx"  ],
+, "app/components/NextAuthProvider.jsx"  ],
   "exclude": [
     "node_modules"
   ]

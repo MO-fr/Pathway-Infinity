@@ -8,7 +8,10 @@
  */
 
 import ErrorMessage from '@/components/ErrorMessage';
+<<<<<<< HEAD
+=======
 import SaveResultsButton from '@/components/SaveResultsButton';
+>>>>>>> 40232fe3db46f0f9eaffd7b65bbb157eabcfb8e8
 import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -31,6 +34,7 @@ export default function ResultsPage() {
      * Handles case variations (e.g., 'Name' vs 'name')
      */
     const getSchoolProperty = (school, propertyName) => {
+
         if (!school || typeof school !== 'object') return null;
 
         // Try exact match first
@@ -51,6 +55,7 @@ export default function ResultsPage() {
      * Helper function to safely render arrays (for pathways, industries, etc.)
      */
     const renderArray = (items, className, ariaLabel) => {
+
         if (!items) return null;
 
         const itemsArray = Array.isArray(items) ? items : [items];
@@ -68,7 +73,9 @@ export default function ResultsPage() {
     };
 
     const analyzeResults = async () => {
+
         try {
+        
             setLoading(true);
             setError(null);
             setLoadingStep('Retrieving your quiz answers...');
@@ -83,6 +90,7 @@ export default function ResultsPage() {
 
             // 1. Fetch school data for AI analysis
             setLoadingStep('Loading school database...');
+            
             const schoolsResponse = await fetch("/api/schools");
 
             if (!schoolsResponse.ok) {
@@ -90,10 +98,12 @@ export default function ResultsPage() {
             }
 
             const schoolsData = await schoolsResponse.json();
-            console.log('Schools data count:', schoolsData?.length || 0);
+
+            console.log('Schools data count:', schoolsData.length || 0);
 
             // 2. Send request to AI analysis endpoint
             setLoadingStep('Analyzing your preferences with AI...');
+
             const aiResponse = await fetch("/api/quiz/analyze", {
                 method: 'POST',
                 headers: {
@@ -111,10 +121,16 @@ export default function ResultsPage() {
             }
 
             setLoadingStep('Processing your matches...');
+
             const analysisData = await aiResponse.json();
+<<<<<<< HEAD
+            
+          // 3. Validate response structure
+=======
             console.log('AI Analysis response:', analysisData);
 
             // 3. Validate response structure
+>>>>>>> 40232fe3db46f0f9eaffd7b65bbb157eabcfb8e8
             if (!analysisData || typeof analysisData !== 'object') {
                 throw new Error('Invalid response format from analysis API');
             }

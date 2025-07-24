@@ -14,12 +14,11 @@ const openai = new OpenAI({
  * @returns {NextResponse} A JSON response with matched schools and analysis.
  */
 export async function POST(req) {
-  console.log("Starting POST request");
 
   try {
+
     // 1. Parse and validate the incoming request body.
     const body = await req.json();
-    console.log("REQUEST BODY:", JSON.stringify(body, null, 2));
 
     const { answers, schools } = body;
 
@@ -42,10 +41,8 @@ export async function POST(req) {
       typeof answers === "string" ? JSON.parse(answers) : answers;
 
     // 2. Check for a valid OpenAI API key. If it's missing, provide a fallback analysis.
-    if (
-      !process.env.OPENAI_API_KEY ||
-      process.env.OPENAI_API_KEY === "your-valid-openai-api-key-here"
-    ) {
+    if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "your-valid-openai-api-key-here") {
+
       console.log("Using fallback analysis (no OpenAI)");
 
       // Simple fallback logic: return the first 3 schools.
@@ -62,11 +59,10 @@ export async function POST(req) {
     }
 
     // 3. Use OpenAI for analysis if the API key is available.
-    console.log("Using OpenAI for analysis");
-
-    // Optimize for large school datasets - limit to first 50 schools to stay within context window
+   // Optimize for large school datasets - limit to first 50 schools to stay within context window
     const schoolsForAnalysis =
       schools.length > 50 ? schools.slice(0, 50) : schools;
+
     console.log(
       `Analyzing ${schoolsForAnalysis.length} schools (total: ${schools.length})`
     );
@@ -89,7 +85,7 @@ export async function POST(req) {
                     )}
                     
                     Please provide:
-                    1. A detailed analysis of the student's preferences and career fit.
+                    1. A detailed analysis of the my preferences and career fit.
                     2. A key named "recommendedSchools" containing an array of the top 3-5 matching school objects, exactly as they were provided in the input list. Include a "reasoning" property inside each school object explaining why it's a good match.
                     
                     Format your entire response as a single, valid JSON object with two keys: "analysis" (a string) and "recommendedSchools" (an array of objects).`,
@@ -99,19 +95,26 @@ export async function POST(req) {
       response_format: { type: "json_object" }, // Ensure the output is valid JSON.
     });
 
-    const aiResponse = completion.choices[0].message.content;
-    console.log("Raw Response:", aiResponse);
+    console.log(`AI response received with ${completion} completion`);
+    console.log(`AI response received with ${completion.choices.length} choices`);
 
-    // 4. Parse and validate the AI response
+    const aiResponse = completion.choices[0].message.content;
+
+   // 4. Parse and validate the AI response
     let aiResult;
+
     try {
+
       aiResult = JSON.parse(aiResponse);
 
       // Validate the expected structure
       if (!aiResult.analysis || !aiResult.recommendedSchools) {
+
         throw new Error("Invalid AI response structure");
       }
-    } catch (parseError) {
+
+    } 
+    catch (parseError) {
       console.error("Failed to parse AI response:", parseError);
 
       // Fallback response
@@ -129,8 +132,12 @@ export async function POST(req) {
     };
 
     console.log("Final Response:", JSON.stringify(response, null, 2));
+
     return NextResponse.json(response);
-  } catch (error) {
+
+  } 
+  
+  catch (error) {
     console.error("[ANALYZE API] Error:", error);
 
     // Return specific error information

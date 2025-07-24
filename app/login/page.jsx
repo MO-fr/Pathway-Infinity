@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { AuthForm } from '../components/AuthForm';
 
-
 export default function LoginPage() {
   return (
     <>

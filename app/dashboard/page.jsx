@@ -26,6 +26,7 @@ const itemVariants = {
 
 
 export default function Dashboard() {
+    
     const { data: session } = useSession();
     const [mounted, setMounted] = useState(false);
 

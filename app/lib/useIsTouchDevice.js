@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 
 export default function useIsTouchDevice() {
+  
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   
   useEffect(() => {

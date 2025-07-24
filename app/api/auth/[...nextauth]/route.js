@@ -8,6 +8,7 @@ console.log(process.env.NEXTAUTH_SECRET);
 const NextAuth = require("next-auth").default || require("next-auth");
 
 const authOptions = {
+  
   secret: process.env.NEXTAUTH_SECRET,
   // Remove PrismaAdapter when using JWT strategy
   // adapter: PrismaAdapter(prisma),
@@ -21,6 +22,7 @@ const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing credentials.");
         }
@@ -50,8 +52,17 @@ const authOptions = {
     verifyRequest: "/login",
     newUser: "/login",
   },
+  pages: {
+    signIn: "/login",
+    signOut: "/login",
+    error: "/login",
+    verifyRequest: "/login",
+    newUser: "/login",
+  },
   callbacks: {
+    
     async jwt({ token, user }) {
+      
       console.log("JWT Callback:", { token, user });
 
       if (user) {
