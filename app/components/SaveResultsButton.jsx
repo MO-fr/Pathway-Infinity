@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/Button';
+import Button from './Button';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 

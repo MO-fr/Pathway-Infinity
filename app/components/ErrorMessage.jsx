@@ -5,7 +5,7 @@
 
 'use client';
 
-import Button from '@/components/Button';
+import Button from './Button';
 import { motion } from 'framer-motion';
 
 export default function ErrorMessage({ message, onRetry }) {
