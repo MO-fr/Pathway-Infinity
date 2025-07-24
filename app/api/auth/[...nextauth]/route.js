@@ -1,4 +1,5 @@
 // src/app/api/auth/[...nextauth]/route.js
+<<<<<<< HEAD
 import { compare } from "bcrypt";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -6,22 +7,42 @@ import prisma from "@/lib/prisma.js";
 console.log(process.env.NEXTAUTH_SECRET)
 export const authOptions = {
   
+=======
+import { compare } from "bcryptjs";
+import prisma from "../../../../lib/prisma.js";
+
+console.log(process.env.NEXTAUTH_SECRET);
+
+// Use require for NextAuth to avoid ES module issues
+const NextAuth = require("next-auth").default || require("next-auth");
+
+const authOptions = {
+>>>>>>> dev
   secret: process.env.NEXTAUTH_SECRET,
   // Remove PrismaAdapter when using JWT strategy
   // adapter: PrismaAdapter(prisma),
   providers: [
-    CredentialsProvider({
+    {
+      id: "credentials",
       name: "Credentials",
+      type: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing credentials.");
         }
+<<<<<<< HEAD
         const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+=======
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+>>>>>>> dev
         if (!user) {
           throw new Error("Invalid credentials.");
         }
@@ -30,8 +51,8 @@ export const authOptions = {
           throw new Error("Invalid credentials.");
         }
         return { id: user.id, email: user.email, name: user.name };
-      }
-    })
+      },
+    },
   ],
   session: { strategy: "jwt" },
   pages: {
@@ -49,9 +70,7 @@ export const authOptions = {
     newUser: "/login",
   },
   callbacks: {
-    
     async jwt({ token, user }) {
-      
       console.log("JWT Callback:", { token, user });
 
       if (user) {
@@ -72,8 +91,8 @@ export const authOptions = {
     async session({ session, token }) {
       session.user.id = token.id;
       return session;
-    }
-  }
+    },
+  },
 };
 const handler = NextAuth(authOptions);
 if (process.env.NODE_ENV === "development") {
