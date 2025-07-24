@@ -6,10 +6,6 @@ import { motion } from 'framer-motion';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-<<<<<<< HEAD
-import Button from './Button';
-=======
->>>>>>> 40232fe3db46f0f9eaffd7b65bbb157eabcfb8e8
 
 export function AuthForm({ mode = 'login' }) {
 
