@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradients -->
+  <defs>
+    <linearGradient id="mintGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#42c572;stop-opacity:0.6"/>
+      <stop offset="50%" style="stop-color:#70e58c;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#42c572;stop-opacity:0.6"/>
+    </linearGradient>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:0.6"/>
+      <stop offset="50%" style="stop-color:#38bdf8;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#0ea5e9;stop-opacity:0.6"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Main infinity paths -->
+  <g class="infinity-paths">
+    <!-- Combined infinity path -->
+    <path d="M400 300 
+             C 350 200, 250 200, 200 250 
+             C 150 300, 150 400, 200 450 
+             C 250 500, 350 400, 400 300
+             C 450 200, 550 200, 600 250
+             C 650 300, 650 400, 600 450
+             C 550 500, 450 400, 400 300Z" 
+          stroke="#42c572" 
+          stroke-width="8" 
+          fill="none" 
+          class="path-animate-1"/>
+    
+    <!-- Overlaying gradient path -->
+    <path d="M400 300 
+             C 350 200, 250 200, 200 250 
+             C 150 300, 150 400, 200 450 
+             C 250 500, 350 400, 400 300
+             C 450 200, 550 200, 600 250
+             C 650 300, 650 400, 600 450
+             C 550 500, 450 400, 400 300Z" 
+          stroke="url(#skyGradient)" 
+          stroke-width="4" 
+          fill="none" 
+          class="path-animate-2" 
+          style="filter: blur(4px)"/>
+    
+    <!-- Career path nodes -->
+    <circle cx="200" cy="350" r="20" fill="#42c572" class="node-animate"/>
+    <circle cx="300" cy="250" r="15" fill="#70e58c" class="node-animate"/>
+    <circle cx="400" cy="300" r="25" fill="#0ea5e9" class="node-animate"/>
+    <circle cx="500" cy="350" r="15" fill="#38bdf8" class="node-animate"/>
+    <circle cx="600" cy="250" r="20" fill="#0ea5e9" class="node-animate"/>
+    
+    <!-- Decorative elements -->
+    <circle cx="250" cy="400" r="8" fill="#42c572" class="dot-animate"/>
+    <circle cx="350" cy="275" r="8" fill="#70e58c" class="dot-animate"/>
+    <circle cx="450" cy="325" r="8" fill="#0ea5e9" class="dot-animate"/>
+    <circle cx="550" cy="300" r="8" fill="#38bdf8" class="dot-animate"/>
+  </g>
+
+  <style>
+    .path-animate-1 {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: dash 3s ease-in-out forwards infinite;
+    }
+    .path-animate-2 {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: dash 3s ease-in-out forwards infinite;
+    }
+    .path-animate-3 {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: dash 3s ease-in-out forwards infinite;
+    }
+    .node-animate {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .dot-animate {
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes dash {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+    }
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+  </style>
+</svg>
