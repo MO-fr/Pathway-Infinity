@@ -88,10 +88,10 @@ export default function HeroSection() {
                 filter: 'drop-shadow(0 10px 15px rgba(112, 229, 140, 0.15))'
               }}
             >                <Image
-                src="/career-paths.svg"
-                alt="Career pathways illustration"
-                width={600}
-                height={500}
+                src="/infinity-paths.svg"
+                alt="Pathway Infinity illustration"
+                width={800}
+                height={600}
                 style={{
                   objectFit: 'contain',
                   transform: 'scale(1.1)'
