@@ -2,9 +2,9 @@
 'use client';
 
 import AnimatedBackground from '@/components/AnimatedBackground';
-import { AuthForm } from '@/components/AuthForm';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { AuthForm } from '../components/AuthForm';
 
 export default function LoginPage() {
   return (

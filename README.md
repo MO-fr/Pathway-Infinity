@@ -92,11 +92,44 @@ Pathway Infinity makes career guidance accessible, personalized, and engaging th
    - Call-to-action buttons
 
 3. **Dashboard**:
+   - Streamlined two-card layout
+   - Career quiz quick access
+   - Direct link to saved programs
    - Personalized welcome message
-   - Career quiz access
-   - Saved programs view
-   - Easy navigation between features
-   - Smooth sign-out functionality
+   - Clean, centered design
+
+4. **Results Management**:
+   - Save quiz results functionality
+   - Toast notifications for success/error feedback
+   - View saved results in dedicated page
+   - Individual result detail pages
+   - Protected result access (user-specific)
+
+5. **User Experience Improvements**:
+   - Toast notifications for user feedback
+   - Responsive design across all devices
+   - Loading states with smooth animations
+   - Error handling with user-friendly messages
+   - Consistent styling throughout
+
+### Recent Updates (July 2025)
+1. **New Features**:
+   - Added save results functionality
+   - Implemented toast notifications
+   - Created individual result detail pages
+   - Added result protection (user-specific access)
+
+2. **UI Improvements**:
+   - Streamlined dashboard layout
+   - Centered card design
+   - Removed redundant "Start Fresh" option
+   - Enhanced mobile responsiveness
+
+3. **Technical Enhancements**:
+   - Updated dependencies
+   - Improved error handling
+   - Added proper TypeScript types
+   - Enhanced API route security
 
 4. **Navigation**:
    - Responsive navbar with mobile menu
@@ -211,7 +244,7 @@ The application will be available at `http://localhost:3001`
 ### Major Features (Complete)
 - **Distraction-Free Career Quiz**: 6-question, one-at-a-time quiz with smooth transitions, mobile-friendly layout, and a visual progress bar.
 - **Results Page**: Personalized career path recommendations based on quiz answers, with a clean, responsive UI and fallback handling for missing data.
-- **Navbar Hiding**: Navbar is automatically hidden during the quiz and results for a focused experience.
+- **Navbar Hides on Quiz/Results**: Navbar is automatically hidden during the quiz and results for a focused experience.
 - **State Management**: Uses React state and sessionStorage for quiz flow and answer persistence.
 - **No Lint Errors**: Codebase is clean, with no unused variables or imports, and follows project coding standards.
 - **Modern, Accessible UI**: All pages are responsive, simple, and easy to use for non-technical students.
@@ -285,3 +318,41 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## How the Site Works
+
+Pathway Infinity is designed to guide users through a seamless experience for exploring career paths and educational opportunities. Here's how the site works:
+
+1. **Homepage**:
+   - Users are greeted with a visually appealing homepage featuring sections like Hero, Features, and How It Works.
+   - The Animated Background and CTA Section encourage users to engage with the platform.
+
+2. **Authentication**:
+   - Users can sign up or log in using the NextAuth authentication system.
+   - Secure routes ensure user data is protected.
+
+3. **Dashboard**:
+   - After logging in, users access a personalized dashboard displaying saved career paths and educational programs.
+
+4. **Quiz**:
+   - Users can take a questionnaire to analyze their interests and receive tailored career recommendations.
+   - The Quiz Progress component tracks their progress.
+
+5. **Results**:
+   - The results page displays career paths and educational programs based on the quiz analysis.
+
+6. **Saved Items**:
+   - Users can save career paths and programs for future reference.
+
+7. **Responsive Design**:
+   - The site is fully responsive, ensuring a smooth experience across devices.
+
+8. **Technology Stack**:
+   - Built with Next.js, React, Tailwind CSS, Prisma, and PostgreSQL.
+   - PostCSS and Tailwind handle styling, while Prisma manages database interactions.
+
+9. **Global State Management**:
+   - Zustand and React Context API are used for managing shared state across components.
+
+10. **Deployment**:
+    - The site is configured to work both locally and online, ensuring accessibility for all users.

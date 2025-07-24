@@ -8,6 +8,10 @@
  */
 
 import ErrorMessage from '@/components/ErrorMessage';
+<<<<<<< HEAD
+=======
+import SaveResultsButton from '@/components/SaveResultsButton';
+>>>>>>> 40232fe3db46f0f9eaffd7b65bbb157eabcfb8e8
 import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -19,7 +23,7 @@ export default function ResultsPage() {
     const [loadingStep, setLoadingStep] = useState('Preparing analysis...');
     const [error, setError] = useState(null);
     const router = useRouter();
-    
+
     useEffect(() => {
         analyzeResults();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,18 +36,18 @@ export default function ResultsPage() {
     const getSchoolProperty = (school, propertyName) => {
 
         if (!school || typeof school !== 'object') return null;
-        
+
         // Try exact match first
         if (school[propertyName]) return school[propertyName];
-        
+
         // Try capitalized version
         const capitalized = propertyName.charAt(0).toUpperCase() + propertyName.slice(1);
         if (school[capitalized]) return school[capitalized];
-        
+
         // Try lowercase version
         const lowercase = propertyName.toLowerCase();
         if (school[lowercase]) return school[lowercase];
-        
+
         return null;
     };
 
@@ -53,12 +57,12 @@ export default function ResultsPage() {
     const renderArray = (items, className, ariaLabel) => {
 
         if (!items) return null;
-        
+
         const itemsArray = Array.isArray(items) ? items : [items];
-        
+
         return itemsArray.map((item, i) => (
-            <span 
-                key={`${ariaLabel}-${i}-${item}`} 
+            <span
+                key={`${ariaLabel}-${i}-${item}`}
                 className={className}
                 role="badge"
                 aria-label={`${ariaLabel}: ${item}`}
@@ -88,11 +92,11 @@ export default function ResultsPage() {
             setLoadingStep('Loading school database...');
             
             const schoolsResponse = await fetch("/api/schools");
-            
+
             if (!schoolsResponse.ok) {
                 throw new Error(`Failed to fetch schools data: ${schoolsResponse.status}`);
             }
-            
+
             const schoolsData = await schoolsResponse.json();
 
             console.log('Schools data count:', schoolsData.length || 0);
@@ -105,9 +109,9 @@ export default function ResultsPage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
-                    answers: storedAnswers, 
-                    schools: schoolsData 
+                body: JSON.stringify({
+                    answers: storedAnswers,
+                    schools: schoolsData
                 })
             });
 
@@ -119,8 +123,14 @@ export default function ResultsPage() {
             setLoadingStep('Processing your matches...');
 
             const analysisData = await aiResponse.json();
+<<<<<<< HEAD
             
           // 3. Validate response structure
+=======
+            console.log('AI Analysis response:', analysisData);
+
+            // 3. Validate response structure
+>>>>>>> 40232fe3db46f0f9eaffd7b65bbb157eabcfb8e8
             if (!analysisData || typeof analysisData !== 'object') {
                 throw new Error('Invalid response format from analysis API');
             }
@@ -132,7 +142,7 @@ export default function ResultsPage() {
             if (!analysisData.matches || !Array.isArray(analysisData.matches)) {
                 throw new Error('No school matches found in response');
             }
-            
+
             // 4. Set the results state with validated data
             setLoadingStep('Finalizing results...');
             setResults(analysisData);
@@ -162,7 +172,7 @@ export default function ResultsPage() {
                         role="status"
                         aria-live="polite"
                     >
-                        <div 
+                        <div
                             className="w-16 h-16 border-4 border-mint-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"
                             aria-hidden="true"
                         />
@@ -209,17 +219,17 @@ export default function ResultsPage() {
                             </ul>
                         </div>
                         <div className="space-y-4">
-                            <Button 
-                                onClick={analyzeResults} 
-                                variant="secondary" 
+                            <Button
+                                onClick={analyzeResults}
+                                variant="secondary"
                                 className="w-full"
                                 aria-label="Try searching for schools again"
                             >
                                 Try Again
                             </Button>
-                            <Button 
-                                onClick={handleRetakeQuiz} 
-                                variant="primary" 
+                            <Button
+                                onClick={handleRetakeQuiz}
+                                variant="primary"
                                 className="w-full"
                                 aria-label="Start over with a new quiz"
                             >
@@ -288,8 +298,8 @@ export default function ResultsPage() {
                                             <div className="p-6 md:p-8">
                                                 <div className="flex flex-col md:flex-row justify-between">
                                                     <div className="flex-1">
-                                                        <h3 
-                                                            className="text-2xl font-bold mb-2" 
+                                                        <h3
+                                                            className="text-2xl font-bold mb-2"
                                                             id={`school-title-${index}`}
                                                         >
                                                             {schoolName}
@@ -385,9 +395,15 @@ export default function ResultsPage() {
                             </div>
                         </section>
 
-                        <div className="mt-8 text-center">
-                            <Button 
-                                onClick={() => router.push('/questionnaire')} 
+                        <div className="mt-8 text-center space-x-4">
+                            <SaveResultsButton
+                                results={results}
+                                onSave={() => {
+                                    // Optional: Show success message or redirect
+                                }}
+                            />
+                            <Button
+                                onClick={() => router.push('/questionnaire')}
                                 variant="primary"
                                 aria-label="Find more matching schools"
                             >

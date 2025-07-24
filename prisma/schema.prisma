@@ -8,13 +8,14 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
+  id            String       @id @default(cuid())
+  email         String       @unique
   name          String
   password      String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  savedPrograms Program[] @relation("ProgramToUser")
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  savedPrograms Program[]    @relation("ProgramToUser")
+  quizResults   QuizResult[] @relation("UserQuizResults")
 }
 
 model Program {
@@ -28,4 +29,15 @@ model Program {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   users       User[]   @relation("ProgramToUser")
+}
+
+model QuizResult {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("UserQuizResults", fields: [userId], references: [id], onDelete: Cascade)
+  results   Json
+  savedAt   DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }

@@ -2,10 +2,8 @@
 import { compare } from "bcrypt";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "@lib/prisma.js";
-
+import prisma from "@/lib/prisma.js";
 console.log(process.env.NEXTAUTH_SECRET)
-
 export const authOptions = {
   
   secret: process.env.NEXTAUTH_SECRET,
@@ -23,23 +21,26 @@ export const authOptions = {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing credentials.");
         }
-
         const user = await prisma.user.findUnique({ where: { email: credentials.email } });
-
         if (!user) {
           throw new Error("Invalid credentials.");
         }
-
         const isValid = await compare(credentials.password, user.password);
         if (!isValid) {
           throw new Error("Invalid credentials.");
         }
-
         return { id: user.id, email: user.email, name: user.name };
       }
     })
   ],
   session: { strategy: "jwt" },
+  pages: {
+    signIn: "/login",
+    signOut: "/login",
+    error: "/login",
+    verifyRequest: "/login",
+    newUser: "/login",
+  },
   pages: {
     signIn: "/login",
     signOut: "/login",
@@ -74,11 +75,8 @@ export const authOptions = {
     }
   }
 };
-
 const handler = NextAuth(authOptions);
-
 if (process.env.NODE_ENV === "development") {
   console.log("NextAuth handler initialized");
 }
-
 export { handler as GET, handler as POST };
