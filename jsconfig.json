@@ -18,6 +18,10 @@
     "jsx": "preserve",
     "jsxImportSource": "react",
     "strict": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "checkJs": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -26,11 +30,8 @@
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
     "noEmit": true,
     "incremental": true,
-    "moduleResolution": "node",
-    "module": "esnext",
     "resolveJsonModule": true,
     "isolatedModules": true
   },

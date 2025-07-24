@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/Button';
+import Button from '@/app/components/Button';
 import { motion } from 'framer-motion';
 
 export default function NotFound() {

@@ -3,7 +3,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import AnimatedBackground from '../components/AnimatedBackground';
+import AnimatedBackground from '@/app/components/AnimatedBackground';
 import { AuthForm } from '../components/AuthForm';
 
 
