@@ -1,8 +1,8 @@
 'use client';
 
-import QuizIntro from '@/components/QuizIntro';
-import QuestionCard from '@/components/questionnaire/QuestionCard';
-import QuizProgress from '@/components/questionnaire/QuizProgress';
+import QuizIntro from '@/app/components/QuizIntro';
+import QuestionCard from '@/app/components/questionnaire/QuestionCard';
+import QuizProgress from '@/app/components/questionnaire/QuizProgress';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
