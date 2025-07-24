@@ -5,9 +5,7 @@ import { AuthForm } from '@/components/AuthForm';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-export const metadata = {
-  viewport: 'width=device-width, initial-scale=1',
-};
+
 
 export default function SignupPage() {
   return (
