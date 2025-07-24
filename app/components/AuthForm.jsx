@@ -1,7 +1,7 @@
 // Auth Form component
 'use client';
 
-import Button from '@/app/components/Button';
+import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';

@@ -1,7 +1,7 @@
 // Login page
 'use client';
 
-import AnimatedBackground from '@/app/components/AnimatedBackground';
+import AnimatedBackground from '@/components/AnimatedBackground';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { AuthForm } from '../components/AuthForm';
