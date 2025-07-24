@@ -71,11 +71,11 @@ export default function Dashboard() {
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="max-w-7xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3 mb-12"
+                className="max-w-5xl mx-auto grid gap-8 grid-cols-1 md:grid-cols-2 mb-12 px-4 justify-items-center"
             >
                 {/* Start Career Quiz Card */}
                 <motion.div variants={itemVariants}>
-                    <Link href="/questionnaire" className="block h-full">
+                    <Link href="/questionnaire" className="block h-full w-full max-w-md">
                         <motion.div
                             whileHover={{
                                 scale: 1.03,
@@ -97,7 +97,7 @@ export default function Dashboard() {
 
                 {/* View Saved Programs Card */}
                 <motion.div variants={itemVariants}>
-                    <Link href="/saved" className="block h-full">
+                    <Link href="/saved" className="block h-full w-full max-w-md">
                         <motion.div
                             whileHover={{
                                 scale: 1.03,
@@ -116,28 +116,7 @@ export default function Dashboard() {
                         </motion.div>
                     </Link>
                 </motion.div>
-
-                {/* Start Over Card */}
-                <motion.div variants={itemVariants}>
-                    <Link href="/startover" className="block h-full">
-                        <motion.div
-                            whileHover={{
-                                scale: 1.03,
-                                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                            }}
-                            transition={{ type: "spring", stiffness: 300 }}
-                            className="h-full bg-white rounded-2xl shadow-sm border border-purple-100 hover:border-purple-200 p-8 transition-colors duration-300"
-                        >
-                            <div className="h-16 w-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6">
-                                <svg className="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                </svg>
-                            </div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-3">Start Fresh</h2>
-                            <p className="text-gray-600 text-lg">Begin a new journey to explore different career paths.</p>
-                        </motion.div>
-                    </Link>
-                </motion.div>            </motion.div>
+            </motion.div>
         </div>
     );
 }
