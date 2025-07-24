@@ -1,8 +1,8 @@
 'use client';
 
-import QuizIntro from '@/components/QuizIntro';
-import QuestionCard from '@/components/questionnaire/QuestionCard';
-import QuizProgress from '@/components/questionnaire/QuizProgress';
+import QuizIntro from '@/app/components/QuizIntro';
+import QuestionCard from '@/app/components/questionnaire/QuestionCard';
+import QuizProgress from '@/app/components/questionnaire/QuizProgress';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -85,7 +85,7 @@ export default function QuestionnairePage() {
         setSelectedAnswer(answer);
     };
 
-    
+
     useEffect(() => {
 
         if (answers[questions[currentQuestionIndex]?.id]) {
@@ -112,11 +112,11 @@ export default function QuestionnairePage() {
         if (currentQuestionIndex < questions.length - 1) {
 
             setCurrentQuestionIndex((prev) => prev + 1);
-        
-        } 
-        
+
+        }
+
         // Save answers to sessionStorage for results page
-        else {	
+        else {
             sessionStorage.setItem(
                 'quizAnswers',
                 JSON.stringify({
@@ -135,12 +135,12 @@ export default function QuestionnairePage() {
 
 
         setIsStarted(true);
-        
+
         // Reset everything when starting/restarting
         setCurrentQuestionIndex(0);
         setAnswers({});
         setSelectedAnswer(null);
-    
+
     };  // Check if current question is already answered (when navigating back)
 
     return (

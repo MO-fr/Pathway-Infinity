@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "studio": "npx prisma studio",
-    "reset": "rm -rf node_modules .next/ pnpm-lock.yaml && pnpm install && npx prisma generate"
+    "reset": "rm -rf node_modules .next/ npm-lock.yaml && npm install && npx prisma generate"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.0.0",
