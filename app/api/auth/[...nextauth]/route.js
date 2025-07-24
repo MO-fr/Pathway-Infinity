@@ -1,13 +1,4 @@
 // src/app/api/auth/[...nextauth]/route.js
-<<<<<<< HEAD
-import { compare } from "bcrypt";
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "@/lib/prisma.js";
-console.log(process.env.NEXTAUTH_SECRET)
-export const authOptions = {
-  
-=======
 import { compare } from "bcryptjs";
 import prisma from "../../../../lib/prisma.js";
 
@@ -17,7 +8,6 @@ console.log(process.env.NEXTAUTH_SECRET);
 const NextAuth = require("next-auth").default || require("next-auth");
 
 const authOptions = {
->>>>>>> dev
   secret: process.env.NEXTAUTH_SECRET,
   // Remove PrismaAdapter when using JWT strategy
   // adapter: PrismaAdapter(prisma),
@@ -34,15 +24,11 @@ const authOptions = {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing credentials.");
         }
-<<<<<<< HEAD
-        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
-=======
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
 
->>>>>>> dev
         if (!user) {
           throw new Error("Invalid credentials.");
         }
