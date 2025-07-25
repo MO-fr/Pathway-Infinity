@@ -2,15 +2,8 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-<<<<<<< HEAD
-
-// export const metadata = {
-//   viewport: 'width=device-width, initial-scale=1',
-// };
-=======
-import AnimatedBackground from '../components/AnimatedBackground';
-import { AuthForm } from '../components/AuthForm';
->>>>>>> 40232fe3db46f0f9eaffd7b65bbb157eabcfb8e8
+import AnimatedBackground from '@/components/AnimatedBackground';
+import { AuthForm } from '@/components/AuthForm';
 
 export default function SignupPage() {
   return (
