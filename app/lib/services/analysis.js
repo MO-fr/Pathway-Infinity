@@ -1,10 +1,6 @@
 "use client";
 
-<<<<<<< HEAD:lib/services/analysis.js
-import { quizApi, schoolsApi } from "@/api";
-=======
-import { quizApi, schoolsApi } from '@/app/lib/api';
->>>>>>> 40232fe3db46f0f9eaffd7b65bbb157eabcfb8e8:app/lib/services/analysis.js
+import { quizApi, schoolsApi } from "@/app/lib/api";
 
 /**
  * Analyzes quiz answers and finds matching schools
