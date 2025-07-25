@@ -3,8 +3,8 @@
  * Handles new user creation with secure password hashing
  */
 
-import { hashPassword } from "@lib/auth";
-import { db } from "@lib/db";
+import { hashPassword } from "../../../lib/auth";
+import { db } from "../../../lib/db";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {

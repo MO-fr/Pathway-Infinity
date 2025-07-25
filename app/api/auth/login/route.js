@@ -3,8 +3,8 @@
  * Handles user authentication and session management
  */
 
-import { createAuthToken, setAuthToken, verifyPassword } from "../../../../lib/auth";
-import { db } from "../../../../lib/db";
+import { createAuthToken, setAuthToken, verifyPassword } from "../../../lib/auth";
+import { db } from "../../../lib/db";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {

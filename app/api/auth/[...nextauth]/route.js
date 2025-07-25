@@ -1,6 +1,6 @@
 // src/app/api/auth/[...nextauth]/route.js
 import { compare } from "bcryptjs";
-import prisma from "../../../../lib/prisma.js";
+import prisma from "../../../lib/prisma";
 
 console.log(process.env.NEXTAUTH_SECRET);
 
