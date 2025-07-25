@@ -1,7 +1,7 @@
-import { prisma } from '@/lib/db';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
-import { authOptions } from '../../../auth/[...nextauth]/route';
+import prisma from '../../../../lib/prisma.js';
+import { authOptions } from '../../../../../lib/auth-config.js';
 
 export async function GET(request, { params }) {
     try {
@@ -15,6 +15,7 @@ export async function GET(request, { params }) {
         }
 
         console.log('Fetching result with ID:', params.id);
+
         const result = await prisma.quizResult.findFirst({
             where: {
                 id: params.id,
