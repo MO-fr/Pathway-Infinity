@@ -1,6 +1,6 @@
 // src/app/api/auth/[...nextauth]/route.js
 import { compare } from "bcryptjs";
-import prisma from "../../../../lib/prisma.js";
+import prisma from "@/lib/prisma";
 
 console.log(process.env.NEXTAUTH_SECRET);
 
@@ -40,7 +40,12 @@ const authOptions = {
           throw new Error("Invalid credentials.");
         }
 
-        return { id: user.id, email: user.email, name: user.name };
+        return {
+          id: user.id,
+          userId: user.id, // Add this to ensure it matches the database field
+          email: user.email,
+          name: user.name
+        };
       },
     },
   ],

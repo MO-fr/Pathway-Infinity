@@ -1,22 +1,29 @@
 /* Tailwind directives */
 @tailwind base;
-@tailwind components; 
+@tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
     /* Mint green with blue tones palette */
-    --color-primary: 112 229 140;    /* mint-400 */
-    --color-secondary: 56 189 248;   /* sky-400 */
-    --color-accent: 34 211 238;      /* azure-400 */
+    --color-primary: 112 229 140;
+    /* mint-400 */
+    --color-secondary: 56 189 248;
+    /* sky-400 */
+    --color-accent: 34 211 238;
+    /* azure-400 */
     --color-background: 255 255 255;
     --color-foreground: 23 23 23;
-    
+
     /* Additional colors from our palette */
-    --color-mint: 152 255 152;      /* mint green #98FF98 */
-    --color-sky: 56 189 248;        /* sky blue */
-    --color-azure: 34 211 238;      /* azure blue */
-    --color-slate: 148 163 184;     /* slate gray */
+    --color-mint: 152 255 152;
+    /* mint green #98FF98 */
+    --color-sky: 56 189 248;
+    /* sky blue */
+    --color-azure: 34 211 238;
+    /* azure blue */
+    --color-slate: 148 163 184;
+    /* slate gray */
   }
 
   html {
@@ -72,19 +79,41 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 @keyframes pulse-slow {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 @keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Smooth scrollbar for modern browsers */
@@ -109,13 +138,44 @@
 
 /* Animation styles */
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .animate-float {
   animation: float 4s ease-in-out infinite;
+}
+
+/* Logo path animations */
+@keyframes path-animate {
+  from {
+    stroke-dashoffset: 1000;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.path-animate-1 {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: path-animate 3s ease-in-out forwards infinite;
+}
+
+.path-animate-2 {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: path-animate 3s ease-in-out forwards infinite;
 }
 
 /* Custom scrollbar */

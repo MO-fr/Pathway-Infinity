@@ -143,7 +143,7 @@ export default function SavedProgramsPage() {
 
                                 <div className="mt-4 flex justify-between items-center">
                                     <Button
-                                        onClick={() => router.push(`/results/${result.id}`)}
+                                        onClick={() => router.push(`/saved/${result.id}`)}
                                         variant="outline"
                                         className="text-sm"
                                     >

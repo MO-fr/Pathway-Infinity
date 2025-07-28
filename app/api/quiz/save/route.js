@@ -23,11 +23,12 @@ export async function POST(req) {
             );
         }
 
-        console.log('Saving results for user:', session.user.id);
+        const sessionUserId = session.user.userId || session.user.id;
+        console.log('Saving results for user:', sessionUserId);
 
         const savedResult = await prisma.quizResult.create({
             data: {
-                userId: session.user.id,
+                userId: sessionUserId,
                 results,
                 savedAt: new Date(),
             },

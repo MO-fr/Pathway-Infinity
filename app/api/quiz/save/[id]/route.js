@@ -37,9 +37,14 @@ export async function GET(request, { params }) {
         }
 
         // Check if the result belongs to the requesting user
-        if (result.userId !== session.user.id) {
+        const sessionUserId = session.user.userId || session.user.id;
+        if (result.userId !== sessionUserId) {
+            console.log('Permission denied:', {
+                resultUserId: result.userId,
+                sessionUserId: sessionUserId
+            });
             return NextResponse.json(
-                { error: 'Forbidden' },
+                { error: 'You do not have permission to view this result' },
                 { status: 403 }
             );
         }

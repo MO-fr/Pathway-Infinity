@@ -113,17 +113,17 @@ Pathway Infinity makes career guidance accessible, personalized, and engaging th
    - Consistent styling throughout
 
 ### Recent Updates (July 2025)
-1. **New Features**:
-   - Added save results functionality
-   - Implemented toast notifications
-   - Created individual result detail pages
-   - Added result protection (user-specific access)
+1. **Enhanced Results Display**:
+   - Added detailed AI analysis section in saved results
+   - Improved school matches presentation with colored borders
+   - Added comprehensive school information display (industries, program length, housing, cost)
+   - Included direct website links for each school
 
-2. **UI Improvements**:
-   - Streamlined dashboard layout
-   - Centered card design
-   - Removed redundant "Start Fresh" option
+2. **UI/UX Improvements**:
+   - Added visual separation between school cards with mint-colored borders
+   - Simplified footer design for better focus
    - Enhanced mobile responsiveness
+   - Improved readability with better spacing and typography
 
 3. **Technical Enhancements**:
    - Updated dependencies
@@ -144,8 +144,11 @@ Pathway Infinity makes career guidance accessible, personalized, and engaging th
    - Mobile-friendly layout
 
 6. **Results Page**:
-   - Displays top two career path matches
-   - Clean, responsive UI
+   - Displays comprehensive AI analysis
+   - Shows detailed school matches with complete information
+   - Interactive school cards with hover effects
+   - Direct links to school websites
+   - Clean, responsive UI with proper visual hierarchy
    - Fallback handling for missing data
 
 ### Database Schema

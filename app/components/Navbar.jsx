@@ -1,11 +1,11 @@
 'use client';
 
+import Button from '@/components/Button.jsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import Button from '@/components/Button.jsx';
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -75,28 +75,46 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <svg
-              viewBox="0 0 50 24"
+              viewBox="0 0 800 600"
               className="w-8 h-8 text-mint-600"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
+              <defs>
+                <linearGradient id="mintGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style={{ stopColor: 'currentColor', stopOpacity: 0.6 }} />
+                  <stop offset="50%" style={{ stopColor: 'currentColor', stopOpacity: 0.8 }} />
+                  <stop offset="100%" style={{ stopColor: 'currentColor', stopOpacity: 0.6 }} />
+                </linearGradient>
+              </defs>
+
               <path
-                d="M18 12C18 15.3137 15.3137 18 12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12Z"
+                d="M400 300 
+                   C 350 200, 250 200, 200 250 
+                   C 150 300, 150 400, 200 450 
+                   C 250 500, 350 400, 400 300
+                   C 450 200, 550 200, 600 250
+                   C 650 300, 650 400, 600 450
+                   C 550 500, 450 400, 400 300Z"
                 stroke="currentColor"
-                strokeWidth="2"
-                className="animate-pulse"
+                strokeWidth="8"
+                fill="none"
+                className="path-animate-1"
               />
+
               <path
-                d="M44 12C44 15.3137 41.3137 18 38 18C34.6863 18 32 15.3137 32 12C32 8.68629 34.6863 6 38 6C41.3137 6 44 8.68629 44 12Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="animate-pulse"
-              />
-              <path
-                d="M12 12C12 5.37258 17.3726 0 24 0C30.6274 0 36 5.37258 36 12C36 18.6274 30.6274 24 24 24C17.3726 24 12 18.6274 12 12Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="animate-pulse-slow"
+                d="M400 300 
+                   C 350 200, 250 200, 200 250 
+                   C 150 300, 150 400, 200 450 
+                   C 250 500, 350 400, 400 300
+                   C 450 200, 550 200, 600 250
+                   C 650 300, 650 400, 600 450
+                   C 550 500, 450 400, 400 300Z"
+                stroke="url(#mintGradient)"
+                strokeWidth="4"
+                fill="none"
+                className="path-animate-2"
+                style={{ filter: 'blur(1px)' }}
               />
             </svg>
             <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-mint-600 to-sky-600 bg-clip-text text-transparent">
@@ -171,15 +189,12 @@ export default function Navbar() {
               exit={{ opacity: 0, height: 0 }}
               className="md:hidden"
             >
-              <div className="px-2 pt-2 pb-3 space-y-1">
+              <div className="px-2 pt-2 pb-3 space-y-1 bg-white shadow-lg rounded-b-xl border-t border-mint-100">
                 {session ? (
                   <>
-                    <div className="block px-3 py-2 text-base font-medium text-gray-700">
-                      Welcome, {session.user.name}!
-                    </div>
                     <Link
                       href="/dashboard"
-                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-mint-600 hover:bg-mint-50 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       Dashboard
@@ -187,7 +202,7 @@ export default function Navbar() {
                     <button
                       onClick={handleSignOut}
                       disabled={isSigningOut}
-                      className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50 disabled:opacity-50"
+                      className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50 disabled:opacity-50 transition-colors"
                     >
                       {isSigningOut ? 'Signing out...' : 'Sign out'}
                     </button>
@@ -196,14 +211,14 @@ export default function Navbar() {
                   <>
                     <Link
                       href="/login"
-                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-mint-600 hover:bg-mint-50 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       Log in
                     </Link>
                     <Link
                       href="/signup"
-                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-mint-600 hover:bg-mint-50 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       Sign up

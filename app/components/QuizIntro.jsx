@@ -1,9 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import Button from './Button';
 
 export default function QuizIntro({ onStart }) {
+    const router = useRouter();
 
     return (
         <motion.div
@@ -32,13 +34,25 @@ export default function QuizIntro({ onStart }) {
                     <p className="text-lg md:text-xl text-gray-600 mb-8">
                         This short quiz will help you discover trade school programs and career paths that perfectly match your interests and strengths.
                     </p>
-                    <div className="space-y-4">
-                        <Button onClick={onStart}
-                            variant="primary"
-                            className="text-lg px-8 py-3"
-                        >
-                            Begin
-                        </Button>
+                    <div className="space-y-6">
+                        <div>
+                            <Button
+                                onClick={onStart}
+                                variant="primary"
+                                className="text-lg px-8 py-3"
+                            >
+                                Begin
+                            </Button>
+                        </div>
+                        <div>
+                            <Button
+                                onClick={() => router.push('/dashboard')}
+                                variant="outline"
+                                className="text-base"
+                            >
+                                Back to Dashboard
+                            </Button>
+                        </div>
                         <p className="text-sm text-gray-500">
                             Takes about 5-10 minutes to complete
                         </p>

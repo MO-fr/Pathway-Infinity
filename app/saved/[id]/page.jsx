@@ -1,7 +1,7 @@
 'use client';
 
-import ErrorMessage from '@/components/ErrorMessage';
 import Button from '@/components/Button';
+import ErrorMessage from '@/components/ErrorMessage';
 import { motion } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -10,16 +10,41 @@ import { useCallback, useEffect, useState } from 'react';
 export default function SavedResultDetail({ params }) {
     const { data: session } = useSession();
     const router = useRouter();
-    const [result, setResult] = useState(null);
+    const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [loadingStep, setLoadingStep] = useState('Loading saved results...');
+
+    const getSchoolProperty = (school, propertyName) => {
+        if (!school || typeof school !== 'object') return null;
+        if (school[propertyName]) return school[propertyName];
+        const capitalized = propertyName.charAt(0).toUpperCase() + propertyName.slice(1);
+        if (school[capitalized]) return school[capitalized];
+        const lowercase = propertyName.toLowerCase();
+        if (school[lowercase]) return school[lowercase];
+        return null;
+    };
+
+    const renderArray = (items, className, ariaLabel) => {
+        if (!items) return null;
+        const itemsArray = Array.isArray(items) ? items : [items];
+        return itemsArray.map((item, i) => (
+            <span
+                key={`${ariaLabel}-${i}-${item}`}
+                className={className}
+                role="badge"
+                aria-label={`${ariaLabel}: ${item}`}
+            >
+                {item}
+            </span>
+        ));
+    };
 
     const fetchSavedResult = useCallback(async () => {
         try {
             setLoading(true);
-            console.log('Fetching result with params:', params);
+            setLoadingStep('Fetching saved results...');
             const response = await fetch(`/api/quiz/save/${params.id}`);
-            console.log('Response status:', response.status);
 
             if (!response.ok) {
                 if (response.status === 404) {
@@ -28,154 +53,258 @@ export default function SavedResultDetail({ params }) {
                 if (response.status === 403) {
                     throw new Error('You do not have permission to view this result');
                 }
-                throw new Error('Failed to fetch saved result');
+                throw new Error('An error occurred while fetching the result');
             }
 
             const data = await response.json();
-            setResult(data);
-        } catch (err) {
-            setError(err.message);
-            console.error('Error fetching saved result:', err);
+
+            // The results are already analyzed and stored in the database
+            setResults({
+                ...data.results, // This contains the analyzed results including matches and summary
+                savedAt: data.savedAt,
+                id: data.id
+            });
+        } catch (error) {
+            console.error('Error fetching result:', error);
+            setError(error.message);
         } finally {
             setLoading(false);
         }
-    }, [params]);
+    }, [params.id]);
 
     useEffect(() => {
         if (!session) {
             router.push('/login');
             return;
         }
-
         fetchSavedResult();
     }, [session, router, fetchSavedResult]);
 
+    const handleRetakeQuiz = () => {
+        sessionStorage.removeItem('quizAnswers');
+        router.push('/questionnaire');
+    };
+
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex items-center justify-center">
-                        <div className="w-8 h-8 border-4 border-mint-500 border-t-transparent rounded-full animate-spin" />
-                        <span className="ml-3 text-gray-600">Loading saved result...</span>
-                    </div>
-                </div>
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center"
+                    role="status"
+                    aria-live="polite"
+                >
+                    <div
+                        className="w-16 h-16 border-4 border-mint-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+                        aria-hidden="true"
+                    />
+                    <p className="text-xl text-gray-700 mb-2">Loading your saved results...</p>
+                    <p className="text-sm text-gray-500">{loadingStep}</p>
+                    <span className="sr-only">Loading saved results, please wait</span>
+                </motion.div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
-                <div className="max-w-7xl mx-auto">
-                    <ErrorMessage message={error} />
-                    <div className="mt-8 text-center">
-                        <Button
-                            onClick={() => router.push('/saved')}
-                            variant="primary"
-                        >
-                            Back to Saved Results
-                        </Button>
-                    </div>
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+                <div className="max-w-md text-center" role="alert" aria-live="assertive">
+                    <h1 className="text-2xl font-bold mb-4" id="error-title">Error</h1>
+                    <ErrorMessage
+                        message={error}
+                        onRetry={fetchSavedResult}
+                        aria-describedby="error-title"
+                    />
+                    <Button
+                        onClick={handleRetakeQuiz}
+                        variant="primary"
+                        className="mt-4"
+                    >
+                        Take Quiz Again
+                    </Button>
                 </div>
             </div>
         );
     }
 
-    if (!result) {
+    if (!results) {
         return null;
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
-            <div className="max-w-7xl mx-auto">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-white rounded-2xl shadow-lg p-8"
-                >
-                    <div className="mb-8">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-4">Your Career Match Results</h1>
-                        <p className="text-gray-600">
-                            Saved on {new Date(result.savedAt).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            })}
-                        </p>
-                    </div>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 sm:p-6 lg:p-8">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="max-w-7xl mx-auto"
+            >
+                <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-4">Your Career Path Analysis Results</h1>
+                    <p className="text-gray-600 mb-6">
+                        Saved on: {new Date(results.savedAt).toLocaleDateString()}
+                    </p>
 
-                    {/* Analysis Section */}
-                    {result.results.analysis && (
-                        <section className="mb-12">
-                            <h2 className="text-2xl font-semibold mb-4">Analysis</h2>
-                            <div className="prose max-w-none">
-                                <p className="text-gray-700">{result.results.analysis}</p>
-                            </div>
-                        </section>
+                    {/* AI Analysis */}
+                    {results.analysis && (
+                        <div className="mb-8 bg-mint-50 rounded-xl p-6">
+                            <h2 className="text-2xl font-semibold mb-4 text-mint-900">AI Analysis</h2>
+                            <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{results.analysis}</p>
+                        </div>
                     )}
 
-                    {/* Matched Schools Section */}
-                    {result.results.matchedSchools && result.results.matchedSchools.length > 0 && (
-                        <section className="mt-12">
-                            <h2 className="text-2xl font-semibold mb-6">Matched Trade Schools & Programs</h2>
-                            <div className="grid gap-8">
-                                {result.results.matchedSchools.map((school, index) => (
+                    {/* School Matches */}
+                    {results.matches && results.matches.length > 0 && (
+                        <div>
+                            <h2 className="text-2xl font-semibold mb-6">Recommended Schools</h2>
+                            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                                {results.matches.map((school, index) => (
                                     <motion.div
-                                        key={school.id || index}
+                                        key={index}
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.1 }}
-                                        className="bg-white rounded-lg shadow p-6 border border-mint-100"
+                                        className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border-2 border-mint-200 hover:border-mint-300"
                                     >
-                                        <h3 className="text-xl font-semibold mb-4">{school.name}</h3>
-                                        {school.programs && (
-                                            <div className="mb-4">
-                                                <h4 className="font-medium mb-2">Available Programs:</h4>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {school.programs.map((program, i) => (
-                                                        <span
-                                                            key={i}
-                                                            className="bg-mint-50 text-mint-700 px-3 py-1 rounded-full text-sm"
-                                                        >
-                                                            {program}
-                                                        </span>
-                                                    ))}
-                                                </div>
+                                        <h3 className="text-xl font-semibold mb-3">
+                                            {getSchoolProperty(school, 'name')}
+                                        </h3>
+
+                                        {/* Match Score */}
+                                        <div className="mb-4">
+                                            <div className="inline-block bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+                                                Recommended Match
                                             </div>
-                                        )}
-                                        {school.website && (
-                                            <Button
-                                                href={school.website}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                variant="primary"
-                                                className="mt-4"
-                                            >
-                                                Visit Website
-                                            </Button>
-                                        )}
+                                        </div>
+
+                                        {/* School Details */}
+                                        <div className="space-y-3">
+                                            {/* Location */}
+                                            {getSchoolProperty(school, 'location') && (
+                                                <p className="text-gray-600">
+                                                    📍 {getSchoolProperty(school, 'location')}
+                                                </p>
+                                            )}
+
+                                            {/* Programs */}
+                                            {getSchoolProperty(school, 'programs') && (
+                                                <div className="flex flex-wrap gap-2">
+                                                    {renderArray(
+                                                        getSchoolProperty(school, 'programs'),
+                                                        "bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded",
+                                                        "program"
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {/* Pathways */}
+                                            {getSchoolProperty(school, 'pathway') && (
+                                                <div className="flex flex-wrap gap-2 mb-3">
+                                                    {renderArray(
+                                                        getSchoolProperty(school, 'pathway'),
+                                                        "bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded",
+                                                        "pathway"
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {/* Industries */}
+                                            {getSchoolProperty(school, 'industries') && (
+                                                <div className="mb-3">
+                                                    <h4 className="text-sm font-semibold text-gray-700 mb-1">Industries</h4>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {renderArray(
+                                                            getSchoolProperty(school, 'industries'),
+                                                            "bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded",
+                                                            "industry"
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Program Length */}
+                                            {getSchoolProperty(school, 'programLength') && (
+                                                <div className="mb-3">
+                                                    <h4 className="text-sm font-semibold text-gray-700 mb-1">Program Length</h4>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {renderArray(
+                                                            getSchoolProperty(school, 'programLength'),
+                                                            "bg-mint-100 text-mint-800 text-xs px-2 py-1 rounded",
+                                                            "program-length"
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Housing & Cost */}
+                                            <div className="grid grid-cols-2 gap-4 mb-3">
+                                                {getSchoolProperty(school, 'housing') && (
+                                                    <div>
+                                                        <h4 className="text-sm font-semibold text-gray-700 mb-1">Housing</h4>
+                                                        <p className="text-sm text-gray-600">{getSchoolProperty(school, 'housing')}</p>
+                                                    </div>
+                                                )}
+                                                {getSchoolProperty(school, 'cost') && (
+                                                    <div>
+                                                        <h4 className="text-sm font-semibold text-gray-700 mb-1">Cost</h4>
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {renderArray(
+                                                                getSchoolProperty(school, 'cost'),
+                                                                "bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded",
+                                                                "cost"
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Website */}
+                                            {getSchoolProperty(school, 'website') && (
+                                                <div className="mb-3">
+                                                    <a
+                                                        href={getSchoolProperty(school, 'website')}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-mint-600 hover:text-mint-700 text-sm underline"
+                                                    >
+                                                        Visit Website →
+                                                    </a>
+                                                </div>
+                                            )}
+
+                                            {/* Reasoning */}
+                                            {getSchoolProperty(school, 'reasoning') && (
+                                                <div className="mt-4 pt-4 border-t border-gray-200">
+                                                    <h4 className="text-sm font-semibold text-gray-700 mb-2">Why This Match?</h4>
+                                                    <p className="text-sm text-gray-600">{getSchoolProperty(school, 'reasoning')}</p>
+                                                </div>
+                                            )}
+                                        </div>
                                     </motion.div>
                                 ))}
                             </div>
-                        </section>
+                        </div>
                     )}
+                </div>
 
-                    <div className="mt-12 flex justify-center space-x-4">
-                        <Button
-                            onClick={() => router.push('/saved')}
-                            variant="outline"
-                        >
-                            Back to Saved Results
-                        </Button>
-                        <Button
-                            onClick={() => router.push('/questionnaire')}
-                            variant="primary"
-                        >
-                            Take Quiz Again
-                        </Button>
-                    </div>
-                </motion.div>
-            </div>
+                {/* Action Buttons */}
+                <div className="flex flex-wrap justify-center gap-4">
+                    <Button
+                        onClick={() => router.push('/saved')}
+                        variant="secondary"
+                    >
+                        Back to Saved Results
+                    </Button>
+                    <Button
+                        onClick={handleRetakeQuiz}
+                        variant="primary"
+                    >
+                        Take Quiz Again
+                    </Button>
+                </div>
+            </motion.div>
         </div>
     );
 }

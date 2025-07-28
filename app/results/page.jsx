@@ -8,10 +8,7 @@
  */
 
 import ErrorMessage from '@/components/ErrorMessage';
-<<<<<<< HEAD
-=======
 import SaveResultsButton from '@/components/SaveResultsButton';
->>>>>>> 40232fe3db46f0f9eaffd7b65bbb157eabcfb8e8
 import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -123,14 +120,9 @@ export default function ResultsPage() {
             setLoadingStep('Processing your matches...');
 
             const analysisData = await aiResponse.json();
-<<<<<<< HEAD
-            
-          // 3. Validate response structure
-=======
             console.log('AI Analysis response:', analysisData);
 
             // 3. Validate response structure
->>>>>>> 40232fe3db46f0f9eaffd7b65bbb157eabcfb8e8
             if (!analysisData || typeof analysisData !== 'object') {
                 throw new Error('Invalid response format from analysis API');
             }
