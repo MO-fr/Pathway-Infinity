@@ -1,46 +1,47 @@
 'use client';
 
-import ErrorMessage from '@/components/ErrorMessage';
 import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function SavedResultDetail({ params }) {
+export default function SavedResultsPage() {
     const { data: session } = useSession();
     const router = useRouter();
-    const [result, setResult] = useState(null);
+    const [savedResults, setSavedResults] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const fetchSavedResult = useCallback(async () => {
+    const fetchSavedResults = async () => {
         try {
-            
             setLoading(true);
-            console.log('Fetching result with params:', params);
-            const response = await fetch(`/api/quiz/save/${params.id}`);
+            const response = await fetch('/api/quiz/save');
             console.log('Response status:', response.status);
 
             if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error('Result not found');
-                }
-                if (response.status === 403) {
-                    throw new Error('You do not have permission to view this result');
-                }
-                throw new Error('Failed to fetch saved result');
+                throw new Error('Failed to fetch saved results');
             }
 
             const data = await response.json();
-            setResult(data);
+            setSavedResults(data);
         } catch (err) {
             setError(err.message);
-            console.error('Error fetching saved result:', err);
+            console.error('Error fetching saved results:', err);
         } finally {
             setLoading(false);
         }
-    }, [params]);
+    };
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
 
     useEffect(() => {
         if (!session) {
@@ -48,8 +49,8 @@ export default function SavedResultDetail({ params }) {
             return;
         }
 
-        fetchSavedResult();
-    }, [session, router, fetchSavedResult]);
+        fetchSavedResults();
+    }, [session, router]);
 
     if (loading) {
         return (
@@ -57,7 +58,7 @@ export default function SavedResultDetail({ params }) {
                 <div className="max-w-7xl mx-auto">
                     <div className="flex items-center justify-center">
                         <div className="w-8 h-8 border-4 border-mint-500 border-t-transparent rounded-full animate-spin" />
-                        <span className="ml-3 text-gray-600">Loading saved result...</span>
+                        <span className="ml-3 text-gray-600">Loading saved results...</span>
                     </div>
                 </div>
             </div>
@@ -68,22 +69,19 @@ export default function SavedResultDetail({ params }) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
                 <div className="max-w-7xl mx-auto">
-                    <ErrorMessage message={error} />
-                    <div className="mt-8 text-center">
+                    <div className="text-center">
+                        <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
+                        <p className="text-gray-600 mb-6">{error}</p>
                         <Button
-                            onClick={() => router.push('/saved')}
+                            onClick={() => router.push('/dashboard')}
                             variant="primary"
                         >
-                            Back to Saved Results
+                            Back to Dashboard
                         </Button>
                     </div>
                 </div>
             </div>
         );
-    }
-
-    if (!result) {
-        return null;
     }
 
     return (
@@ -92,90 +90,91 @@ export default function SavedResultDetail({ params }) {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white rounded-2xl shadow-lg p-8"
+                    className="mb-8"
                 >
-                    <div className="mb-8">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-4">Your Career Match Results</h1>
-                        <p className="text-gray-600">
-                            Saved on {new Date(result.savedAt).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            })}
-                        </p>
-                    </div>
-
-                    {/* Analysis Section */}
-                    {result.results.analysis && (
-                        <section className="mb-12">
-                            <h2 className="text-2xl font-semibold mb-4">Analysis</h2>
-                            <div className="prose max-w-none">
-                                <p className="text-gray-700">{result.results.analysis}</p>
-                            </div>
-                        </section>
-                    )}
-
-                    {/* Matched Schools Section */}
-                    {result.results.matchedSchools && result.results.matchedSchools.length > 0 && (
-                        <section className="mt-12">
-                            <h2 className="text-2xl font-semibold mb-6">Matched Trade Schools & Programs</h2>
-                            <div className="grid gap-8">
-                                {result.results.matchedSchools.map((school, index) => (
-                                    <motion.div
-                                        key={school.id || index}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.1 }}
-                                        className="bg-white rounded-lg shadow p-6 border border-mint-100"
-                                    >
-                                        <h3 className="text-xl font-semibold mb-4">{school.name}</h3>
-                                        {school.programs && (
-                                            <div className="mb-4">
-                                                <h4 className="font-medium mb-2">Available Programs:</h4>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {school.programs.map((program, i) => (
-                                                        <span
-                                                            key={i}
-                                                            className="bg-mint-50 text-mint-700 px-3 py-1 rounded-full text-sm"
-                                                        >
-                                                            {program}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-                                        {school.website && (
-                                            <Button
-                                                href={school.website}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                variant="primary"
-                                                className="mt-4"
-                                            >
-                                                Visit Website
-                                            </Button>
-                                        )}
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </section>
-                    )}
-
-                    <div className="mt-12 flex justify-center space-x-4">
-                        <Button
-                            onClick={() => router.push('/saved')}
-                            variant="outline"
-                        >
-                            Back to Saved Results
-                        </Button>
-                        <Button
-                            onClick={() => router.push('/questionnaire')}
-                            variant="primary"
-                        >
-                            Take Quiz Again
-                        </Button>
-                    </div>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-4">Your Saved Results</h1>
+                    <p className="text-gray-600">
+                        Review your previously saved career match results and assessments.
+                    </p>
                 </motion.div>
+
+                {savedResults.length === 0 ? (
+                    <div className="text-center py-12">
+                        <div className="bg-white rounded-2xl p-8 shadow-lg">
+                            <p className="text-gray-600 mb-6 text-lg">
+                                You haven't saved any quiz results yet.
+                            </p>
+                            <Button
+                                onClick={() => router.push('/questionnaire')}
+                                variant="primary"
+                            >
+                                Take the Quiz
+                            </Button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {savedResults.map((result, index) => (
+                            <motion.div
+                                key={result.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                            >
+                                <div className="p-6">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <h2 className="text-xl font-semibold">Career Match Results</h2>
+                                        <span className="text-sm text-gray-500">
+                                            {formatDate(result.savedAt)}
+                                        </span>
+                                    </div>
+
+                                    <div className="mb-6">
+                                        {result.results?.analysis && (
+                                            <p className="text-gray-600 line-clamp-3">
+                                                {result.results.analysis.length > 100 
+                                                    ? result.results.analysis.substring(0, 100) + '...'
+                                                    : result.results.analysis
+                                                }
+                                            </p>
+                                        )}
+                                        {result.results?.matches && (
+                                            <p className="text-sm text-mint-600 mt-2">
+                                                {result.results.matches.length} school{result.results.matches.length !== 1 ? 's' : ''} matched
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div className="flex justify-end space-x-3">
+                                        <Button
+                                            onClick={() => router.push(`/saved/${result.id}`)}
+                                            variant="primary"
+                                            className="text-sm"
+                                        >
+                                            View Details
+                                        </Button>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
+
+                <div className="mt-12 text-center space-x-4">
+                    <Button
+                        onClick={() => router.push('/dashboard')}
+                        variant="outline"
+                    >
+                        Back to Dashboard
+                    </Button>
+                    <Button
+                        onClick={() => router.push('/questionnaire')}
+                        variant="primary"
+                    >
+                        Take New Quiz
+                    </Button>
+                </div>
             </div>
         </div>
     );
