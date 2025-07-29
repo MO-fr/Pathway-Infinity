@@ -1,7 +1,7 @@
 'use client';
 
-import Button from '@/components/Button';
-import ErrorMessage from '@/components/ErrorMessage';
+import Button from '@/app/components/Button';
+import ErrorMessage from '@/app/components/ErrorMessage';
 import { motion } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
