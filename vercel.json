@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "buildCommand": "next build",
+    "buildCommand": "npx prisma generate && next build",
     "outputDirectory": ".next",
     "regions": [
         "iad1"
@@ -8,4 +8,5 @@
     "cleanUrls": true,
     "public": false,
     "framework": "nextjs"
+   
 }
