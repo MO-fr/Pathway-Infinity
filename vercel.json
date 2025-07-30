@@ -7,6 +7,6 @@
     ],
     "cleanUrls": true,
     "public": false,
-    "framework": "nextjs",
+    "framework": "nextjs"
    
 }
