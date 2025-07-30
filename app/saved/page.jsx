@@ -102,7 +102,7 @@ export default function SavedResultsPage() {
                     <div className="text-center py-12">
                         <div className="bg-white rounded-2xl p-8 shadow-lg">
                             <p className="text-gray-600 mb-6 text-lg">
-                                You haven't saved any quiz results yet.
+                                You haven&apos;t saved any quiz results yet.
                             </p>
                             <Button
                                 onClick={() => router.push('/questionnaire')}
@@ -123,8 +123,7 @@ export default function SavedResultsPage() {
                                 className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
                             >
                                 <div className="p-6">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <h2 className="text-xl font-semibold">Career Match Results</h2>
+                                    <div className="mb-2">
                                         <span className="text-sm text-gray-500">
                                             {formatDate(result.savedAt)}
                                         </span>
@@ -133,15 +132,7 @@ export default function SavedResultsPage() {
                                     <div className="mb-6">
                                         {result.results?.analysis && (
                                             <p className="text-gray-600 line-clamp-3">
-                                                {result.results.analysis.length > 100 
-                                                    ? result.results.analysis.substring(0, 100) + '...'
-                                                    : result.results.analysis
-                                                }
-                                            </p>
-                                        )}
-                                        {result.results?.matches && (
-                                            <p className="text-sm text-mint-600 mt-2">
-                                                {result.results.matches.length} school{result.results.matches.length !== 1 ? 's' : ''} matched
+                                                {result.results.analysis}
                                             </p>
                                         )}
                                     </div>

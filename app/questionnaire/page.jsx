@@ -1,12 +1,12 @@
 'use client';
 
 import QuizIntro from '@/components/QuizIntro';
-import QuestionCard from '@/components/QuestionCard';
-import QuizProgress from '@/components/QuizProgress';
+import QuestionCard from '@/components/questionnaire/QuestionCard';
+import QuizProgress from '@/components/questionnaire/QuizProgress';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-``
+
 // Quiz questions data
 const questions = [
     {
@@ -145,7 +145,7 @@ export default function QuestionnairePage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-            <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
+            <div className="min-h-screen flex flex-col items-center justify-center px-4 py-6">
                 <AnimatePresence mode="wait">
                     {!isStarted ? (
                         <QuizIntro key="intro" onStart={handleStart} />
@@ -156,7 +156,7 @@ export default function QuestionnairePage() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.4 }}
-                            className="w-full flex flex-col items-center"
+                            className="w-full max-w-2xl flex flex-col items-center"
                         >
                             <QuestionCard
                                 question={questions[currentQuestionIndex]}
