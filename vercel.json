@@ -1,0 +1,11 @@
+{
+    "version": 2,
+    "buildCommand": "next build",
+    "outputDirectory": ".next",
+    "regions": [
+        "iad1"
+    ],
+    "cleanUrls": true,
+    "public": false,
+    "framework": "nextjs"
+}
