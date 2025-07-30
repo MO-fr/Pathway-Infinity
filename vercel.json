@@ -7,6 +7,15 @@
     ],
     "cleanUrls": true,
     "public": false,
-    "framework": "nextjs"
-   
+    "framework": "nextjs",
+    "env": {
+        "DATABASE_URL": "@database_url",
+        "NEXTAUTH_SECRET": "@nextauth_secret",
+        "NEXTAUTH_URL": "@nextauth_url",
+        "JWT_SECRET": "@jwt_secret",
+        "OPENAI_API_KEY": "@openai_api_key",
+        "AIRTABLE_API_KEY": "@airtable_api_key",
+        "AIRTABLE_BASE_ID": "@airtable_base_id",
+        "AIRTABLE_TABLE_NAME": "@airtable_table_name"
+    }
 }
