@@ -13,7 +13,6 @@
 ## Project Overview
 **Industry**: Launchpad Philly  
 **Developer**: [Mohamed Souare]  
-**Completion Date**: June 27th 2025  
 **GitHub Repository**: [https://github.com/MO-fr/Pathway-Infinity.git]  
 
 ## Business Problem
