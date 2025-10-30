@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function SavedResultDetailClient({ params }) {
     const { data: session } = useSession();
@@ -56,6 +57,38 @@ export default function SavedResultDetailClient({ params }) {
 
         fetchSavedResult();
     }, [session, router, fetchSavedResult]);
+
+    const handleDelete = async () => {
+        if (!confirm('Are you sure you want to delete this saved result? This action cannot be undone.')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/quiz/save/${params.id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete result');
+            }
+
+            toast.success('Result deleted successfully! 🗑️', {
+                duration: 3000,
+                position: 'top-center',
+            });
+
+            // Wait a moment for the toast to show before redirecting
+            setTimeout(() => {
+                router.push('/saved');
+            }, 500);
+        } catch (err) {
+            toast.error('Failed to delete result: ' + err.message, {
+                duration: 4000,
+                position: 'top-center',
+            });
+            console.error('Error deleting result:', err);
+        }
+    };
 
     if (loading) {
         return (
@@ -330,6 +363,13 @@ export default function SavedResultDetailClient({ params }) {
                             variant="outline"
                         >
                             Back to Saved Results
+                        </Button>
+                        <Button
+                            onClick={handleDelete}
+                            variant="outline"
+                            className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                        >
+                            Delete Result
                         </Button>
                         <Button
                             onClick={() => router.push('/questionnaire')}

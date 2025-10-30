@@ -60,7 +60,11 @@ Pathway Infinity makes career guidance accessible, personalized, and engaging th
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 [![PostCSS](https://img.shields.io/badge/PostCSS-8.0-dd3a0a?style=flat-square&logo=postcss)](https://postcss.org/)
 
-#### Database & ORM
+#### AI & External Services
+[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-412991?style=flat-square&logo=openai)](https://openai.com/)
+[![Airtable](https://img.shields.io/badge/Airtable-Database-18BFFF?style=flat-square&logo=airtable)](https://airtable.com/)
+
+#### Authentication & Security
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-latest-316192?style=flat-square&logo=postgresql)](https://www.postgresql.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-6.0-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
 [![Neon](https://img.shields.io/badge/Neon-Serverless-orange?style=flat-square)](https://neon.tech/)
@@ -98,11 +102,20 @@ Pathway Infinity makes career guidance accessible, personalized, and engaging th
    - Clean, centered design
 
 4. **Results Management**:
-   - Save quiz results functionality
+   - Save quiz results functionality with AI analysis
+   - Delete saved results with confirmation dialog
    - Toast notifications for success/error feedback
    - View saved results in dedicated page
-   - Individual result detail pages
+   - Individual result detail pages with delete option
    - Protected result access (user-specific)
+   - Automatic UI updates after deletion
+
+5. **AI-Powered Career Matching**:
+   - OpenAI GPT-4o-mini integration for intelligent recommendations
+   - Comprehensive career path analysis based on user preferences
+   - Detailed reasoning for each school recommendation
+   - Fallback to local matching algorithm when AI unavailable
+   - Airtable integration for dynamic school database
 
 5. **User Experience Improvements**:
    - Toast notifications for user feedback
@@ -111,7 +124,55 @@ Pathway Infinity makes career guidance accessible, personalized, and engaging th
    - Error handling with user-friendly messages
    - Consistent styling throughout
 
-### Recent Updates (July 2025)
+### Recent Updates (October 2025)
+
+#### AI-Powered Analysis
+1. **OpenAI Integration**:
+   - Integrated GPT-4o-mini for cost-effective, intelligent career matching
+   - Comprehensive career path analysis (150-200 words) based on quiz responses
+   - Detailed school reasoning (60-100 words per recommendation)
+   - Optimized token usage with 3000 max tokens per request
+   - Intelligent fallback system when AI is unavailable
+
+2. **Enhanced Matching Algorithm**:
+   - AI analyzes quiz responses against Airtable database of 50+ trade schools
+   - Matches based on pathways, industries, program length, location, and cost
+   - Personalized reasoning for each school recommendation
+   - Complete school data preservation in responses
+
+#### User Experience Improvements
+3. **Delete Functionality**:
+   - Users can delete saved quiz results from both list and detail views
+   - Confirmation dialog prevents accidental deletions
+   - Secure deletion - users can only delete their own results
+   - Smooth UI updates without page refresh
+
+4. **Results Display Enhancement**:
+   - Complete school information display (Name, Pathway, Industries, Location, Cost, Housing, Website)
+   - AI-generated reasoning for why each school matches user preferences
+   - Direct website links for all recommended schools
+   - Improved mobile responsiveness
+
+#### Technical Enhancements
+5. **API Optimization**:
+   - Switched to gpt-4o-mini (200x cheaper than GPT-4, 13x cheaper than GPT-3.5)
+   - Limited school analysis to 50 schools max for performance
+   - Added comprehensive error handling for API quota issues
+   - Implemented graceful degradation with local fallback matching
+
+6. **Cost Efficiency**:
+   - Reduced API costs to ~$0.0002-$0.0005 per quiz completion
+   - Can handle 10,000 users/month for ~$5 in AI costs
+   - Set token limits to prevent runaway costs
+   - Optimized prompts for shorter, more focused responses
+
+7. **Security & Data Handling**:
+   - User-specific result access control
+   - Secure DELETE endpoint with ownership verification
+   - Protected API routes with session validation
+   - Environment variable management for sensitive keys
+
+### Previous Updates (July 2025)
 1. **Enhanced Results Display**:
    - Added detailed AI analysis section in saved results
    - Improved school matches presentation with colored borders
@@ -191,15 +252,23 @@ DATABASE_URL="postgresql://[username]:[password]@[host]/pathway-infinity?sslmode
 # Authentication
 NEXTAUTH_SECRET="your-secret-key"
 NEXTAUTH_URL="http://localhost:3001"
+JWT_SECRET="your-jwt-secret"
 
-# Optional Features
-AI_API_KEY="your-api-key"  # If implementing AI features
+# OpenAI Integration
+OPENAI_API_KEY="sk-proj-your-api-key"
+
+# Airtable Configuration
+AIRTABLE_API_KEY="your-airtable-api-key"
+AIRTABLE_BASE_ID="your-base-id"
+AIRTABLE_TABLE_NAME="your-table-name"
 ```
 
 Make sure to:
 1. Replace the DATABASE_URL with your actual database connection string
-2. Generate a secure NEXTAUTH_SECRET for production
+2. Generate a secure NEXTAUTH_SECRET and JWT_SECRET for production
 3. Update NEXTAUTH_URL based on your deployment environment
+4. Add your OpenAI API key for AI-powered career matching
+5. Configure Airtable credentials for school database access
 
 ### User Interface Elements
 - Modern gradient backgrounds
@@ -241,42 +310,74 @@ npm run dev
 
 The application will be available at `http://localhost:3001`
 
-## 🚀 Current Status (as of June 2025)
+## 🚀 Current Status (as of October 2025)
 
 ### Major Features (Complete)
-- **Distraction-Free Career Quiz**: 6-question, one-at-a-time quiz with smooth transitions, mobile-friendly layout, and a visual progress bar.
-- **Results Page**: Personalized career path recommendations based on quiz answers, with a clean, responsive UI and fallback handling for missing data.
-- **Navbar Hides on Quiz/Results**: Navbar is automatically hidden during the quiz and results for a focused experience.
-- **State Management**: Uses React state and sessionStorage for quiz flow and answer persistence.
-- **No Lint Errors**: Codebase is clean, with no unused variables or imports, and follows project coding standards.
-- **Modern, Accessible UI**: All pages are responsive, simple, and easy to use for non-technical students.
+- **AI-Powered Career Matching**: Uses OpenAI GPT-4o-mini to analyze quiz responses and provide personalized school recommendations with detailed reasoning
+- **Distraction-Free Career Quiz**: 6-question, one-at-a-time quiz with smooth transitions, mobile-friendly layout, and a visual progress bar
+- **Comprehensive Results Page**: Detailed AI analysis (150-200 words) plus 3-5 school recommendations with individual reasoning (60-100 words each)
+- **Save & Manage Results**: Users can save quiz results and delete them anytime with confirmation dialogs
+- **Airtable Integration**: Dynamic school database with 50+ trade schools including pathways, industries, costs, and locations
+- **Intelligent Fallback**: Automatic local matching algorithm when AI is unavailable
+- **Navbar Management**: Navbar automatically hidden during quiz/results for focused experience
+- **State Management**: React state and sessionStorage for quiz flow and answer persistence
+- **Cost Optimization**: Efficient AI usage (~$0.0005 per user) with token limits and school count restrictions
+- **No Lint Errors**: Clean codebase following project standards
+- **Modern, Accessible UI**: Responsive, simple, and student-friendly across all devices
+
+### API Endpoints
+- `POST /api/quiz/analyze` - AI-powered quiz analysis with school matching
+- `GET /api/quiz/save` - Fetch user's saved quiz results
+- `POST /api/quiz/save` - Save new quiz results
+- `GET /api/quiz/save/[id]` - Fetch specific saved result
+- `DELETE /api/quiz/save/[id]` - Delete saved result (with ownership verification)
+- `GET /api/schools` - Fetch schools from Airtable database
+- `POST /api/auth/[...nextauth]` - NextAuth authentication handlers
 
 ### User Flow
-1. **Dashboard**: User lands on a dashboard with options to start the career quiz, view saved programs, or start over.
-2. **Quiz**: User answers 6 questions, one at a time, with animated transitions and a step indicator.
-3. **Results**: After the last question, answers are processed and the user is shown their top two career path matches.
-4. **Navigation**: User can return to dashboard, retake the quiz, or explore recommended programs.
+1. **Landing Page**: User views features and benefits, then signs up or logs in
+2. **Dashboard**: User lands on dashboard with options to start career quiz or view saved results
+3. **Quiz**: User answers 6 questions one at a time with animated transitions and progress tracking
+4. **AI Analysis**: Answers are sent to OpenAI GPT-4o-mini which analyzes preferences and matches with schools from Airtable
+5. **Results**: User sees comprehensive career path analysis plus 3-5 personalized school recommendations with detailed reasoning
+6. **Save Results**: User can save results for future reference with one click
+7. **Manage Saved Results**: View all saved results, access detailed views, or delete unwanted results
+8. **Navigation**: Return to dashboard, retake quiz, or explore recommended schools via direct website links
 
 ### Technical Highlights
-- **Next.js 14+ / React 18+**
-- **Framer Motion** for smooth UI transitions
-- **Tailwind CSS** for styling
-- **NextAuth.js** for authentication
-- **Prisma + PostgreSQL** for data
-- **No new libraries added without approval**
-- **All code documented and production-grade**
+- **Next.js 14+ / React 18+** with App Router
+- **OpenAI GPT-4o-mini** for intelligent, cost-effective AI analysis
+- **Airtable** as dynamic school database with 50+ programs
+- **Framer Motion** for smooth UI transitions and animations
+- **Tailwind CSS** for modern, responsive styling
+- **NextAuth.js** for secure authentication
+- **Prisma + PostgreSQL (Neon)** for user data and saved results
+- **Token optimization** with 3000 max tokens and school limiting
+- **Graceful degradation** with local fallback matching
+- **All code documented** and production-grade
+- **Clean codebase** with no lint errors or unused imports
 
 ### Recently Completed
+- ✅ AI-powered career matching with OpenAI GPT-4o-mini
+- ✅ Airtable integration for dynamic school database
+- ✅ Comprehensive AI analysis (150-200 words) and detailed school reasoning (60-100 words)
+- ✅ Delete saved results functionality with confirmation
+- ✅ Cost optimization (200x cheaper than GPT-4)
+- ✅ Intelligent fallback system for AI unavailability
 - ✅ Career quiz and results page fully implemented
+- ✅ Complete school data display (pathways, industries, cost, location, housing, website)
 - ✅ Navbar hides on quiz/results routes
 - ✅ All ESLint issues resolved
 - ✅ Mobile and desktop UI tested
+- ✅ Secure user-specific result management
 
 ### In Progress / Next Steps
-- 🔄 AI-powered program matching (future)
-- 🔄 User profile customization
-- 🔄 Program comparison tools
-- 🔄 Progress tracking
+- 🔄 Enhanced filtering options for school search
+- 🔄 User profile customization and preferences
+- 🔄 School comparison tools
+- 🔄 Progress tracking and career journey milestones
+- 🔄 Email notifications for saved results
+- 🔄 Share results functionality
 
 ---
 

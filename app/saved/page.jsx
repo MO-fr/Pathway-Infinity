@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function SavedResultsPage() {
     const { data: session } = useSession();
@@ -30,6 +31,34 @@ export default function SavedResultsPage() {
             console.error('Error fetching saved results:', err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDelete = async (resultId) => {
+        if (!confirm('Are you sure you want to delete this saved result? This action cannot be undone.')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/quiz/save/${resultId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete result');
+            }
+
+            setSavedResults(savedResults.filter(result => result.id !== resultId));
+            toast.success('Result deleted successfully! 🗑️', {
+                duration: 3000,
+                position: 'top-center',
+            });
+        } catch (err) {
+            toast.error('Failed to delete result: ' + err.message, {
+                duration: 4000,
+                position: 'top-center',
+            });
+            console.error('Error deleting result:', err);
         }
     };
 
@@ -137,7 +166,14 @@ export default function SavedResultsPage() {
                                         )}
                                     </div>
 
-                                    <div className="flex justify-end space-x-3">
+                                    <div className="flex justify-between items-center space-x-3">
+                                        <Button
+                                            onClick={() => handleDelete(result.id)}
+                                            variant="outline"
+                                            className="text-sm text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                                        >
+                                            Delete
+                                        </Button>
                                         <Button
                                             onClick={() => router.push(`/saved/${result.id}`)}
                                             variant="primary"

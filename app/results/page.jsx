@@ -7,9 +7,9 @@
  * This is a client component that fetches and displays data from the quiz.
  */
 
+import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import SaveResultsButton from '@/components/SaveResultsButton';
-import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -72,7 +72,7 @@ export default function ResultsPage() {
     const analyzeResults = async () => {
 
         try {
-        
+
             setLoading(true);
             setError(null);
             setLoadingStep('Retrieving your quiz answers...');
@@ -87,7 +87,7 @@ export default function ResultsPage() {
 
             // 1. Fetch school data for AI analysis
             setLoadingStep('Loading school database...');
-            
+
             const schoolsResponse = await fetch("/api/schools");
 
             if (!schoolsResponse.ok) {
@@ -121,6 +121,11 @@ export default function ResultsPage() {
 
             const analysisData = await aiResponse.json();
             console.log('AI Analysis response:', analysisData);
+            console.log('Analysis text:', analysisData.analysis);
+            console.log('Matches array:', analysisData.matches);
+            console.log('Number of matches:', analysisData.matches?.length);
+            console.log('First match:', analysisData.matches?.[0]);
+            console.log('First match details:', JSON.stringify(analysisData.matches?.[0], null, 2));
 
             // 3. Validate response structure
             if (!analysisData || typeof analysisData !== 'object') {
@@ -137,7 +142,9 @@ export default function ResultsPage() {
 
             // 4. Set the results state with validated data
             setLoadingStep('Finalizing results...');
+            console.log('Setting results state with:', analysisData);
             setResults(analysisData);
+            console.log('Results state set successfully');
 
         } catch (err) {
             console.error('Error occurred while analyzing results:', err);
