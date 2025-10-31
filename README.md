@@ -56,9 +56,12 @@ Pathway Infinity makes career guidance accessible, personalized, and engaging th
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-ff69b4?style=flat-square&logo=framer)](https://www.framer.com/motion/)
 
-#### Styling
+#### Styling & Theming
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 [![PostCSS](https://img.shields.io/badge/PostCSS-8.0-dd3a0a?style=flat-square&logo=postcss)](https://postcss.org/)
+- Custom dark mode implementation with React Context
+- Class-based dark mode strategy with Tailwind
+- Persistent theme preferences with localStorage
 
 #### AI & External Services
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-412991?style=flat-square&logo=openai)](https://openai.com/)
@@ -86,22 +89,33 @@ Pathway Infinity makes career guidance accessible, personalized, and engaging th
    - Session management with NextAuth.js
    - Protected routes and middleware
    - Automatic redirect to dashboard after authentication
+   - Automatic light mode on sign out
 
-2. **Landing Page**:
+2. **Dark Mode System**:
+   - Full dark mode support on authenticated pages only
+   - Context-aware theme toggle (hidden on public pages)
+   - Persistent theme preference across sessions
+   - Smooth transitions without page flashes
+   - Consistent color scheme with mint green accents
+   - Automatic light mode reset on sign out
+
+3. **Landing Page**:
    - Modern, animated hero section
    - Feature highlights
    - How it works section
    - Smooth scrolling navigation
    - Call-to-action buttons
+   - Light mode only for public-facing design
 
-3. **Dashboard**:
+4. **Dashboard**:
    - Streamlined two-card layout
    - Career quiz quick access
    - Direct link to saved programs
    - Personalized welcome message
    - Clean, centered design
+   - Full dark mode support
 
-4. **Results Management**:
+5. **Results Management**:
    - Save quiz results functionality with AI analysis
    - Delete saved results with confirmation dialog
    - Toast notifications for success/error feedback
@@ -109,68 +123,109 @@ Pathway Infinity makes career guidance accessible, personalized, and engaging th
    - Individual result detail pages with delete option
    - Protected result access (user-specific)
    - Automatic UI updates after deletion
+   - Beautiful card layouts with dark mode support
 
-5. **AI-Powered Career Matching**:
+6. **AI-Powered Career Matching**:
    - OpenAI GPT-4o-mini integration for intelligent recommendations
    - Comprehensive career path analysis based on user preferences
    - Detailed reasoning for each school recommendation
    - Fallback to local matching algorithm when AI unavailable
    - Airtable integration for dynamic school database
 
-5. **User Experience Improvements**:
+7. **User Experience Improvements**:
    - Toast notifications for user feedback
    - Responsive design across all devices
-   - Loading states with smooth animations
+   - Loading states with smooth animations and dark mode
    - Error handling with user-friendly messages
-   - Consistent styling throughout
+   - Consistent styling throughout light and dark modes
+   - No white flashes during page transitions
 
 ### Recent Updates (October 2025)
 
+#### Dark Mode Implementation (Latest)
+1. **Comprehensive Dark Mode System**:
+   - Full dark mode support across all authenticated pages (Dashboard, Questionnaire, Results, Saved Results)
+   - Smart context-aware dark mode toggle (only visible on authenticated pages)
+   - Automatic light mode enforcement on public pages (Landing, Login, Signup)
+   - Persistent theme preference with localStorage
+   - Automatic light mode on sign out with theme reset
+
+2. **Dark Mode Color Scheme**:
+   - Consistent dark slate gradients (`slate-900` to `slate-800`) across all pages
+   - Mint green accent colors (`mint-400/500`) for better dark mode contrast
+   - Proper text hierarchy with `gray-300` body text and `white` headings
+   - Badge system using `blue-900/30` backgrounds with `blue-300` text
+   - Red buttons optimized for dark mode (`red-400` text, `red-900/30` backgrounds)
+
+3. **Component-Level Dark Mode**:
+   - **Buttons**: All button variants (outline, text, primary) with proper dark mode styling
+   - **Cards**: School match cards with dark gradient backgrounds and mint borders
+   - **Loading Screens**: All loading states with dark backgrounds and visible spinners
+   - **Navigation**: Navbar with dark background and proper text contrast
+   - **Forms**: Auth forms remain light mode only
+   - **Footer**: Dark mode support with proper text and border colors
+
+4. **User Experience**:
+   - No white flashes when switching between pages in dark mode
+   - Smooth theme transitions without page reloads
+   - Theme preference persists across sessions
+   - Sign out automatically resets to light mode
+   - Dark mode toggle hidden on public pages for cleaner UI
+
 #### AI-Powered Analysis
-1. **OpenAI Integration**:
+5. **OpenAI Integration**:
    - Integrated GPT-4o-mini for cost-effective, intelligent career matching
    - Comprehensive career path analysis (150-200 words) based on quiz responses
    - Detailed school reasoning (60-100 words per recommendation)
    - Optimized token usage with 3000 max tokens per request
    - Intelligent fallback system when AI is unavailable
 
-2. **Enhanced Matching Algorithm**:
+6. **Enhanced Matching Algorithm**:
    - AI analyzes quiz responses against Airtable database of 50+ trade schools
    - Matches based on pathways, industries, program length, location, and cost
    - Personalized reasoning for each school recommendation
    - Complete school data preservation in responses
 
 #### User Experience Improvements
-3. **Delete Functionality**:
+7. **Delete Functionality**:
    - Users can delete saved quiz results from both list and detail views
    - Confirmation dialog prevents accidental deletions
    - Secure deletion - users can only delete their own results
    - Smooth UI updates without page refresh
 
-4. **Results Display Enhancement**:
+8. **Results Display Enhancement**:
    - Complete school information display (Name, Pathway, Industries, Location, Cost, Housing, Website)
    - AI-generated reasoning for why each school matches user preferences
    - Direct website links for all recommended schools
    - Improved mobile responsiveness
+   - Dark mode support for all result cards and details
 
 #### Technical Enhancements
-5. **API Optimization**:
+9. **API Optimization**:
    - Switched to gpt-4o-mini (200x cheaper than GPT-4, 13x cheaper than GPT-3.5)
    - Limited school analysis to 50 schools max for performance
    - Added comprehensive error handling for API quota issues
    - Implemented graceful degradation with local fallback matching
 
-6. **Cost Efficiency**:
+10. **Cost Efficiency**:
    - Reduced API costs to ~$0.0002-$0.0005 per quiz completion
    - Can handle 10,000 users/month for ~$5 in AI costs
    - Set token limits to prevent runaway costs
    - Optimized prompts for shorter, more focused responses
 
-7. **Security & Data Handling**:
+11. **Security & Data Handling**:
    - User-specific result access control
    - Secure DELETE endpoint with ownership verification
    - Protected API routes with session validation
    - Environment variable management for sensitive keys
+   - Theme preference stored in localStorage (client-side only)
+
+12. **UI/UX Polish**:
+   - Consistent color scheme across light and dark modes
+   - Smooth animations and transitions throughout
+   - Responsive design tested on all device sizes
+   - Accessible button states and hover effects
+   - Loading states with proper dark mode support
 
 ### Previous Updates (July 2025)
 1. **Enhanced Results Display**:
@@ -313,17 +368,19 @@ The application will be available at `http://localhost:3001`
 ## 🚀 Current Status (as of October 2025)
 
 ### Major Features (Complete)
+- **Context-Aware Dark Mode**: Full dark mode system that intelligently applies to authenticated pages only, with automatic light mode on public pages and sign out
 - **AI-Powered Career Matching**: Uses OpenAI GPT-4o-mini to analyze quiz responses and provide personalized school recommendations with detailed reasoning
 - **Distraction-Free Career Quiz**: 6-question, one-at-a-time quiz with smooth transitions, mobile-friendly layout, and a visual progress bar
 - **Comprehensive Results Page**: Detailed AI analysis (150-200 words) plus 3-5 school recommendations with individual reasoning (60-100 words each)
 - **Save & Manage Results**: Users can save quiz results and delete them anytime with confirmation dialogs
 - **Airtable Integration**: Dynamic school database with 50+ trade schools including pathways, industries, costs, and locations
 - **Intelligent Fallback**: Automatic local matching algorithm when AI is unavailable
-- **Navbar Management**: Navbar automatically hidden during quiz/results for focused experience
+- **Smart Navigation**: Navbar automatically hidden during quiz/results for focused experience, with context-aware dark mode toggle
 - **State Management**: React state and sessionStorage for quiz flow and answer persistence
 - **Cost Optimization**: Efficient AI usage (~$0.0005 per user) with token limits and school count restrictions
+- **Theme Persistence**: User's dark/light mode preference saved across sessions with automatic reset on sign out
 - **No Lint Errors**: Clean codebase following project standards
-- **Modern, Accessible UI**: Responsive, simple, and student-friendly across all devices
+- **Modern, Accessible UI**: Responsive, simple, and student-friendly across all devices with full dark mode support
 
 ### API Endpoints
 - `POST /api/quiz/analyze` - AI-powered quiz analysis with school matching
@@ -346,18 +403,26 @@ The application will be available at `http://localhost:3001`
 
 ### Technical Highlights
 - **Next.js 14+ / React 18+** with App Router
+- **Full Dark Mode System** with context-aware theming and persistent preferences
 - **OpenAI GPT-4o-mini** for intelligent, cost-effective AI analysis
 - **Airtable** as dynamic school database with 50+ programs
 - **Framer Motion** for smooth UI transitions and animations
-- **Tailwind CSS** for modern, responsive styling
+- **Tailwind CSS** with custom dark mode configuration
 - **NextAuth.js** for secure authentication
 - **Prisma + PostgreSQL (Neon)** for user data and saved results
 - **Token optimization** with 3000 max tokens and school limiting
 - **Graceful degradation** with local fallback matching
+- **Theme Context** with automatic light/dark mode management
 - **All code documented** and production-grade
 - **Clean codebase** with no lint errors or unused imports
+- **Responsive design** optimized for mobile and desktop
 
 ### Recently Completed
+- ✅ **Full dark mode implementation** with context-aware theme system
+- ✅ **Smart theme management** - light mode on public pages, dark mode on app pages
+- ✅ **Automatic light mode on sign out** with theme reset
+- ✅ **Dark mode button styling** - no more light grey buttons
+- ✅ **Loading screen dark mode** - consistent colors across all loading states
 - ✅ AI-powered career matching with OpenAI GPT-4o-mini
 - ✅ Airtable integration for dynamic school database
 - ✅ Comprehensive AI analysis (150-200 words) and detailed school reasoning (60-100 words)
@@ -368,8 +433,9 @@ The application will be available at `http://localhost:3001`
 - ✅ Complete school data display (pathways, industries, cost, location, housing, website)
 - ✅ Navbar hides on quiz/results routes
 - ✅ All ESLint issues resolved
-- ✅ Mobile and desktop UI tested
+- ✅ Mobile and desktop UI tested and optimized
 - ✅ Secure user-specific result management
+- ✅ Consistent color scheme across all pages and themes
 
 ### In Progress / Next Steps
 - 🔄 Enhanced filtering options for school search

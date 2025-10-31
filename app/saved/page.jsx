@@ -83,11 +83,11 @@ export default function SavedResultsPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex items-center justify-center">
                         <div className="w-8 h-8 border-4 border-mint-500 border-t-transparent rounded-full animate-spin" />
-                        <span className="ml-3 text-gray-600">Loading saved results...</span>
+                        <span className="ml-3 text-gray-600 dark:text-gray-300">Loading saved results...</span>
                     </div>
                 </div>
             </div>
@@ -96,11 +96,11 @@ export default function SavedResultsPage() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center">
-                        <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
-                        <p className="text-gray-600 mb-6">{error}</p>
+                        <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Error</h1>
+                        <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
                         <Button
                             onClick={() => router.push('/dashboard')}
                             variant="primary"
@@ -114,23 +114,23 @@ export default function SavedResultsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
             <div className="max-w-7xl mx-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-8"
                 >
-                    <h1 className="text-3xl font-bold text-gray-900 mb-4">Your Saved Results</h1>
-                    <p className="text-gray-600">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Your Saved Results</h1>
+                    <p className="text-gray-600 dark:text-gray-300">
                         Review your previously saved career match results and assessments.
                     </p>
                 </motion.div>
 
                 {savedResults.length === 0 ? (
                     <div className="text-center py-12">
-                        <div className="bg-white rounded-2xl p-8 shadow-lg">
-                            <p className="text-gray-600 mb-6 text-lg">
+                        <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg">
+                            <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg">
                                 You haven&apos;t saved any quiz results yet.
                             </p>
                             <Button
@@ -149,18 +149,18 @@ export default function SavedResultsPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 }}
-                                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                                className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
                             >
                                 <div className="p-6">
                                     <div className="mb-2">
-                                        <span className="text-sm text-gray-500">
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">
                                             {formatDate(result.savedAt)}
                                         </span>
                                     </div>
 
                                     <div className="mb-6">
                                         {result.results?.analysis && (
-                                            <p className="text-gray-600 line-clamp-3">
+                                            <p className="text-gray-600 dark:text-gray-300 line-clamp-3">
                                                 {result.results.analysis}
                                             </p>
                                         )}
@@ -170,7 +170,7 @@ export default function SavedResultsPage() {
                                         <Button
                                             onClick={() => handleDelete(result.id)}
                                             variant="outline"
-                                            className="text-sm text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                                            className="text-sm text-red-600 dark:text-red-400 border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 hover:border-red-300 dark:hover:border-red-600"
                                         >
                                             Delete
                                         </Button>

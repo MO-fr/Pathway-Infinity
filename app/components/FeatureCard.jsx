@@ -2,20 +2,20 @@
 
 import { motion } from 'framer-motion';
 
-export default function FeatureCard({ 
-  title, 
-  description, 
-  icon, 
+export default function FeatureCard({
+  title,
+  description,
+  icon,
   delay = 0,
   index
 }) {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ 
-        opacity: 1, 
+      whileInView={{
+        opacity: 1,
         y: 0,
-        transition: { 
+        transition: {
           duration: 0.5,
           delay: delay * 0.2
         }
@@ -27,8 +27,8 @@ export default function FeatureCard({
         ${index % 3 === 0 ? 'bg-mint-500' : index % 3 === 1 ? 'bg-sky-500' : 'bg-azure-500'}
       `}>
         {icon}
-      </div>      <h3 className="text-xl font-bold mb-2">{title}</h3>
-      <p className="text-sky-700">{description}</p>
+      </div>      <h3 className="text-xl font-bold mb-2 text-blue-600">{title}</h3>
+      <p className="text-gray-700">{description}</p>
     </motion.div>
   );
 }

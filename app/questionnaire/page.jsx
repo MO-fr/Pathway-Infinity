@@ -144,7 +144,7 @@ export default function QuestionnairePage() {
     };  // Check if current question is already answered (when navigating back)
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
             <div className="min-h-screen flex flex-col items-center justify-center px-4 py-6">
                 <AnimatePresence mode="wait">
                     {!isStarted ? (

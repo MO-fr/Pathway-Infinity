@@ -159,7 +159,7 @@ function getFallbackAnalysis(schools, parsedAnswers) {
 // AI analysis function
 async function getAIAnalysis(schoolsForAnalysis, parsedAnswers) {
   const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini", // Updated to current cost-effective model
+    model: "gpt-5-nano", // Updated to current cost-effective model, if model too unintelligent bump to mini
     messages: [
       {
         role: "system",

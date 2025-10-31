@@ -17,10 +17,10 @@ export default function LoginPage() {
           transition={{ duration: 0.5 }}
           className="text-center mb-8"
         >
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-blue-600">
             Welcome Back
           </h1>
-          <p className="text-sky-700 max-w-md mx-auto">
+          <p className="text-blue-700 max-w-md mx-auto">
             Log in to track your career exploration progress and save your favorite pathways.
           </p>
         </motion.div>
@@ -31,7 +31,7 @@ export default function LoginPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-8 text-sky-700"
+          className="mt-8 text-blue-700"
         >
           Don&apos;t have an account?{' '}
           <Link

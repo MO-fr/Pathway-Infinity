@@ -21,7 +21,7 @@ export function AuthForm({ mode = 'login' }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
-    
+
     e.preventDefault();
     setIsLoading(true);
 
@@ -52,18 +52,18 @@ export function AuthForm({ mode = 'login' }) {
 
       setErrors(newErrors);
       setIsLoading(false);
-      
+
       return;
 
-    } 
-    
+    }
+
     try {
-      
+
       if (mode === 'signup') {
 
         // Import the authApi from lib/api
         const { authApi } = await import('../lib/api');
-        
+
         await authApi.signup(formData);
         // Axios errors will be caught in the catch block
 
@@ -92,9 +92,9 @@ export function AuthForm({ mode = 'login' }) {
         if (result?.error) {
 
           setErrors({ auth: 'Invalid credentials' });
-        
+
         } else {
-        
+
           router.push('/dashboard');
         }
       }
@@ -126,11 +126,11 @@ export function AuthForm({ mode = 'login' }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         onSubmit={handleSubmit}
-        className="space-y-6 bg-slate-50/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-mint-100"
+        className="space-y-6 bg-slate-50/80 dark:bg-slate-800/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-mint-100 dark:border-slate-700"
       >
         {mode === 'signup' && (
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-sky-700">
+            <label htmlFor="name" className="block text-sm font-medium text-sky-700 dark:text-sky-400">
               Name
             </label>            <input
               type="text"
@@ -140,16 +140,16 @@ export function AuthForm({ mode = 'login' }) {
               value={formData.name || ''}
               onChange={handleChange}
               suppressHydrationWarning
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-mint-500 focus:outline-none focus:ring-1 focus:ring-mint-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 dark:bg-slate-700 dark:text-white px-3 py-2 shadow-sm focus:border-mint-500 focus:outline-none focus:ring-1 focus:ring-mint-500"
             />
             {errors.name && (
-              <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>
             )}
           </div>
         )}
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-sky-700">
+          <label htmlFor="email" className="block text-sm font-medium text-sky-700 dark:text-sky-400">
             Email
           </label>
           <input
@@ -160,15 +160,15 @@ export function AuthForm({ mode = 'login' }) {
             value={formData.email}
             onChange={handleChange}
             suppressHydrationWarning
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-mint-500 focus:outline-none focus:ring-1 focus:ring-mint-500"
+            className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 dark:bg-slate-700 dark:text-white px-3 py-2 shadow-sm focus:border-mint-500 focus:outline-none focus:ring-1 focus:ring-mint-500"
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-sky-700">
+          <label htmlFor="password" className="block text-sm font-medium text-sky-700 dark:text-sky-400">
             Password
           </label>
           <div className="relative mt-1">
@@ -180,7 +180,7 @@ export function AuthForm({ mode = 'login' }) {
               autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
               value={formData.password}
               onChange={handleChange}
-              className="block w-full rounded-md border border-gray-300 px-3 py-2 pr-10 shadow-sm focus:border-mint-500 focus:outline-none focus:ring-1 focus:ring-mint-500"
+              className="block w-full rounded-md border border-gray-300 dark:border-gray-600 dark:bg-slate-700 dark:text-white px-3 py-2 pr-10 shadow-sm focus:border-mint-500 focus:outline-none focus:ring-1 focus:ring-mint-500"
             />
             <button
               type="button"
@@ -200,13 +200,13 @@ export function AuthForm({ mode = 'login' }) {
             </button>
           </div>
           {errors.password && (
-            <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password}</p>
           )}
         </div>
 
         {errors.auth && (
-          <div className="rounded-md bg-red-50 p-4">
-            <p className="text-sm text-red-600">{errors.auth}</p>
+          <div className="rounded-md bg-red-50 dark:bg-red-900/30 p-4">
+            <p className="text-sm text-red-600 dark:text-red-400">{errors.auth}</p>
           </div>
         )}
 

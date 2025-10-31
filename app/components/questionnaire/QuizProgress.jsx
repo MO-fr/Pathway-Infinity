@@ -24,7 +24,7 @@ export default function QuizProgress({
                 <Button
                     variant="text"
                     onClick={() => router.push('/dashboard')}
-                    className="text-sky-600 hover:text-sky-700"
+                    className="text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300"
                 >
                     Exit Quiz
                 </Button>
@@ -40,7 +40,7 @@ export default function QuizProgress({
                 )}
             </div>
 
-            <div className="w-full bg-mint-100/50 h-2 rounded-full mt-4">
+            <div className="w-full bg-mint-100/50 dark:bg-mint-900/30 h-2 rounded-full mt-4">
                 <motion.div
                     className="h-full bg-mint-500 rounded-full"
                     initial={{ width: 0 }}

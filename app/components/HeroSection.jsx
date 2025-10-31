@@ -39,7 +39,7 @@ export default function HeroSection() {
           <motion.h1
             variants={fadeIn}
             custom={0.3}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-blue-600"
           >
             Find Your <span className="bg-gradient-to-r from-mint-500 to-sky-500 bg-clip-text text-transparent">Perfect Trade</span> With Pathway Infinity
           </motion.h1>
@@ -47,7 +47,7 @@ export default function HeroSection() {
           <motion.p
             variants={fadeIn}
             custom={0.5}
-            className="text-lg md:text-xl text-sky-800 max-w-2xl leading-relaxed"
+            className="text-lg md:text-xl text-gray-700 max-w-2xl leading-relaxed"
           >
             Discover trade schools, vocational training, and career paths matched to your skills and interests. Get personalized recommendations for both traditional careers and skilled trades.
           </motion.p>
@@ -70,9 +70,9 @@ export default function HeroSection() {
         >
           <div className="relative w-full h-full">
             {/* Decorative background elements */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px]">              <div className="absolute inset-0 bg-gradient-to-r from-mint-300/20 to-mint-500/20 rounded-full blur-3xl"></div>
-              <div className="absolute inset-10 bg-gradient-to-r from-sky-300/20 to-sky-500/20 rounded-full blur-2xl"></div>
-              <div className="absolute inset-20 bg-gradient-to-r from-azure-300/20 to-mint-400/20 rounded-full blur-xl"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px]">              <div className="absolute inset-0 bg-gradient-to-r from-mint-300/20 to-mint-500/20 dark:from-mint-800/20 dark:to-mint-600/20 rounded-full blur-3xl"></div>
+              <div className="absolute inset-10 bg-gradient-to-r from-sky-300/20 to-sky-500/20 dark:from-sky-800/20 dark:to-sky-600/20 rounded-full blur-2xl"></div>
+              <div className="absolute inset-20 bg-gradient-to-r from-azure-300/20 to-mint-400/20 dark:from-azure-800/20 dark:to-mint-700/20 rounded-full blur-xl"></div>
             </div>
             {/* Main illustration */}
             <motion.div

@@ -163,7 +163,7 @@ export default function ResultsPage() {
     return (
         <React.Fragment>
             {loading && (
-                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -175,17 +175,17 @@ export default function ResultsPage() {
                             className="w-16 h-16 border-4 border-mint-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"
                             aria-hidden="true"
                         />
-                        <p className="text-xl text-gray-700 mb-2">Analyzing your answers...</p>
-                        <p className="text-sm text-gray-500">{loadingStep}</p>
+                        <p className="text-xl text-gray-700 dark:text-gray-300 mb-2">Analyzing your answers...</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{loadingStep}</p>
                         <span className="sr-only">Loading results, please wait</span>
                     </motion.div>
                 </div>
             )}
 
             {error && !loading && (
-                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
                     <div className="max-w-md text-center" role="alert" aria-live="assertive">
-                        <h1 className="text-2xl font-bold mb-4" id="error-title">Error</h1>
+                        <h1 className="text-2xl font-bold mb-4 dark:text-white" id="error-title">Error</h1>
                         <ErrorMessage
                             message={error}
                             onRetry={analyzeResults}
@@ -204,14 +204,14 @@ export default function ResultsPage() {
             )}
 
             {!loading && !error && !results?.matches?.length && (
-                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
                     <div className="max-w-md text-center" role="main">
-                        <h1 className="text-2xl font-bold mb-4" id="no-results-title">No matching schools found</h1>
+                        <h1 className="text-2xl font-bold mb-4 dark:text-white" id="no-results-title">No matching schools found</h1>
                         <div className="mb-6" aria-describedby="no-results-title">
-                            <p className="mb-3">
+                            <p className="mb-3 dark:text-gray-300">
                                 We couldn&apos;t find any schools matching your criteria. This could be because:
                             </p>
-                            <ul className="list-disc text-left mt-3 ml-6" role="list">
+                            <ul className="list-disc text-left mt-3 ml-6 dark:text-gray-300" role="list">
                                 <li>Your answers were very specific</li>
                                 <li>We don&apos;t have schools in our database that match your preferences</li>
                                 <li>There might be a temporary issue with our school database</li>
@@ -240,7 +240,7 @@ export default function ResultsPage() {
             )}
 
             {!loading && !error && results?.matches?.length > 0 && (
-                <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-10 px-4">
+                <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 py-10 px-4">
                     <div className="max-w-5xl mx-auto">
                         <motion.header
                             initial={{ opacity: 0, y: 20 }}
@@ -248,8 +248,8 @@ export default function ResultsPage() {
                             transition={{ duration: 0.5 }}
                             className="text-center mb-12"
                         >
-                            <h1 className="text-3xl md:text-4xl font-bold mb-4">Your Best Career Path Matches</h1>
-                            <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+                            <h1 className="text-3xl md:text-4xl font-bold mb-4 dark:text-white">Your Best Career Path Matches</h1>
+                            <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
                                 Based on your answers, we&apos;ve found these trade schools that match your interests and goals.
                             </p>
                         </motion.header>
@@ -260,11 +260,11 @@ export default function ResultsPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="bg-white/80 backdrop-blur-sm rounded-xl p-6 mb-8 shadow-lg border border-mint-100"
+                                className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl p-6 mb-8 shadow-lg border border-mint-100 dark:border-slate-700"
                                 aria-labelledby="analysis-title"
                             >
-                                <h2 className="text-xl font-semibold mb-3" id="analysis-title">Analysis of Your Results</h2>
-                                <p className="text-gray-700 whitespace-pre-line">{results.analysis}</p>
+                                <h2 className="text-xl font-semibold mb-3 dark:text-white" id="analysis-title">Analysis of Your Results</h2>
+                                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{results.analysis}</p>
                             </motion.section>
                         )}
 
@@ -290,7 +290,7 @@ export default function ResultsPage() {
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.3 + (index * 0.1) }}
-                                            className="bg-white rounded-2xl shadow-xl overflow-hidden border border-mint-100"
+                                            className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden border border-mint-100 dark:border-slate-700"
                                             role="article"
                                             aria-labelledby={`school-title-${index}`}
                                         >
@@ -298,7 +298,7 @@ export default function ResultsPage() {
                                                 <div className="flex flex-col md:flex-row justify-between">
                                                     <div className="flex-1">
                                                         <h3
-                                                            className="text-2xl font-bold mb-2"
+                                                            className="text-2xl font-bold mb-2 dark:text-white"
                                                             id={`school-title-${index}`}
                                                         >
                                                             {schoolName}
@@ -306,8 +306,8 @@ export default function ResultsPage() {
 
                                                         {/* AI Reasoning (if available) */}
                                                         {reasoning && (
-                                                            <div className="mb-4 p-3 bg-mint-50 rounded-lg border-l-4 border-mint-400">
-                                                                <p className="text-sm text-mint-800">
+                                                            <div className="mb-4 p-3 bg-mint-50 dark:bg-mint-900/30 rounded-lg border-l-4 border-mint-400 dark:border-mint-600">
+                                                                <p className="text-sm text-mint-800 dark:text-mint-300">
                                                                     <strong>Why this school matches:</strong> {reasoning}
                                                                 </p>
                                                             </div>
@@ -317,12 +317,12 @@ export default function ResultsPage() {
                                                         <div className="mb-4" role="group" aria-label="School pathways and industries">
                                                             {pathways && renderArray(
                                                                 pathways,
-                                                                "inline-block bg-mint-100 text-mint-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2",
+                                                                "inline-block bg-mint-100 dark:bg-mint-900/30 text-mint-800 dark:text-mint-300 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2",
                                                                 "Pathway"
                                                             )}
                                                             {industries && renderArray(
                                                                 industries,
-                                                                "inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2",
+                                                                "inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2",
                                                                 "Industry"
                                                             )}
                                                         </div>
@@ -333,8 +333,8 @@ export default function ResultsPage() {
                                                                 <div className="flex items-start">
                                                                     <div className="mr-3 text-mint-500" aria-hidden="true">📍</div>
                                                                     <div>
-                                                                        <dt className="font-semibold">Location</dt>
-                                                                        <dd className="text-gray-600">{location}</dd>
+                                                                        <dt className="font-semibold dark:text-gray-200">Location</dt>
+                                                                        <dd className="text-gray-600 dark:text-gray-400">{location}</dd>
                                                                     </div>
                                                                 </div>
                                                             )}
@@ -344,8 +344,8 @@ export default function ResultsPage() {
                                                                 <div className="flex items-start">
                                                                     <div className="mr-3 text-mint-500" aria-hidden="true">💰</div>
                                                                     <div>
-                                                                        <dt className="font-semibold">Program Cost</dt>
-                                                                        <dd className="text-gray-600">{Array.isArray(cost) ? cost.join(', ') : cost}</dd>
+                                                                        <dt className="font-semibold dark:text-gray-200">Program Cost</dt>
+                                                                        <dd className="text-gray-600 dark:text-gray-400">{Array.isArray(cost) ? cost.join(', ') : cost}</dd>
                                                                     </div>
                                                                 </div>
                                                             )}
@@ -355,8 +355,8 @@ export default function ResultsPage() {
                                                                 <div className="flex items-start">
                                                                     <div className="mr-3 text-mint-500" aria-hidden="true">⏱️</div>
                                                                     <div>
-                                                                        <dt className="font-semibold">Program Length</dt>
-                                                                        <dd className="text-gray-600">{Array.isArray(programLength) ? programLength.join(', ') : programLength}</dd>
+                                                                        <dt className="font-semibold dark:text-gray-200">Program Length</dt>
+                                                                        <dd className="text-gray-600 dark:text-gray-400">{Array.isArray(programLength) ? programLength.join(', ') : programLength}</dd>
                                                                     </div>
                                                                 </div>
                                                             )}
@@ -366,8 +366,8 @@ export default function ResultsPage() {
                                                                 <div className="flex items-start">
                                                                     <div className="mr-3 text-mint-500" aria-hidden="true">🏠</div>
                                                                     <div>
-                                                                        <dt className="font-semibold">Housing</dt>
-                                                                        <dd className="text-gray-600">{housing}</dd>
+                                                                        <dt className="font-semibold dark:text-gray-200">Housing</dt>
+                                                                        <dd className="text-gray-600 dark:text-gray-400">{housing}</dd>
                                                                     </div>
                                                                 </div>
                                                             )}

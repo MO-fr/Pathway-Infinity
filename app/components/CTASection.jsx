@@ -7,7 +7,7 @@ export default function CTASection() {
   return (
     <section className="py-20 relative overflow-hidden">      {/* Background gradient elements */}      <div className="absolute top-0 left-1/4 w-64 h-64 bg-mint-100 rounded-full opacity-50 blur-3xl"></div>
       <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-sky-100 rounded-full opacity-60 blur-3xl"></div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -21,21 +21,21 @@ export default function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold mb-6"
+            className="text-3xl md:text-4xl font-bold mb-6 text-blue-600"
           >
             Ready to Find Your <span className="text-mint-600">Perfect Trade or Career</span>?
           </motion.h2>
-          
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-sky-700 mb-8 text-lg max-w-2xl mx-auto"
+            className="text-gray-700 mb-8 text-lg max-w-2xl mx-auto"
           >
             Take the first step toward a rewarding future. Our quick assessment will match you with trade schools, vocational programs, and career paths that fit your skills and interests.
           </motion.p>
-            <motion.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

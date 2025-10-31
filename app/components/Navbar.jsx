@@ -1,19 +1,29 @@
 'use client';
 
 import Button from '@/components/Button.jsx';
+import DarkModeToggle from '@/components/DarkModeToggle.jsx';
+import { useTheme } from '@/context/ThemeContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function Navbar() {
   const { data: session } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+  const { isDarkMode, setLightMode } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+
+  // Check if we're on a page that should show dark mode toggle
+  const showDarkModeToggle = pathname?.startsWith('/dashboard') ||
+    pathname?.startsWith('/saved') ||
+    pathname?.startsWith('/questionnaire') ||
+    pathname?.startsWith('/results');
 
   useEffect(() => {
     setMounted(true);
@@ -37,8 +47,17 @@ export default function Navbar() {
     try {
       setIsSigningOut(true);
 
-      // Clear any local storage items if they exist
+      // Force light mode before signing out
+      document.documentElement.classList.remove('dark');
+
+      // Set theme to light in localStorage before clearing
+      localStorage.setItem('theme', 'light');
+
+      // Clear any other local storage items if they exist
+      const theme = localStorage.getItem('theme');
       localStorage.clear();
+      // Restore light theme setting
+      localStorage.setItem('theme', 'light');
 
       // Sign out using NextAuth
       await signOut({
@@ -67,7 +86,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-50/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
+      className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
         }`}
     >
       <div className="container mx-auto px-4 md:px-6">
@@ -124,10 +143,11 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
+            {showDarkModeToggle && <DarkModeToggle />}
             {session ? (
               <>
                 {/* User name and navigation when logged in */}
-                <span className="text-gray-700">
+                <span className="text-gray-700 dark:text-gray-300">
                   Welcome, {session.user.name}!
 
                 </span>
@@ -137,7 +157,7 @@ export default function Navbar() {
                 <Button
                   onClick={handleSignOut}
                   variant="outline"
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-950"
                   disabled={isSigningOut}
                 >
                   {isSigningOut ? 'Signing out...' : 'Sign out'}
@@ -157,27 +177,30 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-md hover:bg-gray-100"
-            aria-label="Toggle menu"
-          >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+          <div className="flex items-center space-x-2 md:hidden">
+            {showDarkModeToggle && <DarkModeToggle />}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+              aria-label="Toggle menu"
             >
-              {isOpen ? (
-                <path d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+              <svg
+                className="h-6 w-6 text-gray-700 dark:text-gray-300"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {isOpen ? (
+                  <path d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -189,12 +212,12 @@ export default function Navbar() {
               exit={{ opacity: 0, height: 0 }}
               className="md:hidden"
             >
-              <div className="px-2 pt-2 pb-3 space-y-1 bg-white shadow-lg rounded-b-xl border-t border-mint-100">
+              <div className="px-2 pt-2 pb-3 space-y-1 bg-white dark:bg-slate-800 shadow-lg rounded-b-xl border-t border-mint-100 dark:border-mint-900">
                 {session ? (
                   <>
                     <Link
                       href="/dashboard"
-                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-mint-600 hover:bg-mint-50 transition-colors"
+                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-mint-600 dark:hover:text-mint-400 hover:bg-mint-50 dark:hover:bg-mint-950 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       Dashboard
@@ -202,7 +225,7 @@ export default function Navbar() {
                     <button
                       onClick={handleSignOut}
                       disabled={isSigningOut}
-                      className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50 disabled:opacity-50 transition-colors"
+                      className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 disabled:opacity-50 transition-colors"
                     >
                       {isSigningOut ? 'Signing out...' : 'Sign out'}
                     </button>

@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import NavigationHandler from "@/components/NavigationHandler";
 import { NextAuthProvider } from "@/components/NextAuthProvider";
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "./context/ThemeContext";
 
 /**
  * Root layout component for Pathway Infinity
@@ -59,9 +60,11 @@ export default function RootLayout({ children }) {
     <html lang="en" className="scroll-smooth">
       <body className="antialiased min-h-screen flex flex-col font-nunito" suppressHydrationWarning={true}>
         <NextAuthProvider>
-          <NavigationHandler>{children}</NavigationHandler>
-          <Footer />
-          <Toaster />
+          <ThemeProvider>
+            <NavigationHandler>{children}</NavigationHandler>
+            <Footer />
+            <Toaster />
+          </ThemeProvider>
         </NextAuthProvider>
       </body>
     </html>
